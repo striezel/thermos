@@ -19,7 +19,7 @@
 */
 
 #include "read_linux.hpp"
-#if defined(__linux__) || defined(linux)
+//#if defined(__linux__) || defined(linux)
 #include <filesystem>
 #include <fstream>
 
@@ -39,7 +39,7 @@ std::string first_line(const std::filesystem::path& path)
   return line;
 }
 
-thermos::device read_single_device(const std::filesystem::path& device_directory)
+thermos::device read_thermal_device(const std::filesystem::path& device_directory)
 {
   const std::filesystem::path type (device_directory / "type");
   std::error_code error;
@@ -69,6 +69,15 @@ thermos::device read_single_device(const std::filesystem::path& device_directory
 
 std::vector<thermos::device> read_all()
 {
+  const auto thermal_devs = read_thermal();
+  if (!thermal_devs.empty())
+    return thermal_devs;
+
+  return read_hwmon();
+}
+
+std::vector<thermos::device> read_thermal()
+{
   const std::filesystem::path thermal{"/sys/devices/virtual/thermal"};
 
   std::error_code error;
@@ -81,7 +90,7 @@ std::vector<thermos::device> read_all()
   {
     if (entry.is_directory(error) && !error)
     {
-      auto dev = read_single_device(entry.path());
+      auto dev = read_thermal_device(entry.path());
       if (dev.filled())
       {
         devices.emplace_back(dev);
@@ -92,6 +101,74 @@ std::vector<thermos::device> read_all()
   return devices;
 }
 
+std::vector<thermos::device> read_hwmon_devices(const std::filesystem::path& device_directory)
+{
+  std::error_code error;
+  const auto iterator = std::filesystem::directory_iterator(device_directory, error);
+  if (error)
+    return { };
+
+  std::vector<thermos::device> result;
+  for (const auto& entry: iterator)
+  {
+    if (!entry.is_regular_file(error) || error)
+    {
+      continue;
+    }
+
+    const auto fn = entry.path().filename().generic_string();
+    if ((fn.find("temp") != 0) || (fn.find("_label") <= 4))
+    {
+      continue;
+    }
+
+    thermos::device dev;
+    dev.type = first_line(entry.path());
+    const auto input_name = fn.substr(0, fn.find("_label")) + "_input";
+    auto path_mutable{entry.path()};
+    const auto temp = first_line(path_mutable.replace_filename(input_name));
+    try
+    {
+      std::size_t pos = 0;
+      dev.millicelsius = std::stoll(temp, &pos);
+      if (pos < temp.size())
+        continue;
+    }
+    catch (const std::exception& ex)
+    {
+      return { };
+    }
+    result.emplace_back(dev);
+  }
+
+  return result;
+}
+
+std::vector<thermos::device> read_hwmon()
+{
+  const std::filesystem::path thermal{"/sys/class/hwmon"};
+
+  std::error_code error;
+  const auto iterator = std::filesystem::directory_iterator(thermal, error);
+  if (error)
+    return { };
+
+  std::vector<thermos::device> devices;
+  for (const auto& entry: iterator)
+  {
+    if (entry.is_directory(error) && !error)
+    {
+      const auto devs = read_hwmon_devices(entry.path() / "device");
+      for(const auto& elem: devs)
+      {
+        devices.emplace_back(elem);
+      }
+    }
+  }
+
+  return devices;
+}
+
 } // namespace
 
-#endif // Linux
+//#endif // Linux

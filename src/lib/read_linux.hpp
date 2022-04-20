@@ -33,8 +33,21 @@ namespace thermos::linux_like
  * \return Returns a vector containing the device readings.
  *         Returns an empty vector, if no readings were available.
  */
-
 std::vector<thermos::device> read_all();
+
+/** \brief Reads thermal devices from /sys/devices/virtual/thermal/.
+ *
+ * \return Returns a vector containing the device readings.
+ *         Returns an empty vector, if no readings were available.
+ */
+std::vector<thermos::device> read_thermal();
+
+/** \brief Reads thermal devices from /sys/class/hwmon/.
+ *
+ * \return Returns a vector containing the device readings.
+ *         Returns an empty vector, if no readings were available.
+ */
+std::vector<thermos::device> read_hwmon();
 
 } // namespace
 #endif // Linux
