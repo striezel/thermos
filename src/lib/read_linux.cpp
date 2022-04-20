@@ -158,7 +158,15 @@ std::vector<thermos::device> read_hwmon()
   {
     if (entry.is_directory(error) && !error)
     {
-      const auto devs = read_hwmon_devices(entry.path() / "device");
+      auto devs = read_hwmon_devices(entry.path() / "device");
+      for(const auto& elem: devs)
+      {
+        devices.emplace_back(elem);
+      }
+      // Some kernel versions have the tempN_label and tempN_input files
+      // directly in /sys/class/hwmon/hwmonN instead of the sub directory
+      // /sys/class/hwmon/hwmonN/device.
+      devs = read_hwmon_devices(entry.path());
       for(const auto& elem: devs)
       {
         devices.emplace_back(elem);
