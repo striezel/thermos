@@ -39,6 +39,7 @@
 			<Add option="-std=c++17" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="../../third-party/nonstd/expected.hpp" />
 		<Unit filename="../lib/device.cpp" />
 		<Unit filename="../lib/device.hpp" />
 		<Unit filename="../lib/read.cpp" />
