@@ -1,6 +1,6 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of thermos.
+    This file is part of the test suite for thermos.
     Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
@@ -18,36 +18,5 @@
  -------------------------------------------------------------------------------
 */
 
-#include "device.hpp"
-#include <cmath>
-#include <limits>
-
-namespace thermos
-{
-
-device::device()
-: type(std::string()),
-  millicelsius(std::numeric_limits<decltype(millicelsius)>::min())
-{
-}
-
-bool device::filled() const
-{
-  return !type.empty() && (millicelsius != std::numeric_limits<decltype(millicelsius)>::min());
-}
-
-double device::celsius() const
-{
-  // Rounded to 1/100th degree Celsius.
-  return std::round(static_cast<double>(millicelsius) / 10.0) / 100.0;
-}
-
-double device::fahrenheit() const
-{
-  // Convert from millicelsius to Fahrenheit.
-  const double f = static_cast<double>(millicelsius) * 0.0018 + 32.0;
-  // Rounded to 1/100th degree Fahrenheit.
-  return std::round(f * 100.0) / 100.0;
-}
-
-} // namespace
+#define CATCH_CONFIG_MAIN
+#include "find_catch.hpp"

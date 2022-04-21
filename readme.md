@@ -14,7 +14,8 @@ very few features.
 ### Prerequisites
 
 To build thermos from source you need a C++ compiler with support for C++17,
-CMake 3.8 or later.
+CMake 3.8 or later. Additionally, the program uses Catch (C++ Automated Test
+Cases in Headers) to perform some tests.
 
 It also helps to have Git, a distributed version control system, on your build
 system to get the latest source code directly from the Git repository.
@@ -23,14 +24,14 @@ All of that can usually be installed be typing
 
 ```bash
 # on Debian, Ubuntu, etc.
-apt-get install cmake g++ git
+apt-get install catch cmake g++ git
 ```
 
 or
 
 ```bash
 # on Fedora, etc.
-yum install cmake gcc-c++ git
+yum install catch-devel cmake gcc-c++ git
 ```
 
 into a root terminal.
@@ -56,6 +57,10 @@ cd build
 cmake ../
 make -j4
 ```
+
+If you want to run the test suite, too, then there is one more step:
+
+    ctest -V
 
 ## Copyright and Licensing
 

@@ -44,6 +44,12 @@ struct device
    */
   double celsius() const;
 
+  /** \brief Gets the temperature in degrees Fahrenheit, possibly rounded.
+   *
+   * \return Returns the temperature in ° F.
+   */
+  double fahrenheit() const;
+
   std::string type;
   int64_t millicelsius; /**< temperature in millicelsius, i. e. 1/1000th ° C */
 };

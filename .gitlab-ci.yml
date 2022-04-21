@@ -30,7 +30,7 @@ fedora:
   stage: test
   before_script:
     - yum update -y
-    - yum install -y cmake gcc-c++ git pkgconfig
+    - yum install -y catch-devel cmake gcc-c++ git pkgconfig
   script:
     # build
     - export CXX=g++
