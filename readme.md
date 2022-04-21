@@ -21,11 +21,17 @@ system to get the latest source code directly from the Git repository.
 
 All of that can usually be installed be typing
 
-    apt-get install cmake g++ git
+```bash
+# on Debian, Ubuntu, etc.
+apt-get install cmake g++ git
+```
 
 or
 
-    yum install cmake gcc-c++ git
+```bash
+# on Fedora, etc.
+yum install cmake gcc-c++ git
+```
 
 into a root terminal.
 
@@ -44,10 +50,12 @@ That's it, you should now have the current source code on your machine.
 The build process is relatively easy, because CMake does all the preparations.
 Starting in the root directory of the source, you can do the following steps:
 
-    mkdir build
-    cd build
-    cmake ../
-    make -j4
+```bash
+mkdir build
+cd build
+cmake ../
+make -j4
+```
 
 ## Copyright and Licensing
 
