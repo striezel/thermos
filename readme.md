@@ -6,7 +6,7 @@
 
 This repository contains code to read the thermal sensors of a system.
 
-_Note: This code is still in an early stage of development. So far it has only
+_Note:_ This code is still in an early stage of development. So far it has only
 very few features.
 
 ## Building from source
