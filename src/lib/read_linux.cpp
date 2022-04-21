@@ -19,7 +19,7 @@
 */
 
 #include "read_linux.hpp"
-//#if defined(__linux__) || defined(linux)
+#if defined(__linux__) || defined(linux)
 #include <filesystem>
 #include <fstream>
 
@@ -194,4 +194,4 @@ nonstd::expected<std::vector<device>, std::string> read_hwmon()
 
 } // namespace
 
-//#endif // Linux
+#endif // Linux

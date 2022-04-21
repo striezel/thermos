@@ -51,5 +51,7 @@ endif ()
 # Recurse into subdirectory for the executable.
 add_subdirectory (src)
 
-# Recurse into subdirectory for tests.
-add_subdirectory (tests)
+# Recurse into subdirectory for tests, if we aren't building with MSVC.
+if (NOT MSVC)
+  add_subdirectory (tests)
+endif ()
