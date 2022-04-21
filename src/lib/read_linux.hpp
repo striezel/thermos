@@ -21,7 +21,9 @@
 #ifndef THERMOS_READ_LINUX_HPP
 #define THERMOS_READ_LINUX_HPP
 
+#include <string>
 #include <vector>
+#include "../../third-party/nonstd/expected.hpp"
 #include "device.hpp"
 
 #if defined(__linux__) || defined(linux)
@@ -30,24 +32,24 @@ namespace thermos::linux_like
 
 /** \brief Reads all thermal devices.
  *
- * \return Returns a vector containing the device readings.
- *         Returns an empty vector, if no readings were available.
+ * \return Returns a vector containing the device readings, if successful.
+ *         Returns an error message, if no readings were available.
  */
-std::vector<thermos::device> read_all();
+nonstd::expected<std::vector<device>, std::string> read_all();
 
 /** \brief Reads thermal devices from /sys/devices/virtual/thermal/.
  *
  * \return Returns a vector containing the device readings.
- *         Returns an empty vector, if no readings were available.
+ *         Returns an error message, if no readings were available.
  */
-std::vector<thermos::device> read_thermal();
+nonstd::expected<std::vector<device>, std::string> read_thermal();
 
 /** \brief Reads thermal devices from /sys/class/hwmon/.
  *
  * \return Returns a vector containing the device readings.
- *         Returns an empty vector, if no readings were available.
+ *         Returns an error message, if no readings were available.
  */
-std::vector<thermos::device> read_hwmon();
+nonstd::expected<std::vector<device>, std::string> read_hwmon();
 
 } // namespace
 #endif // Linux

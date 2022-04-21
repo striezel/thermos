@@ -24,12 +24,13 @@
 int main()
 {
   const auto devices = thermos::read_all();
-  if (devices.empty())
+  if (!devices.has_value() || devices.value().empty())
   {
-    std::cout << "No temperature readings available!" << std::endl;
+    std::cout << "No temperature readings available!\n"
+              << devices.error() << std::endl;
   }
 
-  for (const auto& dev: devices)
+  for (const auto& dev: devices.value())
   {
     std::cout << "Device '" << dev.type << "': " << dev.celsius() << " °C\n";
   }

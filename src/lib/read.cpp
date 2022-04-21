@@ -18,9 +18,6 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_READ_HPP
-#define THERMOS_READ_HPP
-
 #include "read.hpp"
 #if defined(__linux__) || defined(linux)
   #include "read_linux.hpp"
@@ -29,11 +26,11 @@
 namespace thermos
 {
 
-std::vector<device> read_all()
+nonstd::expected<std::vector<device>, std::string> read_all()
 {
   #if defined(_WIN32) || defined(_WIN64)
     #warning There is no support for Windows OS yet.
-    return {};
+    return nonstd::make_unexpected("There is no support for reading sensor data on Windows yet.");
   #elif defined(__linux__) || defined(linux)
     return thermos::linux_like::read_all();
   #else
@@ -42,5 +39,3 @@ std::vector<device> read_all()
 }
 
 } // namespace
-
-#endif // THERMOS_READ_HPP

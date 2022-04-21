@@ -21,7 +21,9 @@
 #ifndef THERMOS_READ_HPP
 #define THERMOS_READ_HPP
 
+#include <string>
 #include <vector>
+#include "../../third-party/nonstd/expected.hpp"
 #include "device.hpp"
 
 namespace thermos
@@ -30,9 +32,10 @@ namespace thermos
 /** \brief Reads all thermal devices.
  *
  * \return Returns a vector containing the device readings.
- *         Returns an empty vector, if no readings were available.
+ *         Returns a string containing an error message, if no readings were
+ *         available.
  */
-std::vector<device> read_all();
+nonstd::expected<std::vector<device>, std::string> read_all();
 
 } // namespace
 
