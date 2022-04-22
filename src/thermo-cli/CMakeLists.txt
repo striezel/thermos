@@ -7,6 +7,7 @@ set(thermo_cli_sources
     ../lib/device.cpp
     ../lib/read.cpp
     ../lib/read_linux.cpp
+    ../lib/read_windows.cpp
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

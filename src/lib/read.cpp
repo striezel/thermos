@@ -21,6 +21,8 @@
 #include "read.hpp"
 #if defined(__linux__) || defined(linux)
   #include "read_linux.hpp"
+#elif defined(_WIN32) || defined(_WIN64)
+  #include "read_windows.hpp"
 #endif
 
 namespace thermos
@@ -29,6 +31,7 @@ namespace thermos
 nonstd::expected<std::vector<device>, std::string> read_all()
 {
   #if defined(_WIN32) || defined(_WIN64)
+    return thermos::windows::read_all();
     return nonstd::make_unexpected("There is no support for reading sensor data on Windows yet.");
   #elif defined(__linux__) || defined(linux)
     return thermos::linux_like::read_all();

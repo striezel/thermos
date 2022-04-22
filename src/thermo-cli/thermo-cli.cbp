@@ -46,6 +46,8 @@
 		<Unit filename="../lib/read.hpp" />
 		<Unit filename="../lib/read_linux.cpp" />
 		<Unit filename="../lib/read_linux.hpp" />
+		<Unit filename="../lib/read_windows.cpp" />
+		<Unit filename="../lib/read_windows.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>
