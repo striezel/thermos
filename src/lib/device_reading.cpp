@@ -18,25 +18,39 @@
  -------------------------------------------------------------------------------
 */
 
-#include "read.hpp"
-#if defined(__linux__) || defined(linux)
-  #include "read_linux.hpp"
-#elif defined(_WIN32) || defined(_WIN64)
-  #include "read_windows.hpp"
-#endif
+#include "device_reading.hpp"
+#include <cmath>
+#include <limits>
 
 namespace thermos
 {
 
-nonstd::expected<std::vector<device_reading>, std::string> read_all()
+device_reading::device_reading()
+: dev(device()),
+  millicelsius(std::numeric_limits<decltype(millicelsius)>::min()),
+  time(reading_time_t())
 {
-  #if defined(_WIN32) || defined(_WIN64)
-    return thermos::windows::read_all();
-  #elif defined(__linux__) || defined(linux)
-    return thermos::linux_like::read_all();
-  #else
-    #error Unknown or unsupported operating system!
-  #endif
+}
+
+bool device_reading::filled() const
+{
+  return dev.filled()
+      && (millicelsius != std::numeric_limits<decltype(millicelsius)>::min())
+      && (time != reading_time_t());
+}
+
+double device_reading::celsius() const
+{
+  // Rounded to 1/100th degree Celsius.
+  return std::round(static_cast<double>(millicelsius) / 10.0) / 100.0;
+}
+
+double device_reading::fahrenheit() const
+{
+  // Convert from millicelsius to Fahrenheit.
+  const double f = static_cast<double>(millicelsius) * 0.0018 + 32.0;
+  // Rounded to 1/100th degree Fahrenheit.
+  return std::round(f * 100.0) / 100.0;
 }
 
 } // namespace

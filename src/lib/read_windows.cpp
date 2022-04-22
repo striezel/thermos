@@ -40,7 +40,7 @@ std::string sloppy_narrowing(const wchar_t* wc_str)
   return std::string(wide_string.begin(), wide_string.end());
 }
 
-nonstd::expected<std::vector<device>, std::string> read_wmi()
+nonstd::expected<std::vector<device_reading>, std::string> read_wmi()
 {
   // Initialize COM. (Yes, WMI uses COM.)
   HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -200,8 +200,8 @@ nonstd::expected<std::vector<device>, std::string> read_wmi()
         + std::string("Error code is ") + std::to_string(hr) + ".");
     }
 
-    device dev;
-    dev.type = sloppy_narrowing(property.bstrVal);
+    device_reading reading;
+    reading.dev.name = sloppy_narrowing(property.bstrVal);
     VariantClear(&property);
 
     hr = pObject->Get(
@@ -222,11 +222,12 @@ nonstd::expected<std::vector<device>, std::string> read_wmi()
         + std::string("Error code is ") + std::to_string(hr) + ".");
     }
     // Temperature is given in tenths of Kelvins as VT_I4 in lVal.
-    dev.millicelsius = property.lVal * 100 - 273200;
+    reading.millicelsius = property.lVal * 100 - 273200;
     VariantClear(&property);
     pObject->Release();
-    dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(dev.type);
-    result.emplace_back(dev);
+    reading.dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(dev.type);
+    reading.time = std::chrono::system_clock::now();
+    result.emplace_back(reading);
   }
 
   pEnumerator->Release();
@@ -237,7 +238,7 @@ nonstd::expected<std::vector<device>, std::string> read_wmi()
   return result;
 }
 
-nonstd::expected<std::vector<device>, std::string> read_all()
+nonstd::expected<std::vector<device_reading>, std::string> read_all()
 {
   return read_wmi();
 }

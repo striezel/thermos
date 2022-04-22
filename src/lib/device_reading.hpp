@@ -18,18 +18,22 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_DEVICE_HPP
-#define THERMOS_DEVICE_HPP
+#ifndef THERMOS_DEVICE_READING_HPP
+#define THERMOS_DEVICE_READING_HPP
 
-#include <string>
+#include <chrono>
+#include <cstdint>
+#include "device.hpp"
 
 namespace thermos
 {
 
-/** A device (e. g. a thermal sensor) that can return temperature data. */
-struct device
+struct device_reading
 {
-  device();
+  device_reading();
+
+  /// shorthand for time point type
+  using reading_time_t = std::chrono::time_point<std::chrono::system_clock>;
 
   /** \brief Checks whether this instance has valid data.
    *
@@ -38,10 +42,23 @@ struct device
    */
   bool filled() const;
 
-  std::string name;   /**< name of the device */
-  std::string origin; /**< origin / identifier of the device */
+  /** \brief Gets the temperature in degrees Celsius, possibly rounded.
+   *
+   * \return Returns the temperature in ° C.
+   */
+  double celsius() const;
+
+  /** \brief Gets the temperature in degrees Fahrenheit, possibly rounded.
+   *
+   * \return Returns the temperature in ° F.
+   */
+  double fahrenheit() const;
+
+  device dev; /**< device from which the reading was obtained */
+  int64_t millicelsius; /**< temperature in millicelsius, i. e. 1/1000th ° C */
+  reading_time_t time; /**< time of the reading */
 };
 
 } // namespace
 
-#endif // THERMOS_DEVICE_HPP
+#endif // THERMOS_DEVICE_READING_HPP

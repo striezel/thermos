@@ -40,7 +40,10 @@
 		</Compiler>
 		<Unit filename="../../src/lib/device.cpp" />
 		<Unit filename="../../src/lib/device.hpp" />
+		<Unit filename="../../src/lib/device_reading.cpp" />
+		<Unit filename="../../src/lib/device_reading.hpp" />
 		<Unit filename="device.cpp" />
+		<Unit filename="device_reading.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

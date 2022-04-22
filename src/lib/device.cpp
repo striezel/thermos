@@ -19,37 +19,19 @@
 */
 
 #include "device.hpp"
-#include <cmath>
-#include <limits>
 
 namespace thermos
 {
 
 device::device()
-: type(std::string()),
-  millicelsius(std::numeric_limits<decltype(millicelsius)>::min()),
+: name(std::string()),
   origin(std::string())
 {
 }
 
 bool device::filled() const
 {
-  return !type.empty() && (millicelsius != std::numeric_limits<decltype(millicelsius)>::min())
-      && !origin.empty();
-}
-
-double device::celsius() const
-{
-  // Rounded to 1/100th degree Celsius.
-  return std::round(static_cast<double>(millicelsius) / 10.0) / 100.0;
-}
-
-double device::fahrenheit() const
-{
-  // Convert from millicelsius to Fahrenheit.
-  const double f = static_cast<double>(millicelsius) * 0.0018 + 32.0;
-  // Rounded to 1/100th degree Fahrenheit.
-  return std::round(f * 100.0) / 100.0;
+  return !name.empty() && !origin.empty();
 }
 
 } // namespace

@@ -6,7 +6,9 @@ project(component_tests)
 
 set(component_tests_sources
     ../../src/lib/device.cpp
+    ../../src/lib/device_reading.cpp
     device.cpp
+    device_reading.cpp
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

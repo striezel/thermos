@@ -5,6 +5,7 @@ project(thermo-cli)
 
 set(thermo_cli_sources
     ../lib/device.cpp
+    ../lib/device_reading.cpp
     ../lib/read.cpp
     ../lib/read_linux.cpp
     ../lib/read_windows.cpp

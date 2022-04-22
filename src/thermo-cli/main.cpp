@@ -23,19 +23,19 @@
 
 int main()
 {
-  const auto devices = thermos::read_all();
-  if (!devices.has_value() || devices.value().empty())
+  const auto readings = thermos::read_all();
+  if (!readings.has_value() || readings.value().empty())
   {
     std::cout << "No temperature readings available!\n";
-    if (!devices.has_value())
-      std::cout << devices.error() << std::endl;
+    if (!readings.has_value())
+      std::cout << readings.error() << std::endl;
     return 0;
   }
 
-  for (const auto& dev: devices.value())
+  for (const auto& reading: readings.value())
   {
-    std::cout << "Device '" << dev.type << "': " << dev.celsius() << " °C\n"
-              << "  (from " << dev.origin << ")\n";
+    std::cout << "Device '" << reading.dev.name << "': " << reading.celsius() << " °C\n"
+              << "  (from " << reading.dev.origin << ")\n";
   }
 
   return 0;
