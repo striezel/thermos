@@ -62,13 +62,14 @@ nonstd::expected<thermos::device, std::string> read_thermal_device(const std::fi
     std::size_t pos = 0;
     result.millicelsius = std::stoll(maybe_temperature.value(), &pos);
     if (pos < maybe_temperature.value().size())
-      return nonstd::make_unexpected("File " + temperature.string() + " did not contain an integer value.");
+      return nonstd::make_unexpected("File " + temperature.native() + " did not contain an integer value.");
   }
   catch (const std::exception& ex)
   {
 
     return nonstd::make_unexpected(ex.what());
   }
+  result.origin = temperature.native();
 
   return result;
 }
@@ -143,12 +144,13 @@ nonstd::expected<std::vector<device>, std::string> read_hwmon_devices(const std:
       std::size_t pos = 0;
       dev.millicelsius = std::stoll(maybe_temperature.value(), &pos);
       if (pos < maybe_temperature.value().size())
-        return nonstd::make_unexpected("File " + path_mutable.string() + " did not contain an integer value.");
+        return nonstd::make_unexpected("File " + path_mutable.native() + " did not contain an integer value.");
     }
     catch (const std::exception& ex)
     {
       return nonstd::make_unexpected(ex.what());
     }
+    dev.origin = path_mutable.native();
     result.emplace_back(dev);
   }
 

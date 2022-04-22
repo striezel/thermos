@@ -27,13 +27,15 @@ namespace thermos
 
 device::device()
 : type(std::string()),
-  millicelsius(std::numeric_limits<decltype(millicelsius)>::min())
+  millicelsius(std::numeric_limits<decltype(millicelsius)>::min()),
+  origin(std::string())
 {
 }
 
 bool device::filled() const
 {
-  return !type.empty() && (millicelsius != std::numeric_limits<decltype(millicelsius)>::min());
+  return !type.empty() && (millicelsius != std::numeric_limits<decltype(millicelsius)>::min())
+      && !origin.empty();
 }
 
 double device::celsius() const

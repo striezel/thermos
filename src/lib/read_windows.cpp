@@ -225,6 +225,7 @@ nonstd::expected<std::vector<device>, std::string> read_wmi()
     dev.millicelsius = property.lVal * 100 - 273200;
     VariantClear(&property);
     pObject->Release();
+    dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(dev.type);
     result.emplace_back(dev);
   }
 

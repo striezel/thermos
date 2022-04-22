@@ -52,6 +52,7 @@ struct device
 
   std::string type;
   int64_t millicelsius; /**< temperature in millicelsius, i. e. 1/1000th ° C */
+  std::string origin; /**< origin of the reading */
 };
 
 } // namespace

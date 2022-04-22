@@ -34,7 +34,8 @@ int main()
 
   for (const auto& dev: devices.value())
   {
-    std::cout << "Device '" << dev.type << "': " << dev.celsius() << " °C\n";
+    std::cout << "Device '" << dev.type << "': " << dev.celsius() << " °C\n"
+              << "  (from " << dev.origin << ")\n";
   }
 
   return 0;

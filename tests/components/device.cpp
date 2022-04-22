@@ -30,6 +30,7 @@ TEST_CASE("device constructor")
     device dev;
     REQUIRE( dev.type.empty() );
     REQUIRE( dev.millicelsius == std::numeric_limits<int64_t>::min() );
+    REQUIRE( dev.origin.empty() );
   }
 }
 
@@ -49,6 +50,7 @@ TEST_CASE("device::filled()")
     device dev;
     dev.millicelsius = 42000;
     dev.type = "foo";
+    dev.origin = "bar";
 
     REQUIRE( dev.filled() );
   }
@@ -57,13 +59,44 @@ TEST_CASE("device::filled()")
   {
     device dev;
 
-    dev.type = "foo";
-    REQUIRE_FALSE( dev.filled() );
+    SECTION("only type")
+    {
+      dev.type = "foo";
+      REQUIRE_FALSE( dev.filled() );
+    }
 
-    dev.type.clear();
-    dev.millicelsius = 42000;
+    SECTION("only temperature")
+    {
+      dev.millicelsius = 42000;
+      REQUIRE_FALSE( dev.filled() );
+    }
 
-    REQUIRE_FALSE( dev.filled() );
+    SECTION("only origin")
+    {
+      dev.origin = "bar";
+      REQUIRE_FALSE( dev.filled() );
+    }
+
+    SECTION("only type and temperature")
+    {
+      dev.type = "foo";
+      dev.millicelsius = 42000;
+      REQUIRE_FALSE( dev.filled() );
+    }
+
+    SECTION("only type and origin")
+    {
+      dev.type = "foo";
+      dev.origin = "bar";
+      REQUIRE_FALSE( dev.filled() );
+    }
+
+    SECTION("only temperature and origin")
+    {
+      dev.millicelsius = 42000;
+      dev.origin = "bar";
+      REQUIRE_FALSE( dev.filled() );
+    }
   }
 }
 
