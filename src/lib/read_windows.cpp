@@ -165,7 +165,7 @@ nonstd::expected<std::vector<device_reading>, std::string> read_wmi()
   // Get the data from the query.
   IWbemClassObject* pObject = nullptr;
   ULONG uReturn = 0;
-  std::vector<thermos::device> result;
+  std::vector<thermos::device_reading> result;
   while (pEnumerator)
   {
     pObject = nullptr;
@@ -225,7 +225,7 @@ nonstd::expected<std::vector<device_reading>, std::string> read_wmi()
     reading.millicelsius = property.lVal * 100 - 273200;
     VariantClear(&property);
     pObject->Release();
-    reading.dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(dev.type);
+    reading.dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(reading.dev.name);
     reading.time = std::chrono::system_clock::now();
     result.emplace_back(reading);
   }
