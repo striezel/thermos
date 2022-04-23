@@ -62,6 +62,10 @@ If you want to run the test suite, too, then there is one more step:
 
     ctest -V
 
+## History of changes
+
+A changelog is provided as [separate file](./changelog.md).
+
 ## Copyright and Licensing
 
 Copyright 2022  Dirk Stolle

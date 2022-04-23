@@ -40,6 +40,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="../../third-party/nonstd/expected.hpp" />
+		<Unit filename="../ReturnCodes.hpp" />
+		<Unit filename="../Version.hpp" />
 		<Unit filename="../lib/device.cpp" />
 		<Unit filename="../lib/device.hpp" />
 		<Unit filename="../lib/device_reading.cpp" />
@@ -50,6 +52,8 @@
 		<Unit filename="../lib/read_linux.hpp" />
 		<Unit filename="../lib/read_windows.cpp" />
 		<Unit filename="../lib/read_windows.hpp" />
+		<Unit filename="../util/GitInfos.cpp" />
+		<Unit filename="../util/GitInfos.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>

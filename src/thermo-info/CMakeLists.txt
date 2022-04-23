@@ -9,6 +9,7 @@ set(thermo_info_sources
     ../lib/read.cpp
     ../lib/read_linux.cpp
     ../lib/read_windows.cpp
+    ../util/GitInfos.cpp
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -41,9 +42,51 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSIO
   endif ()
 endif ()
 
+# create git-related constants
+# -- get the current commit hash
+execute_process(
+  COMMAND git rev-parse HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_HASH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# -- get the commit date
+execute_process(
+  COMMAND git show -s --format=%ci
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_TIME
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+message("GIT_HASH is ${GIT_HASH}.")
+message("GIT_TIME is ${GIT_TIME}.")
+
+# replace git-related constants in GitInfos.cpp
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../util/GitInfos.template.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/../util/GitInfos.cpp
+               ESCAPE_QUOTES)
+
 # #################### #
 # tests for executable #
 # #################### #
 
 add_test(NAME thermo_info_simply_run
          COMMAND $<TARGET_FILE:thermo-info>)
+
+# add tests for --version and --help parameters
+# default help parameter "--help"
+add_test(NAME thermo_info_help
+         COMMAND $<TARGET_FILE:thermo-info> --help)
+
+# short help parameter with question mark "-?"
+add_test(NAME thermo_info_help_question_mark
+         COMMAND $<TARGET_FILE:thermo-info> -?)
+
+# Windows-style help parameter "/?"
+add_test(NAME thermo_info_help_question_mark_windows
+         COMMAND $<TARGET_FILE:thermo-info> /?)
+
+# parameter to show version information
+add_test(NAME thermo_info_version
+         COMMAND $<TARGET_FILE:thermo-info> --version)
