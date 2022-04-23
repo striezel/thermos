@@ -30,7 +30,8 @@ namespace thermos::storage
 /** \brief Translates a time point to readable format 'YYYY-MM-DD HH:ii:ss'.
  *
  * \param date_time  the time point to transform to string
- * \return Returns the properly transformed datetime.
+ * \return Returns a string representing the time point. It is similar to SQL
+ *         dates, e. g. "2020-05-25 13:37:00" could be a return value.
  *         If transformation fails, then an error message is returned.
  */
 nonstd::expected<std::string, std::string> time_to_string(const device_reading::reading_time_t& date_time);
