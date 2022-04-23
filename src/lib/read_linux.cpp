@@ -22,6 +22,7 @@
 #if defined(__linux__) || defined(linux)
 #include <filesystem>
 #include <fstream>
+#include <regex>
 
 namespace thermos::linux_like
 {
@@ -116,6 +117,7 @@ nonstd::expected<std::vector<device_reading>, std::string> read_hwmon_devices(co
   if (error)
     return nonstd::make_unexpected("Cannot iterate over directory " + device_directory.native() + ".");
 
+  const std::regex label_exp("temp([0-9]+)_label");
   std::vector<thermos::device_reading> result;
   for (const auto& entry: iterator)
   {
@@ -124,8 +126,9 @@ nonstd::expected<std::vector<device_reading>, std::string> read_hwmon_devices(co
       continue;
     }
 
-    const auto fn = entry.path().filename().generic_string();
-    if ((fn.find("temp") != 0) || (fn.find("_label") <= 4))
+    const auto fn = entry.path().filename().native();
+    // Only matching names are allowed, e. g. "temp0_label".
+    if (!std::regex_match(fn, label_exp))
     {
       continue;
     }
