@@ -7,8 +7,12 @@ project(component_tests)
 set(component_tests_sources
     ../../src/lib/device.cpp
     ../../src/lib/device_reading.cpp
+    ../../src/lib/storage/csv.cpp
+    ../../src/lib/storage/utilities.cpp
     device.cpp
     device_reading.cpp
+    storage/csv.cpp
+    storage/utilities.cpp
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

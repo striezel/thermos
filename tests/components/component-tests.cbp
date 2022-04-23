@@ -42,9 +42,17 @@
 		<Unit filename="../../src/lib/device.hpp" />
 		<Unit filename="../../src/lib/device_reading.cpp" />
 		<Unit filename="../../src/lib/device_reading.hpp" />
+		<Unit filename="../../src/lib/storage/csv.cpp" />
+		<Unit filename="../../src/lib/storage/csv.hpp" />
+		<Unit filename="../../src/lib/storage/store.hpp" />
+		<Unit filename="../../src/lib/storage/utilities.cpp" />
+		<Unit filename="../../src/lib/storage/utilities.hpp" />
 		<Unit filename="device.cpp" />
 		<Unit filename="device_reading.cpp" />
+		<Unit filename="find_catch.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="storage/csv.cpp" />
+		<Unit filename="storage/utilities.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
