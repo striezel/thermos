@@ -44,8 +44,9 @@ TEST_CASE("time_to_string function")
       tm.tm_hour = 19;
       tm.tm_min = 8;
       tm.tm_sec = 1;
-      tm.tm_isdst = 1; // daylight saving time
+      tm.tm_isdst = -1; // no info on daylight saving time
       const std::time_t tt = std::mktime(&tm);
+      REQUIRE( tt != static_cast<std::time_t>(-1) );
 
       const auto date_time = std::chrono::system_clock::from_time_t(tt);
       const auto date_time_string = time_to_string(date_time);
@@ -63,8 +64,9 @@ TEST_CASE("time_to_string function")
       tm.tm_hour = 6;
       tm.tm_min = 7;
       tm.tm_sec = 8;
-      tm.tm_isdst = 1; // daylight saving time
+      tm.tm_isdst = -1; // no info on daylight saving time
       const std::time_t tt = std::mktime(&tm);
+      REQUIRE( tt != static_cast<std::time_t>(-1) );
 
       const auto date_time = std::chrono::system_clock::from_time_t(tt);
       const auto date_time_string = time_to_string(date_time);
@@ -82,8 +84,9 @@ TEST_CASE("time_to_string function")
       tm.tm_hour = 19;
       tm.tm_min = 20;
       tm.tm_sec = 35;
-      tm.tm_isdst = 0; // no daylight saving time
+      tm.tm_isdst = -1; // no info on daylight saving time
       const std::time_t tt = std::mktime(&tm);
+      REQUIRE( tt != static_cast<std::time_t>(-1) );
 
       const auto date_time = std::chrono::system_clock::from_time_t(tt);
       const auto date_time_string = time_to_string(date_time);

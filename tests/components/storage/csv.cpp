@@ -22,11 +22,11 @@
 #include <ctime>
 #include <filesystem>
 #include <fstream>
+#include <stdexcept>
 #include "../../../src/lib/storage/csv.hpp"
 
 thermos::device_reading::reading_time_t to_time(const int year, const unsigned short int month, const unsigned short int day,
-                                                const unsigned short int hours, const unsigned short int minutes, const unsigned short int seconds,
-                                                const bool use_dst)
+                                                const unsigned short int hours, const unsigned short int minutes, const unsigned short int seconds)
 {
   std::tm tm{};
   tm.tm_year = year - 1900;
@@ -35,8 +35,13 @@ thermos::device_reading::reading_time_t to_time(const int year, const unsigned s
   tm.tm_hour = hours;
   tm.tm_min = minutes;
   tm.tm_sec = seconds;
-  tm.tm_isdst = use_dst ? 1 : 0;
+  tm.tm_isdst = -1;
   const std::time_t tt = std::mktime(&tm);
+  if (tt == static_cast<std::time_t>(-1))
+  {
+    throw std::runtime_error("std::mktime failed.");
+  }
+
   return std::chrono::system_clock::from_time_t(tt);
 }
 
@@ -52,7 +57,7 @@ TEST_CASE("csv storage")
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
     reading.millicelsius = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17, true);
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
     csv store;
@@ -68,10 +73,10 @@ TEST_CASE("csv storage")
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
     reading.millicelsius = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17, true);
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
     reading.millicelsius = 60000;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21, true);
+    reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-normal.csv";
@@ -105,10 +110,10 @@ TEST_CASE("csv storage")
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
     reading.millicelsius = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17, true);
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
     reading.millicelsius = 60000;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21, true);
+    reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-append-existing.csv";
@@ -124,10 +129,10 @@ TEST_CASE("csv storage")
     reading.dev.name = "bar";
     reading.dev.origin = "somewhere else";
     reading.millicelsius = 43210;
-    reading.time = to_time(2022, 4, 23, 20, 19, 18, true);
+    reading.time = to_time(2022, 4, 23, 20, 19, 18);
     data.push_back(reading);
     reading.millicelsius = 12345;
-    reading.time = to_time(2022, 4, 23, 22, 23, 24, true);
+    reading.time = to_time(2022, 4, 23, 22, 23, 24);
     data.push_back(reading);
 
     const auto opt_append = store.save(data, file_name);
