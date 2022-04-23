@@ -1,9 +1,9 @@
 # We might support earlier versions, too, but try to use a more recent one.
 cmake_minimum_required (VERSION 3.8)
 
-project(thermo-cli)
+project(thermo-info)
 
-set(thermo_cli_sources
+set(thermo_info_sources
     ../lib/device.cpp
     ../lib/device_reading.cpp
     ../lib/read.cpp
@@ -23,21 +23,21 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(thermo-cli ${thermo_cli_sources})
+add_executable(thermo-info ${thermo_info_sources})
 
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0")
-  target_link_libraries(thermo-cli stdc++fs)
+  target_link_libraries(thermo-info stdc++fs)
 endif ()
 
 # Clang before 9.0 needs to link to libc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0")
     # If we are on Clang 7.x, then the filesystem library from GCC is better.
-    target_link_libraries(thermo-cli stdc++fs)
+    target_link_libraries(thermo-info stdc++fs)
   else ()
    # Use Clang's C++ filesystem library, it is recent enough.
-   target_link_libraries(thermo-cli c++fs)
+   target_link_libraries(thermo-info c++fs)
   endif ()
 endif ()
 
@@ -45,5 +45,5 @@ endif ()
 # tests for executable #
 # #################### #
 
-add_test(NAME thermo_cli_simply_run
-         COMMAND $<TARGET_FILE:thermo-cli>)
+add_test(NAME thermo_info_simply_run
+         COMMAND $<TARGET_FILE:thermo-info>)
