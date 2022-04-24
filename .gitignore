@@ -10,6 +10,7 @@ obj/
 
 # build directory
 build/
+build-static/
 b/
 
 # cppcheck results
