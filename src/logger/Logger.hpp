@@ -1,6 +1,6 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the thermos.
+    This file is part of thermos.
     Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,33 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_VERSION_HPP
-#define THERMOS_VERSION_HPP
-
+#include <optional>
 #include <string>
 
 namespace thermos
 {
 
-/** \brief version information */
-const std::string version = "version 0.2.0, 2022-04-24";
+/** \brief Handles the thermal data logging process.
+ */
+class Logger
+{
+  public:
+    /** \brief Creates a new instance.
+     *
+     * \param fileName   path of the file where the data shall be logged.
+     */
+    Logger(const std::string& fileName);
+
+    /** \brief Starts data logging.
+     *
+     * \return Returns an empty optional in case of success.
+     *         Returns an error message, if an error occurred.
+     * \remarks Note that this method currently only returns in the failure
+     *          case. If it is successful, it keeps running indefinitely.
+     */
+    std::optional<std::string> log();
+  private:
+    std::string file_name;
+}; // class
 
 } // namespace
-
-#endif // THERMOS_VERSION_HPP

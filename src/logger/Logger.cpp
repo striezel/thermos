@@ -1,6 +1,6 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the thermos.
+    This file is part of thermos.
     Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,47 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_VERSION_HPP
-#define THERMOS_VERSION_HPP
-
-#include <string>
+#include "Logger.hpp"
+#include <thread>
+#include "../lib/read.hpp"
+#include "../lib/storage/csv.hpp"
 
 namespace thermos
 {
 
-/** \brief version information */
-const std::string version = "version 0.2.0, 2022-04-24";
+Logger::Logger(const std::string& fileName)
+: file_name(fileName)
+{
+}
+
+std::optional<std::string> Logger::log()
+{
+  while (true)
+  {
+    // Retrieve sensor data.
+    const auto readings = read_all();
+    if (!readings.has_value())
+    {
+      return readings.error();
+    }
+    const auto& readings_v = readings.value();
+    if (readings_v.empty())
+    {
+      return "No temperature readings are available.";
+    }
+
+    // Store retrieved data.
+    storage::csv storage;
+    const auto opt = storage.save(readings_v, file_name);
+    if (opt.has_value())
+    {
+      return opt;
+    }
+
+    // Wait before making the next iteration.
+    constexpr auto interval = std::chrono::seconds(300);
+    std::this_thread::sleep_for(interval);
+  }
+}
 
 } // namespace
-
-#endif // THERMOS_VERSION_HPP

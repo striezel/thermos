@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="thermo-logger" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/thermo-logger" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/thermo-logger" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wnon-virtual-dtor" />
+			<Add option="-Weffc++" />
+			<Add option="-Wzero-as-null-pointer-constant" />
+			<Add option="-Wmain" />
+			<Add option="-pedantic-errors" />
+			<Add option="-pedantic" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-std=gnu++17" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="../../third-party/nonstd/expected.hpp" />
+		<Unit filename="../ReturnCodes.hpp" />
+		<Unit filename="../Version.hpp" />
+		<Unit filename="../lib/device.cpp" />
+		<Unit filename="../lib/device.hpp" />
+		<Unit filename="../lib/device_reading.cpp" />
+		<Unit filename="../lib/device_reading.hpp" />
+		<Unit filename="../lib/read.cpp" />
+		<Unit filename="../lib/read.hpp" />
+		<Unit filename="../lib/read_linux.cpp" />
+		<Unit filename="../lib/read_linux.hpp" />
+		<Unit filename="../lib/read_windows.cpp" />
+		<Unit filename="../lib/read_windows.hpp" />
+		<Unit filename="../lib/storage/csv.cpp" />
+		<Unit filename="../lib/storage/csv.hpp" />
+		<Unit filename="../lib/storage/store.hpp" />
+		<Unit filename="../lib/storage/utilities.cpp" />
+		<Unit filename="../lib/storage/utilities.hpp" />
+		<Unit filename="../util/GitInfos.cpp" />
+		<Unit filename="../util/GitInfos.hpp" />
+		<Unit filename="Logger.cpp" />
+		<Unit filename="Logger.hpp" />
+		<Unit filename="main.cpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
