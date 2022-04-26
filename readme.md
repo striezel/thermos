@@ -14,8 +14,8 @@ very few features.
 ### Prerequisites
 
 To build thermos from source you need a C++ compiler with support for C++17,
-CMake 3.8 or later. Additionally, the program uses Catch (C++ Automated Test
-Cases in Headers) to perform some tests.
+CMake 3.8 or later, and the SQLite 3 library. Additionally, the program uses
+Catch (C++ Automated Test Cases in Headers) to perform some tests.
 
 It also helps to have Git, a distributed version control system, on your build
 system to get the latest source code directly from the Git repository.
@@ -24,14 +24,14 @@ All of that can usually be installed be typing
 
 ```bash
 # on Debian, Ubuntu, etc.
-apt-get install catch cmake g++ git
+apt-get install catch cmake g++ git libsqlite3-dev
 ```
 
 or
 
 ```bash
 # on Fedora, etc.
-yum install catch-devel cmake gcc-c++ git
+yum install catch-devel cmake gcc-c++ git sqlite-devel
 ```
 
 into a root terminal.

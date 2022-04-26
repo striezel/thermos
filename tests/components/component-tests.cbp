@@ -38,19 +38,28 @@
 			<Add option="-std=c++17" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add library="sqlite3" />
+		</Linker>
 		<Unit filename="../../src/lib/device.cpp" />
 		<Unit filename="../../src/lib/device.hpp" />
 		<Unit filename="../../src/lib/device_reading.cpp" />
 		<Unit filename="../../src/lib/device_reading.hpp" />
+		<Unit filename="../../src/lib/sqlite/database.cpp" />
+		<Unit filename="../../src/lib/sqlite/database.hpp" />
+		<Unit filename="../../src/lib/sqlite/statement.cpp" />
+		<Unit filename="../../src/lib/sqlite/statement.hpp" />
 		<Unit filename="../../src/lib/storage/csv.cpp" />
 		<Unit filename="../../src/lib/storage/csv.hpp" />
 		<Unit filename="../../src/lib/storage/store.hpp" />
 		<Unit filename="../../src/lib/storage/utilities.cpp" />
 		<Unit filename="../../src/lib/storage/utilities.hpp" />
+		<Unit filename="../../third-party/nonstd/expected.hpp" />
 		<Unit filename="device.cpp" />
 		<Unit filename="device_reading.cpp" />
 		<Unit filename="find_catch.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="sqlite/database.cpp" />
 		<Unit filename="storage/csv.cpp" />
 		<Unit filename="storage/utilities.cpp" />
 		<Extensions>
