@@ -94,3 +94,67 @@ TEST_CASE("sqlite::database::prepare")
     REQUIRE_FALSE( stmt.value().bind(2, "baz") );
   }
 }
+
+TEST_CASE("sqlite::database::last_insert_id")
+{
+  using namespace thermos::sqlite;
+
+  SECTION("id is zero when no insert has happened")
+  {
+    auto possible_db = database::open(":memory:");
+    REQUIRE( possible_db.has_value() );
+    auto& db = possible_db.value();
+
+    REQUIRE( db.last_insert_id() == 0 );
+  }
+
+  SECTION("id changes after every insert")
+  {
+    auto possible_db = database::open(":memory:");
+    REQUIRE( possible_db.has_value() );
+    auto& db = possible_db.value();
+
+    // Create table.
+    REQUIRE( db.exec("CREATE TABLE foo (fooId INTEGER PRIMARY KEY NOT NULL, blah TEXT NOT NULL);") );
+    // And insert a new record.
+    REQUIRE( db.exec("INSERT INTO foo (fooId, blah) VALUES (42, 'some text');") );
+    const auto first_id = db.last_insert_id();
+    REQUIRE( first_id != 0 );
+    REQUIRE( first_id == 42 );
+    // Insert another record.
+    REQUIRE( db.exec("INSERT INTO foo (blah) VALUES ('some other text');") );
+    const auto second_id = db.last_insert_id();
+    REQUIRE( second_id != 0 );
+    REQUIRE( second_id != first_id );
+    REQUIRE( second_id > first_id );
+  }
+}
+
+TEST_CASE("sqlite::database::table_exists")
+{
+  using namespace thermos::sqlite;
+
+  SECTION("existence checks")
+  {
+    auto possible_db = database::open(":memory:");
+    REQUIRE( possible_db.has_value() );
+    auto& db = possible_db.value();
+
+    // Initially, no table exists.
+    auto exists = db.table_exists("foo");
+    REQUIRE( exists.has_value() );
+    REQUIRE_FALSE( exists.value() );
+
+    // Create table.
+    REQUIRE( db.exec("CREATE TABLE foo (fooId INTEGER NOT NULL);") );
+    // Table should exist now.
+    exists = db.table_exists("foo");
+    REQUIRE( exists.has_value() );
+    REQUIRE( exists.value() );
+
+    // Other table should not exist.
+    exists = db.table_exists("blah");
+    REQUIRE( exists.has_value() );
+    REQUIRE_FALSE( exists.value() );
+  }
+}

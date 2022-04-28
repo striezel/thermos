@@ -86,4 +86,35 @@ nonstd::expected<statement, std::string> database::prepare(const std::string& sq
   return statement({ stmt, sqlite3_finalize });
 }
 
+int64_t database::last_insert_id() const
+{
+  return sqlite3_last_insert_rowid(handle.get());
+}
+
+nonstd::expected<bool, std::string> database::table_exists(const std::string& table)
+{
+  auto maybe_stmt = prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name = @tn;");
+  if (!maybe_stmt.has_value())
+  {
+    return nonstd::make_unexpected(maybe_stmt.error());
+  }
+  auto& stmt = maybe_stmt.value();
+  if (!stmt.bind(1, table))
+  {
+    return nonstd::make_unexpected("Failed to bind parameter to prepared statement.");
+  }
+  const auto rc = sqlite3_step(stmt.ptr());
+  if (rc == SQLITE_ROW)
+  {
+    return sqlite3_column_int(stmt.ptr(), 0) > 0;
+  }
+
+  std::string message{"Error while retrieving query result."};
+  if (rc == SQLITE_ERROR)
+  {
+    message.append(sqlite3_errmsg(handle.get()));
+  }
+  return nonstd::make_unexpected(message);
+}
+
 } // namespace

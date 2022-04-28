@@ -51,6 +51,8 @@
 		<Unit filename="../../src/lib/sqlite/statement.hpp" />
 		<Unit filename="../../src/lib/storage/csv.cpp" />
 		<Unit filename="../../src/lib/storage/csv.hpp" />
+		<Unit filename="../../src/lib/storage/db.cpp" />
+		<Unit filename="../../src/lib/storage/db.hpp" />
 		<Unit filename="../../src/lib/storage/store.hpp" />
 		<Unit filename="../../src/lib/storage/utilities.cpp" />
 		<Unit filename="../../src/lib/storage/utilities.hpp" />
@@ -60,7 +62,11 @@
 		<Unit filename="find_catch.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="sqlite/database.cpp" />
+		<Unit filename="sqlite/statement.cpp" />
 		<Unit filename="storage/csv.cpp" />
+		<Unit filename="storage/db.cpp" />
+		<Unit filename="storage/to_time.cpp" />
+		<Unit filename="storage/to_time.hpp" />
 		<Unit filename="storage/utilities.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of thermos, with earlier code from botvinnik Matrix bot.
-    Copyright (C) 2020, 2022  Dirk Stolle
+    This file is part of the test suite for thermos.
+    Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,29 +18,20 @@
  -------------------------------------------------------------------------------
 */
 
-#include "statement.hpp"
+#include "../find_catch.hpp"
+#include "../../../src/lib/sqlite/database.hpp"
+#include "../../../src/lib/sqlite/statement.hpp"
 
-namespace thermos::sqlite
+TEST_CASE("sqlite::database::ptr")
 {
+  using namespace thermos::sqlite;
 
-statement::statement(std::unique_ptr<sqlite3_stmt, decltype(&sqlite3_finalize)>&& s)
-: stmt(std::move(s))
-{
+  SECTION("ptr() does not return nullptr")
+  {
+    auto db = database::open(":memory:");
+    auto stmt = db.value().prepare("SELECT 1+2 AS sum WHERE sum=@blah;");
+    REQUIRE( stmt.has_value() );
+
+    REQUIRE_FALSE( stmt.value().ptr() == nullptr );
+  }
 }
-
-bool statement::bind(const int index, const std::string& value)
-{
-  return sqlite3_bind_text(stmt.get(), index, value.c_str(), static_cast<int>(value.size()), SQLITE_TRANSIENT) == SQLITE_OK;
-}
-
-bool statement::bind(const int index, const int64_t value)
-{
-  return sqlite3_bind_int64(stmt.get(), index, value) == SQLITE_OK;
-}
-
-sqlite3_stmt* statement::ptr() const
-{
-  return stmt.get();
-}
-
-} // namespace

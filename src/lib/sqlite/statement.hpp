@@ -50,6 +50,12 @@ class statement
      * \return Returns whether the binding was successful.
      */
     bool bind(const int index, const int64_t value);
+
+    /** \brief Gets the internal pointer.
+     *
+     * \return Returns the internal pointer for the prepared statement.
+     */
+    sqlite3_stmt* ptr() const;
   private:
     friend database;
     statement(std::unique_ptr<sqlite3_stmt, decltype(&sqlite3_finalize)>&& s);

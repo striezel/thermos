@@ -67,6 +67,21 @@ class database
      *         If no statement could be prepared, an error message is returned.
      */
     nonstd::expected<statement, std::string> prepare(const std::string& sqlStmt);
+
+    /** \brief Gets the row id of the latest successful insert operation.
+     *
+     * \return Returns the row id of the latest successful insert operation.
+     *         Returns zero, if no insert operation took place yet.
+     */
+    int64_t last_insert_id() const;
+
+    /** \brief Checks whether a certain table exists.
+     *
+     * \param table   name of the table
+     * \return Returns whether the table exists.
+     *         If an error occurred, an message is returned instead.
+     */
+    nonstd::expected<bool, std::string> table_exists(const std::string& table);
   private:
     database(std::unique_ptr<sqlite3, decltype(&sqlite3_close)>&& the_handle);
 

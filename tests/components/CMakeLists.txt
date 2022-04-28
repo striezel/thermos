@@ -10,11 +10,15 @@ set(component_tests_sources
     ../../src/lib/sqlite/database.cpp
     ../../src/lib/sqlite/statement.cpp
     ../../src/lib/storage/csv.cpp
+    ../../src/lib/storage/db.cpp
     ../../src/lib/storage/utilities.cpp
     device.cpp
     device_reading.cpp
     sqlite/database.cpp
+    sqlite/statement.cpp
     storage/csv.cpp
+    storage/db.cpp
+    storage/to_time.cpp
     storage/utilities.cpp
     main.cpp)
 

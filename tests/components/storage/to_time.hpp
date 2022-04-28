@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of thermos, with earlier code from botvinnik Matrix bot.
-    Copyright (C) 2020, 2022  Dirk Stolle
+    This file is part of the test suite for thermos.
+    Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,29 +18,12 @@
  -------------------------------------------------------------------------------
 */
 
-#include "statement.hpp"
+#ifndef THERMOS_TEST_TO_TIME_HPP
+#define THERMOS_TEST_TO_TIME_HPP
 
-namespace thermos::sqlite
-{
+#include "../../../src/lib/device_reading.hpp"
 
-statement::statement(std::unique_ptr<sqlite3_stmt, decltype(&sqlite3_finalize)>&& s)
-: stmt(std::move(s))
-{
-}
+thermos::device_reading::reading_time_t to_time(const int year, const unsigned short int month, const unsigned short int day,
+                                                const unsigned short int hours, const unsigned short int minutes, const unsigned short int seconds);
 
-bool statement::bind(const int index, const std::string& value)
-{
-  return sqlite3_bind_text(stmt.get(), index, value.c_str(), static_cast<int>(value.size()), SQLITE_TRANSIENT) == SQLITE_OK;
-}
-
-bool statement::bind(const int index, const int64_t value)
-{
-  return sqlite3_bind_int64(stmt.get(), index, value) == SQLITE_OK;
-}
-
-sqlite3_stmt* statement::ptr() const
-{
-  return stmt.get();
-}
-
-} // namespace
+#endif // THERMOS_TEST_TO_TIME_HPP

@@ -19,31 +19,10 @@
 */
 
 #include "../find_catch.hpp"
-#include <ctime>
 #include <filesystem>
 #include <fstream>
-#include <stdexcept>
 #include "../../../src/lib/storage/csv.hpp"
-
-thermos::device_reading::reading_time_t to_time(const int year, const unsigned short int month, const unsigned short int day,
-                                                const unsigned short int hours, const unsigned short int minutes, const unsigned short int seconds)
-{
-  std::tm tm{};
-  tm.tm_year = year - 1900;
-  tm.tm_mon = month - 1;
-  tm.tm_mday = day;
-  tm.tm_hour = hours;
-  tm.tm_min = minutes;
-  tm.tm_sec = seconds;
-  tm.tm_isdst = -1;
-  const std::time_t tt = std::mktime(&tm);
-  if (tt == static_cast<std::time_t>(-1))
-  {
-    throw std::runtime_error("std::mktime failed.");
-  }
-
-  return std::chrono::system_clock::from_time_t(tt);
-}
+#include "to_time.hpp"
 
 TEST_CASE("csv storage")
 {
