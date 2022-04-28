@@ -40,7 +40,7 @@ TEST_CASE("csv storage")
     data.push_back(reading);
 
     csv store;
-    const auto opt = store.save(data, "/path/ma-not/exist/for-real.csv");
+    const auto opt = store.save(data, "/path/may-not/exist/for-real.csv");
     REQUIRE( opt.has_value() );
     REQUIRE( opt.value().find("Failed to create or open file") != std::string::npos );
   }
