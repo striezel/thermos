@@ -30,7 +30,7 @@ constexpr thermos::storage::type defaultFileType = thermos::storage::type::db;
 void showVersion()
 {
   thermos::GitInfos info;
-  std::cout << "thermo-logger, " << thermos::version << "\n"
+  std::cout << "thermos-logger, " << thermos::version << "\n"
             << "\n"
             << "Version control commit: " << info.commit() << "\n"
             << "Version control date:   " << info.date() << std::endl;
@@ -40,7 +40,7 @@ void showHelp()
 {
   using namespace thermos::storage;
 
-  std::cout << "thermo-logger [OPTIONS]\n"
+  std::cout << "thermos-logger [OPTIONS]\n"
             << "\n"
             << "Logs thermal sensor data to a CSV or SQLite 3 file.\n"
             << "\n"
@@ -152,7 +152,7 @@ int main(int argc, char** argv)
   {
     std::cerr << "Error: No path for the log file has been specified.\n"
               << "Use the --file parameter to specify the log file destination,"
-              << " e. g. as in\n\n\tthermo-logger --file data.csv\n\n"
+              << " e. g. as in\n\n\tthermos-logger --file data.csv\n\n"
               << "to log the data to the file data.csv in the current directory."
               << std::endl;
     return thermos::rcInvalidParameter;

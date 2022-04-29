@@ -4,7 +4,9 @@
 
 `thermo-info` is renamed to `thermos-info`.
 
-`thermo-logger` can now alternatively write the logged data into a SQLite 3
+`thermo-logger` is renamed to `thermos-logger`.
+
+`thermos-logger` can now alternatively write the logged data into a SQLite 3
 database. The file format can be set by the new `--type` parameter. While
 `--type csv` still writes data to a CSV file, specifying '--type db` will cause
 the program to write the data as SQLite 3 database instead.

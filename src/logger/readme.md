@@ -1,12 +1,12 @@
-# thermo-logger
+# thermos-logger
 
-`thermo-logger` is a command-line program that continuously logs the thermal
+`thermos-logger` is a command-line program that continuously logs the thermal
 sensor data to a CSV file or a SQLite 3 database.
 
 ## Usage
 
 ```
-thermo-logger [OPTIONS]
+thermos-logger [OPTIONS]
 
 Logs thermal sensor data to a CSV or SQLite 3 file.
 

@@ -1,9 +1,9 @@
 # We might support earlier versions, too, but try to use a more recent one.
 cmake_minimum_required (VERSION 3.8)
 
-project(thermo-logger)
+project(thermos-logger)
 
-set(thermo_logger_sources
+set(thermos_logger_sources
     ../lib/device.cpp
     ../lib/device_reading.cpp
     ../lib/read.cpp
@@ -32,7 +32,7 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(thermo-logger ${thermo_logger_sources})
+add_executable(thermos-logger ${thermos_logger_sources})
 
 # find sqlite3 library
 if (CMAKE_VERSION VERSION_LESS "3.14.0")
@@ -43,24 +43,24 @@ endif ()
 find_package (SQLite3)
 if (SQLite3_FOUND)
   include_directories(${SQLite3_INCLUDE_DIRS})
-  target_link_libraries (thermo-logger ${SQLite3_LIBRARIES})
+  target_link_libraries (thermos-logger ${SQLite3_LIBRARIES})
 else ()
   message ( FATAL_ERROR "SQLite3 was not found!" )
 endif (SQLite3_FOUND)
 
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0")
-  target_link_libraries(thermo-logger stdc++fs)
+  target_link_libraries(thermos-logger stdc++fs)
 endif ()
 
 # Clang before 9.0 needs to link to libc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0")
     # If we are on Clang 7.x, then the filesystem library from GCC is better.
-    target_link_libraries(thermo-logger stdc++fs)
+    target_link_libraries(thermos-logger stdc++fs)
   else ()
    # Use Clang's C++ filesystem library, it is recent enough.
-   target_link_libraries(thermo-logger c++fs)
+   target_link_libraries(thermos-logger c++fs)
   endif ()
 endif ()
 
@@ -95,17 +95,17 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../util/GitInfos.template.cpp
 
 # add tests for --version and --help parameters
 # default help parameter "--help"
-add_test(NAME thermo_logger_help
-         COMMAND $<TARGET_FILE:thermo-logger> --help)
+add_test(NAME thermos_logger_help
+         COMMAND $<TARGET_FILE:thermos-logger> --help)
 
 # short help parameter with question mark "-?"
-add_test(NAME thermo_logger_help_question_mark
-         COMMAND $<TARGET_FILE:thermo-logger> -?)
+add_test(NAME thermos_logger_help_question_mark
+         COMMAND $<TARGET_FILE:thermos-logger> -?)
 
 # Windows-style help parameter "/?"
-add_test(NAME thermo_logger_help_question_mark_windows
-         COMMAND $<TARGET_FILE:thermo-logger> /?)
+add_test(NAME thermos_logger_help_question_mark_windows
+         COMMAND $<TARGET_FILE:thermos-logger> /?)
 
 # parameter to show version information
-add_test(NAME thermo_logger_version
-         COMMAND $<TARGET_FILE:thermo-logger> --version)
+add_test(NAME thermos_logger_version
+         COMMAND $<TARGET_FILE:thermos-logger> --version)
