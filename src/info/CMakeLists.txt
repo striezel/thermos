@@ -1,9 +1,9 @@
 # We might support earlier versions, too, but try to use a more recent one.
 cmake_minimum_required (VERSION 3.8)
 
-project(thermo-info)
+project(thermos-info)
 
-set(thermo_info_sources
+set(thermos_info_sources
     ../lib/device.cpp
     ../lib/device_reading.cpp
     ../lib/read.cpp
@@ -24,21 +24,21 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(thermo-info ${thermo_info_sources})
+add_executable(thermos-info ${thermos_info_sources})
 
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0")
-  target_link_libraries(thermo-info stdc++fs)
+  target_link_libraries(thermos-info stdc++fs)
 endif ()
 
 # Clang before 9.0 needs to link to libc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0")
     # If we are on Clang 7.x, then the filesystem library from GCC is better.
-    target_link_libraries(thermo-info stdc++fs)
+    target_link_libraries(thermos-info stdc++fs)
   else ()
    # Use Clang's C++ filesystem library, it is recent enough.
-   target_link_libraries(thermo-info c++fs)
+   target_link_libraries(thermos-info c++fs)
   endif ()
 endif ()
 
@@ -71,22 +71,22 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../util/GitInfos.template.cpp
 # tests for executable #
 # #################### #
 
-add_test(NAME thermo_info_simply_run
-         COMMAND $<TARGET_FILE:thermo-info>)
+add_test(NAME thermos_info_simply_run
+         COMMAND $<TARGET_FILE:thermos-info>)
 
 # add tests for --version and --help parameters
 # default help parameter "--help"
-add_test(NAME thermo_info_help
-         COMMAND $<TARGET_FILE:thermo-info> --help)
+add_test(NAME thermos_info_help
+         COMMAND $<TARGET_FILE:thermos-info> --help)
 
 # short help parameter with question mark "-?"
-add_test(NAME thermo_info_help_question_mark
-         COMMAND $<TARGET_FILE:thermo-info> -?)
+add_test(NAME thermos_info_help_question_mark
+         COMMAND $<TARGET_FILE:thermos-info> -?)
 
 # Windows-style help parameter "/?"
-add_test(NAME thermo_info_help_question_mark_windows
-         COMMAND $<TARGET_FILE:thermo-info> /?)
+add_test(NAME thermos_info_help_question_mark_windows
+         COMMAND $<TARGET_FILE:thermos-info> /?)
 
 # parameter to show version information
-add_test(NAME thermo_info_version
-         COMMAND $<TARGET_FILE:thermo-info> --version)
+add_test(NAME thermos_info_version
+         COMMAND $<TARGET_FILE:thermos-info> --version)

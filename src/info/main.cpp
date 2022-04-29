@@ -27,7 +27,7 @@
 void showVersion()
 {
   thermos::GitInfos info;
-  std::cout << "thermo-info, " << thermos::version << "\n"
+  std::cout << "thermos-info, " << thermos::version << "\n"
             << "\n"
             << "Version control commit: " << info.commit() << "\n"
             << "Version control date:   " << info.date() << std::endl;
@@ -35,7 +35,7 @@ void showVersion()
 
 void showHelp()
 {
-  std::cout << "thermo-info [OPTIONS]\n"
+  std::cout << "thermos-info [OPTIONS]\n"
             << "\n"
             << "Reads and displays thermal sensor data.\n"
             << "\n"

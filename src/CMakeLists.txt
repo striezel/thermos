@@ -2,7 +2,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Recurse into subdirectory for the info executable.
-add_subdirectory (thermo-info)
+add_subdirectory (info)
 
 # Recurse into subdirectory for the logger executable.
 add_subdirectory (logger)

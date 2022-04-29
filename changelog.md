@@ -2,6 +2,8 @@
 
 ## Version 0.3.0-pre (2022-04-29)
 
+`thermo-info` is renamed to `thermos-info`.
+
 `thermo-logger` can now alternatively write the logged data into a SQLite 3
 database. The file format can be set by the new `--type` parameter. While
 `--type csv` still writes data to a CSV file, specifying '--type db` will cause

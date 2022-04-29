@@ -1,12 +1,12 @@
-# thermo-info
+# thermos-info
 
-`thermo-info` is a command-line program that show the current thermal sensor
+`thermos-info` is a command-line program that show the current thermal sensor
 data.
 
 ## Usage
 
 ```
-thermo-info [OPTIONS]
+thermos-info [OPTIONS]
 
 Reads and displays thermal sensor data.
 
