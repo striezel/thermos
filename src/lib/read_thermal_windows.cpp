@@ -18,14 +18,14 @@
  -------------------------------------------------------------------------------
 */
 
-#include "read_windows.hpp"
+#include "read_thermal_windows.hpp"
 #if defined(_WIN32) || defined(_WIN64)
 #define _WIN32_DCOM
 #include <comdef.h>
 #include <wbemidl.h>
 #pragma comment(lib, "wbemuuid.lib")
 
-namespace thermos::windows
+namespace thermos::windows::thermal
 {
 
 std::string sloppy_narrowing(const wchar_t* wc_str)

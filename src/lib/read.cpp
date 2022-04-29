@@ -20,9 +20,9 @@
 
 #include "read.hpp"
 #if defined(__linux__) || defined(linux)
-  #include "read_linux.hpp"
+  #include "read_thermal_linux.hpp"
 #elif defined(_WIN32) || defined(_WIN64)
-  #include "read_windows.hpp"
+  #include "read_thermal_windows.hpp"
 #endif
 
 namespace thermos
@@ -31,9 +31,9 @@ namespace thermos
 nonstd::expected<std::vector<device_reading>, std::string> read_all()
 {
   #if defined(_WIN32) || defined(_WIN64)
-    return thermos::windows::read_all();
+    return thermos::windows::thermal::read_all();
   #elif defined(__linux__) || defined(linux)
-    return thermos::linux_like::read_all();
+    return thermos::linux_like::thermal::read_all();
   #else
     #error Unknown or unsupported operating system!
   #endif

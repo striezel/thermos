@@ -18,13 +18,13 @@
  -------------------------------------------------------------------------------
 */
 
-#include "read_linux.hpp"
+#include "read_thermal_linux.hpp"
 #if defined(__linux__) || defined(linux)
 #include <filesystem>
 #include <fstream>
 #include <regex>
 
-namespace thermos::linux_like
+namespace thermos::linux_like::thermal
 {
 
 nonstd::expected<std::string, std::string> first_line(const std::filesystem::path& path)

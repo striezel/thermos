@@ -52,10 +52,10 @@
 		<Unit filename="../lib/device_reading.hpp" />
 		<Unit filename="../lib/read.cpp" />
 		<Unit filename="../lib/read.hpp" />
-		<Unit filename="../lib/read_linux.cpp" />
-		<Unit filename="../lib/read_linux.hpp" />
-		<Unit filename="../lib/read_windows.cpp" />
-		<Unit filename="../lib/read_windows.hpp" />
+		<Unit filename="../lib/read_thermal_linux.cpp" />
+		<Unit filename="../lib/read_thermal_linux.hpp" />
+		<Unit filename="../lib/read_thermal_windows.cpp" />
+		<Unit filename="../lib/read_thermal_windows.hpp" />
 		<Unit filename="../lib/sqlite/database.cpp" />
 		<Unit filename="../lib/sqlite/database.hpp" />
 		<Unit filename="../lib/sqlite/statement.cpp" />
