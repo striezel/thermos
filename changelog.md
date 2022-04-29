@@ -1,6 +1,6 @@
 # Version history of thermos
 
-## Version 0.3.0-pre (2022-04-29)
+## Version 0.3.0 (2022-04-29)
 
 `thermo-info` is renamed to `thermos-info`.
 
