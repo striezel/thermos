@@ -11,6 +11,8 @@ set(component_tests_sources
     ../../src/lib/sqlite/statement.cpp
     ../../src/lib/storage/csv.cpp
     ../../src/lib/storage/db.cpp
+    ../../src/lib/storage/factory.cpp
+    ../../src/lib/storage/type.cpp
     ../../src/lib/storage/utilities.cpp
     device.cpp
     device_reading.cpp
@@ -18,7 +20,9 @@ set(component_tests_sources
     sqlite/statement.cpp
     storage/csv.cpp
     storage/db.cpp
+    storage/factory.cpp
     storage/to_time.cpp
+    storage/type.cpp
     storage/utilities.cpp
     main.cpp)
 

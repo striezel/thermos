@@ -19,10 +19,13 @@
 */
 
 #include <iostream>
+#include "../lib/storage/type.hpp"
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
 #include "../Version.hpp"
 #include "Logger.hpp"
+
+constexpr thermos::storage::type defaultFileType = thermos::storage::type::db;
 
 void showVersion()
 {
@@ -35,20 +38,32 @@ void showVersion()
 
 void showHelp()
 {
+  using namespace thermos::storage;
+
   std::cout << "thermo-logger [OPTIONS]\n"
             << "\n"
-            << "Logs thermal sensor data to a CSV file.\n"
+            << "Logs thermal sensor data to a CSV or SQLite 3 file.\n"
             << "\n"
             << "options:\n"
             << "  -? | --help            - Shows this help message.\n"
             << "  -v | --version         - Shows version information.\n"
             << "  -f FILE | --file FILE  - Sets the file name of the log file to use during the\n"
-            << "                           program run.\n";
+            << "                           program run.\n"
+            << "  -t TYPE | --type TYPE  - Sets the file type of the log file to use during the\n"
+            << "                           program run. Allowed file types are:\n"
+            << "                               " << type::csv << "\n"
+            << "                               " << type::db << "\n"
+            << "                           If the type is '" << type::csv << "', then the readings are stored\n"
+            << "                           as character-separated values (CSV). If the type is\n"
+            << "                           '" << type::db << "', then the readings are stored in as SQLite 3\n"
+            << "                           database.\n"
+            << "                           If no type is given, then '" << defaultFileType << "' is assumed.\n";
 }
 
 int main(int argc, char** argv)
 {
   std::string logFile;
+  std::optional<thermos::storage::type> fileType = std::nullopt;
 
   if ((argc > 1) && (argv != nullptr))
   {
@@ -92,6 +107,37 @@ int main(int argc, char** argv)
           return thermos::rcInvalidParameter;
         }
       } // if log file
+      else if ((param == "--type") || (param == "-t"))
+      {
+        if (fileType.has_value())
+        {
+          std::cerr << "Error: File type was already set to "
+                    << fileType.value() << "!" << std::endl;
+          return thermos::rcInvalidParameter;
+        }
+        // enough parameters?
+        if ((i+1 < argc) && (argv[i+1] != nullptr))
+        {
+          fileType = thermos::storage::from_string(std::string(argv[i+1]));
+          if (!fileType.has_value())
+          {
+            std::cerr << "Error: '" << std::string(argv[i+1]) << "' is not a "
+                      << "valid file type.\nAllowed types are:\n"
+                      << "\t" << thermos::storage::type::csv
+                      << "\n\t" << thermos::storage::type::db
+                      << "\nPlease use one of them.\n";
+            return thermos::rcInvalidParameter;
+          }
+          // Skip next parameter, because it's already used as file path.
+          ++i;
+        }
+        else
+        {
+          std::cerr << "Error: You have to enter a file type after \""
+                    << param <<"\"." << std::endl;
+          return thermos::rcInvalidParameter;
+        }
+      } // if file type
       else
       {
         std::cerr << "Error: Unknown parameter " << param << "!\n"
@@ -112,7 +158,12 @@ int main(int argc, char** argv)
     return thermos::rcInvalidParameter;
   }
 
-  thermos::Logger logger(logFile);
+  if (!fileType.has_value())
+  {
+    fileType = defaultFileType;
+  }
+
+  thermos::Logger logger(logFile, fileType.value());
   const auto opt = logger.log();
   if (opt.has_value())
   {

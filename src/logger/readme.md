@@ -1,20 +1,29 @@
 # thermo-logger
 
 `thermo-logger` is a command-line program that continuously logs the thermal
-sensor data to a file.
+sensor data to a CSV file or a SQLite 3 database.
 
 ## Usage
 
 ```
 thermo-logger [OPTIONS]
 
-Logs thermal sensor data to a CSV file.
+Logs thermal sensor data to a CSV or SQLite 3 file.
 
 options:
   -? | --help            - Shows this help message.
   -v | --version         - Shows version information.
   -f FILE | --file FILE  - Sets the file name of the log file to use during the
-                           the program run.
+                           program run.
+  -t TYPE | --type TYPE  - Sets the file type of the log file to use during the
+                           program run. Allowed file types are:
+                               csv
+                               db
+                           If the type is 'csv', then the readings are stored
+                           as character-separated values (CSV). If the type is
+                           'db', then the readings are stored in as SQLite 3
+                           database.
+                           If no type is given, then 'db' is assumed.
 ```
 
 Once started the program runs indefinitely and logs new data every five minutes.

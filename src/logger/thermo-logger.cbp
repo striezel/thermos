@@ -40,6 +40,9 @@
 			<Add option="-std=gnu++17" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add library="sqlite3" />
+		</Linker>
 		<Unit filename="../../third-party/nonstd/expected.hpp" />
 		<Unit filename="../ReturnCodes.hpp" />
 		<Unit filename="../Version.hpp" />
@@ -53,9 +56,19 @@
 		<Unit filename="../lib/read_linux.hpp" />
 		<Unit filename="../lib/read_windows.cpp" />
 		<Unit filename="../lib/read_windows.hpp" />
+		<Unit filename="../lib/sqlite/database.cpp" />
+		<Unit filename="../lib/sqlite/database.hpp" />
+		<Unit filename="../lib/sqlite/statement.cpp" />
+		<Unit filename="../lib/sqlite/statement.hpp" />
 		<Unit filename="../lib/storage/csv.cpp" />
 		<Unit filename="../lib/storage/csv.hpp" />
+		<Unit filename="../lib/storage/db.cpp" />
+		<Unit filename="../lib/storage/db.hpp" />
+		<Unit filename="../lib/storage/factory.cpp" />
+		<Unit filename="../lib/storage/factory.hpp" />
 		<Unit filename="../lib/storage/store.hpp" />
+		<Unit filename="../lib/storage/type.cpp" />
+		<Unit filename="../lib/storage/type.hpp" />
 		<Unit filename="../lib/storage/utilities.cpp" />
 		<Unit filename="../lib/storage/utilities.hpp" />
 		<Unit filename="../util/GitInfos.cpp" />

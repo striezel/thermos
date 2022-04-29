@@ -21,13 +21,14 @@
 #include "Logger.hpp"
 #include <thread>
 #include "../lib/read.hpp"
-#include "../lib/storage/csv.hpp"
+#include "../lib/storage/factory.hpp"
 
 namespace thermos
 {
 
-Logger::Logger(const std::string& fileName)
-: file_name(fileName)
+Logger::Logger(const std::string& fileName, const storage::type fileType)
+: file_name(fileName),
+  file_type(fileType)
 {
 }
 
@@ -48,8 +49,8 @@ std::optional<std::string> Logger::log()
     }
 
     // Store retrieved data.
-    storage::csv storage;
-    const auto opt = storage.save(readings_v, file_name);
+    auto storage = storage::factory::create(file_type);
+    const auto opt = storage->save(readings_v, file_name);
     if (opt.has_value())
     {
       return opt;

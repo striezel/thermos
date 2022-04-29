@@ -1,6 +1,6 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the thermos.
+    This file is part of thermos.
     Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,35 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_VERSION_HPP
-#define THERMOS_VERSION_HPP
+#include "type.hpp"
 
-#include <string>
-
-namespace thermos
+namespace thermos::storage
 {
 
-/** \brief version information */
-const std::string version = "version 0.3.0-pre, 2022-04-29";
+std::optional<type> from_string(const std::string& str)
+{
+  if (str == "csv")
+    return type::csv;
+  if (str == "db")
+    return type::db;
+
+  // No match.
+  return std::nullopt;
+}
+
+std::ostream& operator<<(std::ostream& os, const type& t)
+{
+  switch(t)
+  {
+    case type::csv:
+         os << "csv";
+         break;
+    case type::db:
+         os << "db";
+         break;
+  }
+
+  return os;
+}
 
 } // namespace
-
-#endif // THERMOS_VERSION_HPP

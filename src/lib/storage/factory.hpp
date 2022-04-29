@@ -1,6 +1,6 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the thermos.
+    This file is part of thermos.
     Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,29 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_VERSION_HPP
-#define THERMOS_VERSION_HPP
+#ifndef THERMOS_STORAGE_FACTORY_HPP
+#define THERMOS_STORAGE_FACTORY_HPP
 
-#include <string>
+#include <memory>
+#include "store.hpp"
+#include "type.hpp"
 
-namespace thermos
+namespace thermos::storage
 {
 
-/** \brief version information */
-const std::string version = "version 0.3.0-pre, 2022-04-29";
+/** \brief Factory for store instances.
+ */
+struct factory
+{
+  /** \brief Creates a store instance based on the given type.
+   *
+   * \param t     type of the store instance to create
+   * \return Returns a unique_ptr to the created instance.
+   *         Returns nullptr, if the type is not supported.
+   */
+  static std::unique_ptr<store> create(const type t);
+};
 
 } // namespace
 
-#endif // THERMOS_VERSION_HPP
+#endif // THERMOS_STORAGE_FACTORY_HPP

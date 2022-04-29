@@ -18,36 +18,42 @@
  -------------------------------------------------------------------------------
 */
 
+#ifndef THERMOS_STORAGE_TYPE_HPP
+#define THERMOS_STORAGE_TYPE_HPP
+
 #include <optional>
+#include <ostream>
 #include <string>
-#include "../lib/storage/type.hpp"
 
-namespace thermos
+namespace thermos::storage
 {
 
-/** \brief Handles the thermal data logging process.
+/// Enumeration to indicate the type of storage for device readings.
+enum class type
+{
+  /// Store readings as CSV file.
+  csv,
+
+  /// Store readings in SQLite 3 database.
+  db
+};
+
+/** \brief Converts a string value into the corresponding type.
+ *
+ * \param str   the string value, e. g. "csv" or "db"
+ * \return Returns an optional containing the matching type on success.
+ *         Returns an empty optional, if string did not match.
  */
-class Logger
-{
-  public:
-    /** \brief Creates a new instance.
-     *
-     * \param fileName   path of the file where the data shall be logged
-     * \param fileType   the file type to use (CSV or SQLite 3 database)
-     */
-    Logger(const std::string& fileName, const storage::type fileType);
+std::optional<type> from_string(const std::string& str);
 
-    /** \brief Starts data logging.
-     *
-     * \return Returns an empty optional in case of success.
-     *         Returns an error message, if an error occurred.
-     * \remarks Note that this method currently only returns in the failure
-     *          case. If it is successful, it keeps running indefinitely.
-     */
-    std::optional<std::string> log();
-  private:
-    std::string file_name;
-    storage::type file_type;
-}; // class
+/** \brief Writes the value of a type enumeration to an output stream.
+ *
+ * \param os   the stream to write to
+ * \param t    the enumeration value
+ * \return Returns a reference to the stream.
+ */
+std::ostream& operator<<(std::ostream& os, const type& t);
 
 } // namespace
+
+#endif // THERMOS_STORAGE_TYPE_HPP

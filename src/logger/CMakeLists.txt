@@ -9,7 +9,12 @@ set(thermo_logger_sources
     ../lib/read.cpp
     ../lib/read_linux.cpp
     ../lib/read_windows.cpp
+    ../lib/sqlite/database.cpp
+    ../lib/sqlite/statement.cpp
     ../lib/storage/csv.cpp
+    ../lib/storage/db.cpp
+    ../lib/storage/factory.cpp
+    ../lib/storage/type.cpp
     ../lib/storage/utilities.cpp
     ../util/GitInfos.cpp
     Logger.cpp
@@ -28,6 +33,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(thermo-logger ${thermo_logger_sources})
+
+# find sqlite3 library
+if (CMAKE_VERSION VERSION_LESS "3.14.0")
+  # Find module for sqlite3 was added in CMake 3.14.0, so any earlier version
+  # needs an extra configuration file to find it.
+  set(SQLite3_DIR "../../cmake/" )
+endif ()
+find_package (SQLite3)
+if (SQLite3_FOUND)
+  include_directories(${SQLite3_INCLUDE_DIRS})
+  target_link_libraries (thermo-logger ${SQLite3_LIBRARIES})
+else ()
+  message ( FATAL_ERROR "SQLite3 was not found!" )
+endif (SQLite3_FOUND)
 
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0")
