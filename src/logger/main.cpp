@@ -173,6 +173,7 @@ int main(int argc, char** argv)
   {
     std::cerr << "Error: Logging failed or was aborted.\n"
               << opt.value() << std::endl;
+    return thermos::rcLoggingFailure;
   }
 
   return 0;

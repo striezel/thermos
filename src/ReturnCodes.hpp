@@ -27,6 +27,9 @@ namespace thermos
 /** \brief exit code for invalid command line parameters */
 constexpr int rcInvalidParameter = 1;
 
+/** \brief exit code for failed or aborted logging */
+constexpr int rcLoggingFailure = 2;
+
 } // namespace
 
 #endif // THERMOS_RETURNCODES_HPP
