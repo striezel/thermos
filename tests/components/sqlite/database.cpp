@@ -21,6 +21,7 @@
 #include "../find_catch.hpp"
 #include "../../../src/lib/sqlite/database.hpp"
 
+#if !defined(THERMOS_NO_SQLITE)
 TEST_CASE("sqlite::database::quote")
 {
   using namespace thermos::sqlite;
@@ -158,3 +159,4 @@ TEST_CASE("sqlite::database::table_exists")
     REQUIRE_FALSE( exists.value() );
   }
 }
+#endif // SQLite feature guard

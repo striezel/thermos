@@ -21,6 +21,7 @@
 #ifndef THERMOS_SQLITE3_DATABASE_HPP
 #define THERMOS_SQLITE3_DATABASE_HPP
 
+#if !defined(THERMOS_NO_SQLITE)
 #include <memory>
 #include <string>
 #include <sqlite3.h>
@@ -89,5 +90,7 @@ class database
 };
 
 }
+
+#endif // SQLite feature guard
 
 #endif // THERMOS_SQLITE3_DATABASE_HPP

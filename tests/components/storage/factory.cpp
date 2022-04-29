@@ -33,18 +33,24 @@ TEST_CASE("factory::create function")
     REQUIRE_FALSE( ptr == nullptr );
     const csv* csv_ptr = dynamic_cast<csv*>(ptr.get());
     REQUIRE_FALSE( csv_ptr == nullptr );
+    #if !defined(THERMOS_NO_SQLITE)
     const db* db_ptr = dynamic_cast<db*>(ptr.get());
     REQUIRE( db_ptr == nullptr );
+    #endif
   }
 
   SECTION("db")
   {
     const auto ptr = factory::create(type::db);
+    #if !defined(THERMOS_NO_SQLITE)
     REQUIRE_FALSE( ptr == nullptr );
     const csv* csv_ptr = dynamic_cast<csv*>(ptr.get());
     REQUIRE( csv_ptr == nullptr );
     const db* db_ptr = dynamic_cast<db*>(ptr.get());
     REQUIRE_FALSE( db_ptr == nullptr );
+    #else
+    REQUIRE( ptr == nullptr );
+    #endif
   }
 
   SECTION("unsupported type returns null")

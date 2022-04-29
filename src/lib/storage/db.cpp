@@ -18,6 +18,7 @@
  -------------------------------------------------------------------------------
 */
 
+#if !defined(THERMOS_NO_SQLITE)
 #include "db.hpp"
 #include "utilities.hpp"
 
@@ -160,3 +161,4 @@ std::optional<std::string> db::insert_reading(sqlite::database& db, const device
 }
 
 } // namespace
+#endif // SQLite

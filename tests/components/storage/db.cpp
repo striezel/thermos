@@ -25,6 +25,7 @@
 #include "../../../src/lib/storage/db.hpp"
 #include "to_time.hpp"
 
+#if !defined(THERMOS_NO_SQLITE)
 TEST_CASE("db storage")
 {
   using namespace thermos;
@@ -175,3 +176,4 @@ TEST_CASE("db storage")
     REQUIRE( size_one < size_two );
   }
 }
+#endif // SQLite feature guard

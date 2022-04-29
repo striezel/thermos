@@ -21,6 +21,7 @@
 #include "database.hpp"
 #include <iostream>
 
+#if !defined(THERMOS_NO_SQLITE)
 namespace thermos::sqlite
 {
 
@@ -118,3 +119,5 @@ nonstd::expected<bool, std::string> database::table_exists(const std::string& ta
 }
 
 } // namespace
+
+#endif // SQLite feature guard

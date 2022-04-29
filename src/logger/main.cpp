@@ -19,14 +19,20 @@
 */
 
 #include <iostream>
+#if !defined(THERMOS_NO_SQLITE)
 #include <sqlite3.h>
+#endif
 #include "../lib/storage/type.hpp"
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
 #include "../Version.hpp"
 #include "Logger.hpp"
 
+#if !defined(THERMOS_NO_SQLITE)
 constexpr thermos::storage::type defaultFileType = thermos::storage::type::db;
+#else
+constexpr thermos::storage::type defaultFileType = thermos::storage::type::csv;
+#endif
 
 void showVersion()
 {
@@ -36,8 +42,13 @@ void showVersion()
             << "Version control commit: " << info.commit() << "\n"
             << "Version control date:   " << info.date() << "\n"
             << "\n"
+  #if !defined(THERMOS_NO_SQLITE)
             << "Libraries:\n"
             << "SQLite " << sqlite3_libversion() << std::endl;
+  #else
+            << "Note: This version was built without SQLite support, so the SQLite-related\n"
+            << "features are not available." << std::endl;
+  #endif
 }
 
 void showHelp()
@@ -132,6 +143,16 @@ int main(int argc, char** argv)
                       << "\nPlease use one of them.\n";
             return thermos::rcInvalidParameter;
           }
+          #if defined(THERMOS_NO_SQLITE)
+          if (fileType.value() == thermos::storage::type::db)
+          {
+            std::cerr << "Error: This program was compiled without support for"
+                      << " SQLite 3 databases. Therefore you cannot use the "
+                      << "file type " << thermos::storage::type::db
+                      << " here.\n";
+            return thermos::rcInvalidParameter;
+          }
+          #endif
           // Skip next parameter, because it's already used as file path.
           ++i;
         }

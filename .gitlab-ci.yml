@@ -32,9 +32,17 @@ fedora:
     - yum update -y
     - yum install -y catch-devel cmake gcc-c++ git pkgconfig sqlite-devel
   script:
-    # build
     - export CXX=g++
     - export CC=gcc
+    # build without SQLite support
+    - mkdir build-no-sqlite
+    - cd build-no-sqlite
+    - cmake ../ -DNO_SQLITE=ON
+    - make -j4
+    # tests
+    - ctest -V
+    - cd ..
+    # normal build with SQLite support
     - mkdir build
     - cd build
     - cmake ../

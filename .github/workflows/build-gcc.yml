@@ -28,3 +28,16 @@ jobs:
         run: |
           cd "$GITHUB_WORKSPACE"/build
           ctest -V
+      - name: Build with GNU GCC ${{ matrix.version }} - no SQLite
+        run: |
+          export CXX=g++-${{ matrix.version }}
+          export CC=gcc-${{ matrix.version }}
+          cd $GITHUB_WORKSPACE
+          mkdir build-no-sqlite
+          cd build-no-sqlite
+          cmake ../ -DNO_SQLITE=ON
+          make -j4
+      - name: Tests - no SQLite
+        run: |
+          cd "$GITHUB_WORKSPACE"/build-no-sqlite
+          ctest -V

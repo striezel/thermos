@@ -48,6 +48,10 @@ if (CODE_COVERAGE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
 endif ()
 
+# If the option NO_SQLITE is enabled (e. g. via `cmake -DNO_SQLITE=ON`)
+# during the build, then all features using SQLite 3 are removed.
+option(NO_SQLITE "Remove SQLite 3 functionality" OFF)
+
 # Recurse into subdirectory for the executable.
 add_subdirectory (src)
 

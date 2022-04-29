@@ -20,6 +20,7 @@
 
 #include "statement.hpp"
 
+#if !defined(THERMOS_NO_SQLITE)
 namespace thermos::sqlite
 {
 
@@ -44,3 +45,5 @@ sqlite3_stmt* statement::ptr() const
 }
 
 } // namespace
+
+#endif // SQLite feature guard

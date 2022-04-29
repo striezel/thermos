@@ -22,6 +22,7 @@
 #include "../../../src/lib/sqlite/database.hpp"
 #include "../../../src/lib/sqlite/statement.hpp"
 
+#if !defined(THERMOS_NO_SQLITE)
 TEST_CASE("sqlite::database::ptr")
 {
   using namespace thermos::sqlite;
@@ -35,3 +36,4 @@ TEST_CASE("sqlite::database::ptr")
     REQUIRE_FALSE( stmt.value().ptr() == nullptr );
   }
 }
+#endif // SQLite feature guard

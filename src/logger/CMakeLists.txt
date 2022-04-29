@@ -32,21 +32,27 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if (NO_SQLITE)
+    add_definitions( -DTHERMOS_NO_SQLITE=1 )
+endif ()
+
 add_executable(thermos-logger ${thermos_logger_sources})
 
-# find sqlite3 library
-if (CMAKE_VERSION VERSION_LESS "3.14.0")
-  # Find module for sqlite3 was added in CMake 3.14.0, so any earlier version
-  # needs an extra configuration file to find it.
-  set(SQLite3_DIR "../../cmake/" )
+if (NOT NO_SQLITE)
+  # find sqlite3 library
+  if (CMAKE_VERSION VERSION_LESS "3.14.0")
+    # Find module for sqlite3 was added in CMake 3.14.0, so any earlier version
+    # needs an extra configuration file to find it.
+    set(SQLite3_DIR "../../cmake/" )
+  endif ()
+  find_package (SQLite3)
+  if (SQLite3_FOUND)
+    include_directories(${SQLite3_INCLUDE_DIRS})
+    target_link_libraries (thermos-logger ${SQLite3_LIBRARIES})
+  else ()
+    message ( FATAL_ERROR "SQLite3 was not found!" )
+  endif (SQLite3_FOUND)
 endif ()
-find_package (SQLite3)
-if (SQLite3_FOUND)
-  include_directories(${SQLite3_INCLUDE_DIRS})
-  target_link_libraries (thermos-logger ${SQLite3_LIBRARIES})
-else ()
-  message ( FATAL_ERROR "SQLite3 was not found!" )
-endif (SQLite3_FOUND)
 
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0")

@@ -21,6 +21,7 @@
 #ifndef THERMOS_SQLITE3_STATEMENT_HPP
 #define THERMOS_SQLITE3_STATEMENT_HPP
 
+#if !defined(THERMOS_NO_SQLITE)
 #include <memory>
 #include <string>
 #include <sqlite3.h>
@@ -64,5 +65,7 @@ class statement
 };
 
 }
+
+#endif // SQLite feature guard
 
 #endif // THERMOS_SQLITE3_STATEMENT_HPP

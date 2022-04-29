@@ -32,3 +32,16 @@ jobs:
         run: |
           cd "$GITHUB_WORKSPACE"/build
           ctest -V
+      - name: Build with Clang ${{ matrix.version }} - no SQLite
+        run: |
+          export CXX=clang++-${{ matrix.version }}
+          export CC=clang-${{ matrix.version }}
+          cd $GITHUB_WORKSPACE
+          mkdir build-no-sqlite
+          cd build-no-sqlite
+          cmake ../ -DNO_SQLITE=ON
+          make -j4
+      - name: Tests - no SQLite
+        run: |
+          cd "$GITHUB_WORKSPACE"/build-no-sqlite
+          ctest -V

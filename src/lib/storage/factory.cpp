@@ -20,7 +20,9 @@
 
 #include "factory.hpp"
 #include "csv.hpp"
+#if !defined(THERMOS_NO_SQLITE)
 #include "db.hpp"
+#endif
 
 namespace thermos::storage
 {
@@ -29,8 +31,10 @@ std::unique_ptr<store> factory::create(const type t)
 {
   switch (t)
   {
+    #if !defined(THERMOS_NO_SQLITE)
     case type::db:
          return std::make_unique<db>();
+    #endif
     case type::csv:
          return std::make_unique<csv>();
     default:

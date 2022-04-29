@@ -21,6 +21,7 @@
 #ifndef THERMOS_STORAGE_DB_HPP
 #define THERMOS_STORAGE_DB_HPP
 
+#if !defined(THERMOS_NO_SQLITE)
 #include "store.hpp"
 #include "../../../third-party/nonstd/expected.hpp"
 #include "../sqlite/database.hpp"
@@ -70,5 +71,7 @@ class db: public store
 };
 
 } // namespace
+
+#endif // SQLite feature guard
 
 #endif // THERMOS_STORAGE_DB_HPP

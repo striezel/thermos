@@ -34,6 +34,14 @@ Logger::Logger(const std::string& fileName, const storage::type fileType)
 
 std::optional<std::string> Logger::log()
 {
+  #if defined(THERMOS_NO_SQLITE)
+  if (file_type == storage::type::db)
+  {
+    return std::string("This program was built without SQLite features, ")
+      + "so db cannot be used as file type.";
+  }
+  #endif
+
   while (true)
   {
     // Retrieve sensor data.
