@@ -19,6 +19,7 @@
 */
 
 #include <iostream>
+#include <sqlite3.h>
 #include "../lib/storage/type.hpp"
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
@@ -33,7 +34,10 @@ void showVersion()
   std::cout << "thermos-logger, " << thermos::version << "\n"
             << "\n"
             << "Version control commit: " << info.commit() << "\n"
-            << "Version control date:   " << info.date() << std::endl;
+            << "Version control date:   " << info.date() << "\n"
+            << "\n"
+            << "Libraries:\n"
+            << "SQLite " << sqlite3_libversion() << std::endl;
 }
 
 void showHelp()
