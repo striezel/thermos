@@ -18,16 +18,16 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_READ_THERMAL_WINDOWS_HPP
-#define THERMOS_READ_THERMAL_WINDOWS_HPP
+#ifndef THERMOS_READ_THERMAL_LINUX_HPP
+#define THERMOS_READ_THERMAL_LINUX_HPP
 
 #include <string>
 #include <vector>
-#include "../third-party/nonstd/expected.hpp"
-#include "device_reading.hpp"
+#include "../../third-party/nonstd/expected.hpp"
+#include "../device_reading.hpp"
 
-#if defined(_WIN32) || defined(_WIN64)
-namespace thermos::windows::thermal
+#if defined(__linux__) || defined(linux)
+namespace thermos::linux_like::thermal
 {
 
 /** \brief Reads all thermal devices.
@@ -37,17 +37,21 @@ namespace thermos::windows::thermal
  */
 nonstd::expected<std::vector<device_reading>, std::string> read_all();
 
-/** \brief Reads thermal data from WMI.
+/** \brief Reads thermal devices from /sys/devices/virtual/thermal/.
  *
  * \return Returns a vector containing the device readings.
  *         Returns an error message, if no readings were available.
- * \remarks Note that this method requires administrative privileges to get
- *          actual data. Standard user accounts may get errors or an empty
- *          vector instead.
  */
-nonstd::expected<std::vector<device_reading>, std::string> read_wmi();
+nonstd::expected<std::vector<device_reading>, std::string> read_thermal();
+
+/** \brief Reads thermal devices from /sys/class/hwmon/.
+ *
+ * \return Returns a vector containing the device readings.
+ *         Returns an error message, if no readings were available.
+ */
+nonstd::expected<std::vector<device_reading>, std::string> read_hwmon();
 
 } // namespace
-#endif // Windows
+#endif // Linux
 
-#endif // THERMOS_READ_THERMAL_WINDOWS_HPP
+#endif // THERMOS_READ_THERMAL_LINUX_HPP

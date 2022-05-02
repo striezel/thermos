@@ -20,7 +20,7 @@
 
 #include "Logger.hpp"
 #include <thread>
-#include "../../lib/read.hpp"
+#include "../../lib/thermal/read.hpp"
 #include "../../lib/storage/factory.hpp"
 
 namespace thermos
@@ -45,7 +45,7 @@ std::optional<std::string> Logger::log()
   while (true)
   {
     // Retrieve sensor data.
-    const auto readings = read_all();
+    const auto readings = thermal::read_all();
     if (!readings.has_value())
     {
       return readings.error();

@@ -18,7 +18,7 @@
  -------------------------------------------------------------------------------
 */
 
-#include "read_thermal_windows.hpp"
+#include "read_windows.hpp"
 #if defined(_WIN32) || defined(_WIN64)
 #define _WIN32_DCOM
 #include <comdef.h>

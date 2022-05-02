@@ -18,7 +18,7 @@
  -------------------------------------------------------------------------------
 */
 
-#include "read_thermal_linux.hpp"
+#include "read_linux.hpp"
 #if defined(__linux__) || defined(linux)
 #include <filesystem>
 #include <fstream>

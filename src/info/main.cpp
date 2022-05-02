@@ -19,7 +19,7 @@
 */
 
 #include <iostream>
-#include "../../lib/read.hpp"
+#include "../../lib/thermal/read.hpp"
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
 #include "../Version.hpp"
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     } // for i
   } // if arguments are there
 
-  const auto readings = thermos::read_all();
+  const auto readings = thermos::thermal::read_all();
   if (!readings.has_value() || readings.value().empty())
   {
     std::cout << "No temperature readings available!\n";

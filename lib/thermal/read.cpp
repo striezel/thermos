@@ -18,25 +18,25 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_READ_HPP
-#define THERMOS_READ_HPP
+#include "read.hpp"
+#if defined(__linux__) || defined(linux)
+  #include "read_linux.hpp"
+#elif defined(_WIN32) || defined(_WIN64)
+  #include "read_windows.hpp"
+#endif
 
-#include <string>
-#include <vector>
-#include "../third-party/nonstd/expected.hpp"
-#include "device_reading.hpp"
-
-namespace thermos
+namespace thermos::thermal
 {
 
-/** \brief Reads all thermal devices.
- *
- * \return Returns a vector containing the device readings.
- *         Returns a string containing an error message, if no readings were
- *         available.
- */
-nonstd::expected<std::vector<device_reading>, std::string> read_all();
+nonstd::expected<std::vector<device_reading>, std::string> read_all()
+{
+  #if defined(_WIN32) || defined(_WIN64)
+    return thermos::windows::thermal::read_all();
+  #elif defined(__linux__) || defined(linux)
+    return thermos::linux_like::thermal::read_all();
+  #else
+    #error Unknown or unsupported operating system!
+  #endif
+}
 
 } // namespace
-
-#endif // THERMOS_READ_HPP

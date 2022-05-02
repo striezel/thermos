@@ -6,9 +6,9 @@ project(thermos-info)
 set(thermos_info_sources
     ../../lib/device.cpp
     ../../lib/device_reading.cpp
-    ../../lib/read.cpp
-    ../../lib/read_thermal_linux.cpp
-    ../../lib/read_thermal_windows.cpp
+    ../../lib/thermal/read.cpp
+    ../../lib/thermal/read_linux.cpp
+    ../../lib/thermal/read_windows.cpp
     ../util/GitInfos.cpp
     main.cpp)
 
