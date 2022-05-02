@@ -19,7 +19,7 @@
 */
 
 #include "../find_catch.hpp"
-#include "../../../src/lib/storage/utilities.hpp"
+#include "../../../lib/storage/utilities.hpp"
 
 TEST_CASE("time_to_string function")
 {

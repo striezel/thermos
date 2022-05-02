@@ -4,18 +4,18 @@ cmake_minimum_required (VERSION 3.8)
 project(thermos-logger)
 
 set(thermos_logger_sources
-    ../lib/device.cpp
-    ../lib/device_reading.cpp
-    ../lib/read.cpp
-    ../lib/read_thermal_linux.cpp
-    ../lib/read_thermal_windows.cpp
-    ../lib/sqlite/database.cpp
-    ../lib/sqlite/statement.cpp
-    ../lib/storage/csv.cpp
-    ../lib/storage/db.cpp
-    ../lib/storage/factory.cpp
-    ../lib/storage/type.cpp
-    ../lib/storage/utilities.cpp
+    ../../lib/device.cpp
+    ../../lib/device_reading.cpp
+    ../../lib/read.cpp
+    ../../lib/read_thermal_linux.cpp
+    ../../lib/read_thermal_windows.cpp
+    ../../lib/sqlite/database.cpp
+    ../../lib/sqlite/statement.cpp
+    ../../lib/storage/csv.cpp
+    ../../lib/storage/db.cpp
+    ../../lib/storage/factory.cpp
+    ../../lib/storage/type.cpp
+    ../../lib/storage/utilities.cpp
     ../util/GitInfos.cpp
     Logger.cpp
     main.cpp)

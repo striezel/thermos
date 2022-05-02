@@ -21,7 +21,7 @@
 #include "../find_catch.hpp"
 #include <filesystem>
 #include <fstream>
-#include "../../../src/lib/storage/csv.hpp"
+#include "../../../lib/storage/csv.hpp"
 #include "to_time.hpp"
 
 TEST_CASE("csv storage")

@@ -21,7 +21,7 @@
 #ifndef THERMOS_TEST_TO_TIME_HPP
 #define THERMOS_TEST_TO_TIME_HPP
 
-#include "../../../src/lib/device_reading.hpp"
+#include "../../../lib/device_reading.hpp"
 
 thermos::device_reading::reading_time_t to_time(const int year, const unsigned short int month, const unsigned short int day,
                                                 const unsigned short int hours, const unsigned short int minutes, const unsigned short int seconds);

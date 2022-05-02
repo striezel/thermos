@@ -20,8 +20,8 @@
 
 #include "Logger.hpp"
 #include <thread>
-#include "../lib/read.hpp"
-#include "../lib/storage/factory.hpp"
+#include "../../lib/read.hpp"
+#include "../../lib/storage/factory.hpp"
 
 namespace thermos
 {

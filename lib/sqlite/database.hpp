@@ -25,7 +25,7 @@
 #include <memory>
 #include <string>
 #include <sqlite3.h>
-#include "../../../third-party/nonstd/expected.hpp"
+#include "../../third-party/nonstd/expected.hpp"
 #include "statement.hpp"
 
 namespace thermos::sqlite

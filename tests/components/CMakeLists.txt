@@ -5,15 +5,15 @@ cmake_minimum_required (VERSION 3.8)
 project(component_tests)
 
 set(component_tests_sources
-    ../../src/lib/device.cpp
-    ../../src/lib/device_reading.cpp
-    ../../src/lib/sqlite/database.cpp
-    ../../src/lib/sqlite/statement.cpp
-    ../../src/lib/storage/csv.cpp
-    ../../src/lib/storage/db.cpp
-    ../../src/lib/storage/factory.cpp
-    ../../src/lib/storage/type.cpp
-    ../../src/lib/storage/utilities.cpp
+    ../../lib/device.cpp
+    ../../lib/device_reading.cpp
+    ../../lib/sqlite/database.cpp
+    ../../lib/sqlite/statement.cpp
+    ../../lib/storage/csv.cpp
+    ../../lib/storage/db.cpp
+    ../../lib/storage/factory.cpp
+    ../../lib/storage/type.cpp
+    ../../lib/storage/utilities.cpp
     device.cpp
     device_reading.cpp
     sqlite/database.cpp

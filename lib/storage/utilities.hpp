@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of thermos.
-    Copyright (C) 2022  Dirk Stolle
+    This file is part of the weather information collector.
+    Copyright (C) 2020, 2021  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,25 +18,24 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_READ_HPP
-#define THERMOS_READ_HPP
+#ifndef THERMOS_STORAGE_UTILITIES_HPP
+#define THERMOS_STORAGE_UTILITIES_HPP
 
-#include <string>
-#include <vector>
 #include "../../third-party/nonstd/expected.hpp"
-#include "device_reading.hpp"
+#include "../device_reading.hpp"
 
-namespace thermos
+namespace thermos::storage
 {
 
-/** \brief Reads all thermal devices.
+/** \brief Translates a time point to readable format 'YYYY-MM-DD HH:ii:ss'.
  *
- * \return Returns a vector containing the device readings.
- *         Returns a string containing an error message, if no readings were
- *         available.
+ * \param date_time  the time point to transform to string
+ * \return Returns a string representing the time point. It is similar to SQL
+ *         dates, e. g. "2020-05-25 13:37:00" could be a return value.
+ *         If transformation fails, then an error message is returned.
  */
-nonstd::expected<std::vector<device_reading>, std::string> read_all();
+nonstd::expected<std::string, std::string> time_to_string(const device_reading::reading_time_t& date_time);
 
 } // namespace
 
-#endif // THERMOS_READ_HPP
+#endif // THERMOS_STORAGE_UTILITIES_HPP

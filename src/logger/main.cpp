@@ -22,7 +22,7 @@
 #if !defined(THERMOS_NO_SQLITE)
 #include <sqlite3.h>
 #endif
-#include "../lib/storage/type.hpp"
+#include "../../lib/storage/type.hpp"
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
 #include "../Version.hpp"

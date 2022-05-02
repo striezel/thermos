@@ -20,7 +20,7 @@
 
 #include "../find_catch.hpp"
 #include <sstream>
-#include "../../../src/lib/storage/type.hpp"
+#include "../../../lib/storage/type.hpp"
 
 TEST_CASE("from_string function")
 {

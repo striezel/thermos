@@ -19,7 +19,7 @@
 */
 
 #include "find_catch.hpp"
-#include "../../src/lib/device.hpp"
+#include "../../lib/device.hpp"
 
 TEST_CASE("device constructor")
 {

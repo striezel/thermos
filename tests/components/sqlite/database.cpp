@@ -19,7 +19,7 @@
 */
 
 #include "../find_catch.hpp"
-#include "../../../src/lib/sqlite/database.hpp"
+#include "../../../lib/sqlite/database.hpp"
 
 #if !defined(THERMOS_NO_SQLITE)
 TEST_CASE("sqlite::database::quote")

@@ -20,7 +20,7 @@
 
 #include <optional>
 #include <string>
-#include "../lib/storage/type.hpp"
+#include "../../lib/storage/type.hpp"
 
 namespace thermos
 {

@@ -23,7 +23,7 @@
 
 #if !defined(THERMOS_NO_SQLITE)
 #include "store.hpp"
-#include "../../../third-party/nonstd/expected.hpp"
+#include "../../third-party/nonstd/expected.hpp"
 #include "../sqlite/database.hpp"
 
 namespace thermos::storage

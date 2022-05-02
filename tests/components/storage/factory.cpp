@@ -19,9 +19,9 @@
 */
 
 #include "../find_catch.hpp"
-#include "../../../src/lib/storage/csv.hpp"
-#include "../../../src/lib/storage/db.hpp"
-#include "../../../src/lib/storage/factory.hpp"
+#include "../../../lib/storage/csv.hpp"
+#include "../../../lib/storage/db.hpp"
+#include "../../../lib/storage/factory.hpp"
 
 TEST_CASE("factory::create function")
 {

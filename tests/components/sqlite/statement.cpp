@@ -19,8 +19,8 @@
 */
 
 #include "../find_catch.hpp"
-#include "../../../src/lib/sqlite/database.hpp"
-#include "../../../src/lib/sqlite/statement.hpp"
+#include "../../../lib/sqlite/database.hpp"
+#include "../../../lib/sqlite/statement.hpp"
 
 #if !defined(THERMOS_NO_SQLITE)
 TEST_CASE("sqlite::database::ptr")

@@ -24,7 +24,7 @@
 #include <optional>
 #include <string>
 #include <vector>
-#include "../../../third-party/nonstd/expected.hpp"
+#include "../../third-party/nonstd/expected.hpp"
 #include "../device_reading.hpp"
 
 namespace thermos::storage

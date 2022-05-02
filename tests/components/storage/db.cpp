@@ -22,7 +22,7 @@
 #include <array>
 #include <filesystem>
 #include <fstream>
-#include "../../../src/lib/storage/db.hpp"
+#include "../../../lib/storage/db.hpp"
 #include "to_time.hpp"
 
 #if !defined(THERMOS_NO_SQLITE)

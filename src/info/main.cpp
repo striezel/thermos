@@ -19,7 +19,7 @@
 */
 
 #include <iostream>
-#include "../lib/read.hpp"
+#include "../../lib/read.hpp"
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
 #include "../Version.hpp"
