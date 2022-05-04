@@ -39,7 +39,7 @@ TEST_CASE("time_to_string function")
     {
       std::tm tm{};
       tm.tm_year = 2022 - 1900; // 2022
-      tm.tm_mon = 4-1; // April
+      tm.tm_mon = 4 - 1; // April
       tm.tm_mday = 23; // 23rd
       tm.tm_hour = 19;
       tm.tm_min = 8;
@@ -59,7 +59,7 @@ TEST_CASE("time_to_string function")
     {
       std::tm tm{};
       tm.tm_year = 1990 - 1900; // 1990
-      tm.tm_mon = 5-1; // May
+      tm.tm_mon = 5 - 1; // May
       tm.tm_mday = 1; // 1st
       tm.tm_hour = 6;
       tm.tm_min = 7;
@@ -79,7 +79,7 @@ TEST_CASE("time_to_string function")
     {
       std::tm tm{};
       tm.tm_year = 2030 - 1900; // 2030
-      tm.tm_mon = 12-1; // December
+      tm.tm_mon = 12 - 1; // December
       tm.tm_mday = 24; // 24th
       tm.tm_hour = 19;
       tm.tm_min = 20;
