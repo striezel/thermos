@@ -2,6 +2,7 @@
 
 [![GitHub CI Clang status](https://github.com/striezel/thermos/workflows/Clang/badge.svg)](https://github.com/striezel/thermos/actions)
 [![GitHub CI GCC status](https://github.com/striezel/thermos/workflows/GCC/badge.svg)](https://github.com/striezel/thermos/actions)
+[![GitHub CI MSVC status](https://github.com/striezel/thermos/workflows/MSVC/badge.svg)](https://github.com/striezel/thermos/actions)
 [![GitLab pipeline status](https://gitlab.com/striezel/thermos/badges/main/pipeline.svg)](https://gitlab.com/striezel/thermos/)
 
 This repository contains code to read the thermal sensors of a system.
