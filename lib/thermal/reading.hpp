@@ -18,19 +18,19 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_DEVICE_READING_HPP
-#define THERMOS_DEVICE_READING_HPP
+#ifndef THERMOS_THERMAL_READING_HPP
+#define THERMOS_THERMAL_READING_HPP
 
 #include <chrono>
 #include <cstdint>
-#include "device.hpp"
+#include "../device.hpp"
 
-namespace thermos
+namespace thermos::thermal
 {
 
-struct device_reading
+struct reading
 {
-  device_reading();
+  reading();
 
   /// shorthand for time point type
   using reading_time_t = std::chrono::time_point<std::chrono::system_clock>;
@@ -61,4 +61,4 @@ struct device_reading
 
 } // namespace
 
-#endif // THERMOS_DEVICE_READING_HPP
+#endif // THERMOS_THERMAL_READING_HPP

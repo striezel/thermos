@@ -22,7 +22,7 @@
 #define THERMOS_STORAGE_UTILITIES_HPP
 
 #include "../../third-party/nonstd/expected.hpp"
-#include "../device_reading.hpp"
+#include "../thermal/reading.hpp"
 
 namespace thermos::storage
 {
@@ -34,7 +34,7 @@ namespace thermos::storage
  *         dates, e. g. "2020-05-25 13:37:00" could be a return value.
  *         If transformation fails, then an error message is returned.
  */
-nonstd::expected<std::string, std::string> time_to_string(const device_reading::reading_time_t& date_time);
+nonstd::expected<std::string, std::string> time_to_string(const thermal::reading::reading_time_t& date_time);
 
 } // namespace
 

@@ -22,7 +22,7 @@
 #include <ctime>
 #include <stdexcept>
 
-thermos::device_reading::reading_time_t to_time(const int year, const unsigned short int month, const unsigned short int day,
+thermos::thermal::reading::reading_time_t to_time(const int year, const unsigned short int month, const unsigned short int day,
                                                 const unsigned short int hours, const unsigned short int minutes, const unsigned short int seconds)
 {
   std::tm tm{};

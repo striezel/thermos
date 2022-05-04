@@ -24,7 +24,7 @@
 namespace thermos::storage
 {
 
-nonstd::expected<std::string, std::string> time_to_string(const device_reading::reading_time_t& date_time)
+nonstd::expected<std::string, std::string> time_to_string(const thermal::reading::reading_time_t& date_time)
 {
   const std::time_t tt = std::chrono::system_clock::to_time_t(date_time);
   struct tm tm;

@@ -33,8 +33,8 @@ TEST_CASE("db storage")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<device_reading> data;
-    device_reading reading;
+    std::vector<thermal::reading> data;
+    thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
     reading.millicelsius = 42000;
@@ -59,8 +59,8 @@ TEST_CASE("db storage")
       stream.close();
     }
 
-    std::vector<device_reading> data;
-    device_reading reading;
+    std::vector<thermal::reading> data;
+    thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
     reading.millicelsius = 42000;
@@ -77,8 +77,8 @@ TEST_CASE("db storage")
 
   SECTION("normal write operation")
   {
-    std::vector<device_reading> data;
-    device_reading reading;
+    std::vector<thermal::reading> data;
+    thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
     reading.millicelsius = 42000;
@@ -123,8 +123,8 @@ TEST_CASE("db storage")
 
   SECTION("save appends to existing file")
   {
-    std::vector<device_reading> data;
-    device_reading reading;
+    std::vector<thermal::reading> data;
+    thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
     reading.millicelsius = 42000;

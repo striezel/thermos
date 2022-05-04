@@ -31,8 +31,8 @@ TEST_CASE("csv storage")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<device_reading> data;
-    device_reading reading;
+    std::vector<thermal::reading> data;
+    thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
     reading.millicelsius = 42000;
@@ -47,8 +47,8 @@ TEST_CASE("csv storage")
 
   SECTION("normal write operation")
   {
-    std::vector<device_reading> data;
-    device_reading reading;
+    std::vector<thermal::reading> data;
+    thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
     reading.millicelsius = 42000;
@@ -84,8 +84,8 @@ TEST_CASE("csv storage")
 
   SECTION("save appends to existing file")
   {
-    std::vector<device_reading> data;
-    device_reading reading;
+    std::vector<thermal::reading> data;
+    thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
     reading.millicelsius = 42000;

@@ -41,7 +41,7 @@ class db: public store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> save(const std::vector<device_reading>& data, const std::string& file_name) final;
+    std::optional<std::string> save(const std::vector<thermal::reading>& data, const std::string& file_name) final;
   private:
     /** \brief Ensures that the tables needed to save information exist.
      *
@@ -67,7 +67,7 @@ class db: public store
      * \return Returns an empty optional, if insertion was successful.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> insert_reading(sqlite::database& db, const device_reading& reading);
+    std::optional<std::string> insert_reading(sqlite::database& db, const thermal::reading& reading);
 };
 
 } // namespace

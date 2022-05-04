@@ -25,7 +25,7 @@
 namespace thermos::storage
 {
 
-std::optional<std::string> db::save(const std::vector<device_reading>& data, const std::string& file_name)
+std::optional<std::string> db::save(const std::vector<thermal::reading>& data, const std::string& file_name)
 {
   // Open the database.
   auto maybe_db = sqlite::database::open(file_name);
@@ -135,7 +135,7 @@ nonstd::expected<int64_t, std::string> db::find_or_create_device(sqlite::databas
   return db.last_insert_id();
 }
 
-std::optional<std::string> db::insert_reading(sqlite::database& db, const device_reading& reading)
+std::optional<std::string> db::insert_reading(sqlite::database& db, const thermal::reading& reading)
 {
   const auto dev_id = find_or_create_device(db, reading.dev);
   if (!dev_id.has_value())

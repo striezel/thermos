@@ -18,34 +18,34 @@
  -------------------------------------------------------------------------------
 */
 
-#include "device_reading.hpp"
+#include "reading.hpp"
 #include <cmath>
 #include <limits>
 
-namespace thermos
+namespace thermos::thermal
 {
 
-device_reading::device_reading()
+reading::reading()
 : dev(device()),
   millicelsius(std::numeric_limits<decltype(millicelsius)>::min()),
   time(reading_time_t())
 {
 }
 
-bool device_reading::filled() const
+bool reading::filled() const
 {
   return dev.filled()
       && (millicelsius != std::numeric_limits<decltype(millicelsius)>::min())
       && (time != reading_time_t());
 }
 
-double device_reading::celsius() const
+double reading::celsius() const
 {
   // Rounded to 1/100th degree Celsius.
   return std::round(static_cast<double>(millicelsius) / 10.0) / 100.0;
 }
 
-double device_reading::fahrenheit() const
+double reading::fahrenheit() const
 {
   // Convert from millicelsius to Fahrenheit.
   const double f = static_cast<double>(millicelsius) * 0.0018 + 32.0;

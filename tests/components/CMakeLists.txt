@@ -6,7 +6,6 @@ project(component_tests)
 
 set(component_tests_sources
     ../../lib/device.cpp
-    ../../lib/device_reading.cpp
     ../../lib/reading_type.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
@@ -15,8 +14,8 @@ set(component_tests_sources
     ../../lib/storage/factory.cpp
     ../../lib/storage/type.cpp
     ../../lib/storage/utilities.cpp
+    ../../lib/thermal/reading.cpp
     device.cpp
-    device_reading.cpp
     reading_type.cpp
     sqlite/database.cpp
     sqlite/statement.cpp
@@ -26,6 +25,7 @@ set(component_tests_sources
     storage/to_time.cpp
     storage/type.cpp
     storage/utilities.cpp
+    thermal/reading.cpp
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

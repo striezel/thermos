@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 #include "../../third-party/nonstd/expected.hpp"
-#include "../device_reading.hpp"
+#include "../thermal/reading.hpp"
 
 namespace thermos::storage
 {
@@ -46,7 +46,7 @@ class store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    virtual std::optional<std::string> save(const std::vector<device_reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> save(const std::vector<thermal::reading>& data, const std::string& file_name) = 0;
 };
 
 } // namespace

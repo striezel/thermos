@@ -40,7 +40,7 @@ std::string sloppy_narrowing(const wchar_t* wc_str)
   return std::string(wide_string.begin(), wide_string.end());
 }
 
-nonstd::expected<std::vector<device_reading>, std::string> read_wmi()
+nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_wmi()
 {
   // Initialize COM. (Yes, WMI uses COM.)
   HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -165,7 +165,7 @@ nonstd::expected<std::vector<device_reading>, std::string> read_wmi()
   // Get the data from the query.
   IWbemClassObject* pObject = nullptr;
   ULONG uReturn = 0;
-  std::vector<thermos::device_reading> result;
+  std::vector<thermos::thermal::reading> result;
   while (pEnumerator)
   {
     pObject = nullptr;
@@ -200,7 +200,7 @@ nonstd::expected<std::vector<device_reading>, std::string> read_wmi()
         + std::string("Error code is ") + std::to_string(hr) + ".");
     }
 
-    device_reading reading;
+    thermos::thermal::reading reading;
     reading.dev.name = sloppy_narrowing(property.bstrVal);
     VariantClear(&property);
 
@@ -238,7 +238,7 @@ nonstd::expected<std::vector<device_reading>, std::string> read_wmi()
   return result;
 }
 
-nonstd::expected<std::vector<device_reading>, std::string> read_all()
+nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all()
 {
   return read_wmi();
 }

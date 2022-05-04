@@ -44,8 +44,8 @@
 		<Unit filename="../Version.hpp" />
 		<Unit filename="../../lib/device.cpp" />
 		<Unit filename="../../lib/device.hpp" />
-		<Unit filename="../../lib/device_reading.cpp" />
-		<Unit filename="../../lib/device_reading.hpp" />
+		<Unit filename="../../lib/thermal/reading.cpp" />
+		<Unit filename="../../lib/thermal/reading.hpp" />
 		<Unit filename="../../lib/thermal/read.cpp" />
 		<Unit filename="../../lib/thermal/read.hpp" />
 		<Unit filename="../../lib/thermal/read_linux.cpp" />

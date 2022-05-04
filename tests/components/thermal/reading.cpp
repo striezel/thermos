@@ -18,29 +18,29 @@
  -------------------------------------------------------------------------------
 */
 
-#include "find_catch.hpp"
-#include "../../lib/device_reading.hpp"
+#include "../find_catch.hpp"
+#include "../../../lib/thermal/reading.hpp"
 
-TEST_CASE("device_reading constructor")
+TEST_CASE("thermal::reading constructor")
 {
   using namespace thermos;
 
   SECTION("initial values must be set")
   {
-    device_reading reading;
+    thermal::reading reading;
     REQUIRE_FALSE( reading.dev.filled() );
     REQUIRE( reading.millicelsius == std::numeric_limits<int64_t>::min() );
-    REQUIRE( reading.time == device_reading::reading_time_t() );
+    REQUIRE( reading.time == thermal::reading::reading_time_t() );
   }
 }
 
-TEST_CASE("device_reading::filled()")
+TEST_CASE("thermal::reading::filled()")
 {
   using namespace thermos;
 
-  SECTION("empty device_reading")
+  SECTION("empty thermal reading")
   {
-    device_reading reading;
+    thermal::reading reading;
 
     REQUIRE_FALSE( reading.filled() );
   }
@@ -52,7 +52,7 @@ TEST_CASE("device_reading::filled()")
     dev.origin = "bar";
     REQUIRE( dev.filled() );
 
-    device_reading reading;
+    thermal::reading reading;
     reading.dev = dev;
     reading.millicelsius = 42000;
     reading.time = std::chrono::system_clock::now();
@@ -61,7 +61,7 @@ TEST_CASE("device_reading::filled()")
 
   SECTION("partially set data")
   {
-    device_reading reading;
+    thermal::reading reading;
 
     SECTION("only device")
     {
@@ -116,13 +116,13 @@ TEST_CASE("device_reading::filled()")
   }
 }
 
-TEST_CASE("device_reading::celsius()")
+TEST_CASE("thermal::reading::celsius()")
 {
   using namespace thermos;
 
   SECTION("check some values")
   {
-    device_reading reading;
+    thermal::reading reading;
     REQUIRE( reading.celsius() == -9223372036854775.808 );
 
     reading.millicelsius = 42000;
@@ -139,13 +139,13 @@ TEST_CASE("device_reading::celsius()")
   }
 }
 
-TEST_CASE("device_reading::fahrenheit()")
+TEST_CASE("thermal::reading::fahrenheit()")
 {
   using namespace thermos;
 
   SECTION("check some values")
   {
-    device_reading reading;
+    thermal::reading reading;
 
     reading.millicelsius = 0; // 0 °C
     REQUIRE( reading.fahrenheit() == 32.0 );

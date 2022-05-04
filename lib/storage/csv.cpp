@@ -25,7 +25,7 @@
 namespace thermos::storage
 {
 
-std::optional<std::string> csv::save(const std::vector<device_reading>& data, const std::string& file_name)
+std::optional<std::string> csv::save(const std::vector<thermal::reading>& data, const std::string& file_name)
 {
   const char separator = ';';
 

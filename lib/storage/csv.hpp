@@ -38,7 +38,7 @@ class csv: public store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> save(const std::vector<device_reading>& data, const std::string& file_name) final;
+    std::optional<std::string> save(const std::vector<thermal::reading>& data, const std::string& file_name) final;
 };
 
 } // namespace

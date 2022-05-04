@@ -5,7 +5,6 @@ project(thermos-logger)
 
 set(thermos_logger_sources
     ../../lib/device.cpp
-    ../../lib/device_reading.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
     ../../lib/storage/csv.cpp
@@ -16,6 +15,7 @@ set(thermos_logger_sources
     ../../lib/thermal/read.cpp
     ../../lib/thermal/read_linux.cpp
     ../../lib/thermal/read_windows.cpp
+    ../../lib/thermal/reading.cpp
     ../util/GitInfos.cpp
     Logger.cpp
     main.cpp)

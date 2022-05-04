@@ -43,8 +43,6 @@
 		</Linker>
 		<Unit filename="../../lib/device.cpp" />
 		<Unit filename="../../lib/device.hpp" />
-		<Unit filename="../../lib/device_reading.cpp" />
-		<Unit filename="../../lib/device_reading.hpp" />
 		<Unit filename="../../lib/reading_type.cpp" />
 		<Unit filename="../../lib/reading_type.hpp" />
 		<Unit filename="../../lib/sqlite/database.cpp" />
@@ -62,9 +60,10 @@
 		<Unit filename="../../lib/storage/type.hpp" />
 		<Unit filename="../../lib/storage/utilities.cpp" />
 		<Unit filename="../../lib/storage/utilities.hpp" />
+		<Unit filename="../../lib/thermal/reading.cpp" />
+		<Unit filename="../../lib/thermal/reading.hpp" />
 		<Unit filename="../../third-party/nonstd/expected.hpp" />
 		<Unit filename="device.cpp" />
-		<Unit filename="device_reading.cpp" />
 		<Unit filename="find_catch.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="reading_type.cpp" />
@@ -77,6 +76,7 @@
 		<Unit filename="storage/to_time.hpp" />
 		<Unit filename="storage/type.cpp" />
 		<Unit filename="storage/utilities.cpp" />
+		<Unit filename="thermal/reading.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
