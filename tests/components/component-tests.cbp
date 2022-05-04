@@ -45,6 +45,8 @@
 		<Unit filename="../../lib/device.hpp" />
 		<Unit filename="../../lib/device_reading.cpp" />
 		<Unit filename="../../lib/device_reading.hpp" />
+		<Unit filename="../../lib/reading_type.cpp" />
+		<Unit filename="../../lib/reading_type.hpp" />
 		<Unit filename="../../lib/sqlite/database.cpp" />
 		<Unit filename="../../lib/sqlite/database.hpp" />
 		<Unit filename="../../lib/sqlite/statement.cpp" />
@@ -65,6 +67,7 @@
 		<Unit filename="device_reading.cpp" />
 		<Unit filename="find_catch.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="reading_type.cpp" />
 		<Unit filename="sqlite/database.cpp" />
 		<Unit filename="sqlite/statement.cpp" />
 		<Unit filename="storage/csv.cpp" />
