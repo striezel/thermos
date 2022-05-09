@@ -8,6 +8,7 @@ set(component_tests_sources
     ../../lib/device.cpp
     ../../lib/device_reading.cpp
     ../../lib/reading_type.cpp
+    ../../lib/load/reading.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
     ../../lib/storage/csv.cpp
@@ -18,6 +19,7 @@ set(component_tests_sources
     ../../lib/thermal/reading.cpp
     device.cpp
     reading_type.cpp
+    load/reading.cpp
     sqlite/database.cpp
     sqlite/statement.cpp
     storage/csv.cpp
