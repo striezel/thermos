@@ -116,6 +116,17 @@ TEST_CASE("load::reading::filled()")
   }
 }
 
+TEST_CASE("load::reading::type()")
+{
+  using namespace thermos;
+
+  SECTION("type is always load")
+  {
+    load::reading reading;
+    REQUIRE( reading.type() == reading_type::load );
+  }
+}
+
 TEST_CASE("load::reading::percent()")
 {
   using namespace thermos;

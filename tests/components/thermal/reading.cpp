@@ -116,6 +116,17 @@ TEST_CASE("thermal::reading::filled()")
   }
 }
 
+TEST_CASE("thermal::reading::type()")
+{
+  using namespace thermos;
+
+  SECTION("type is always temperature")
+  {
+    thermal::reading reading;
+    REQUIRE( reading.type() == reading_type::temperature );
+  }
+}
+
 TEST_CASE("thermal::reading::celsius()")
 {
   using namespace thermos;
