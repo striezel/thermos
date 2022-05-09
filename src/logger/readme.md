@@ -8,7 +8,7 @@ sensor data to a CSV file or a SQLite 3 database.
 ```
 thermos-logger [OPTIONS]
 
-Logs thermal sensor data to a CSV or SQLite 3 file.
+Logs thermal sensor data and CPU load to a CSV or SQLite 3 file.
 
 options:
   -? | --help            - Shows this help message.

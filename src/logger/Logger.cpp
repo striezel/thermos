@@ -20,6 +20,7 @@
 
 #include "Logger.hpp"
 #include <thread>
+#include "../../lib/load/read.hpp"
 #include "../../lib/thermal/read.hpp"
 #include "../../lib/storage/factory.hpp"
 
@@ -42,23 +43,42 @@ std::optional<std::string> Logger::log()
   }
   #endif
 
+  auto next = std::chrono::steady_clock::now();
+
   while (true)
   {
-    // Retrieve sensor data.
-    const auto readings = thermal::read_all();
-    if (!readings.has_value())
+    // Retrieve thermal sensor data.
+    const auto thermal_readings = thermal::read_all();
+    if (!thermal_readings.has_value())
     {
-      return readings.error();
+      return thermal_readings.error();
     }
-    const auto& readings_v = readings.value();
-    if (readings_v.empty())
+    const auto& thermal_readings_v = thermal_readings.value();
+    if (thermal_readings_v.empty())
     {
       return "No temperature readings are available.";
     }
 
+    // Retrieve CPU load data.
+    const auto load_readings = load::read_all();
+    if (!load_readings.has_value())
+    {
+      return load_readings.error();
+    }
+    const auto& load_readings_v = load_readings.value();
+    if (load_readings_v.empty())
+    {
+      return "No CPU load data is available.";
+    }
+
     // Store retrieved data.
     auto storage = storage::factory::create(file_type);
-    const auto opt = storage->save(readings_v, file_name);
+    auto opt = storage->save(thermal_readings_v, file_name);
+    if (opt.has_value())
+    {
+      return opt;
+    }
+    opt = storage->save(load_readings_v, file_name);
     if (opt.has_value())
     {
       return opt;
@@ -66,7 +86,8 @@ std::optional<std::string> Logger::log()
 
     // Wait before making the next iteration.
     constexpr auto interval = std::chrono::seconds(300);
-    std::this_thread::sleep_for(interval);
+    next += interval;
+    std::this_thread::sleep_until(next);
   }
 }
 

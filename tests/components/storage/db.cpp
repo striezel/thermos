@@ -26,7 +26,7 @@
 #include "to_time.hpp"
 
 #if !defined(THERMOS_NO_SQLITE)
-TEST_CASE("db storage")
+TEST_CASE("db storage: thermal data")
 {
   using namespace thermos;
   using namespace thermos::storage;
@@ -49,12 +49,12 @@ TEST_CASE("db storage")
 
   SECTION("file is not in SQLite 3 format")
   {
-    const auto file_name = "file-is-not-sqlite3.db";
+    const auto file_name = "thermal-file-is-not-sqlite3.db";
     {
       std::ofstream stream(file_name);
       REQUIRE( stream.good() );
-      stream << "foo;origin is here;42000;2022-04-23 19:18:17\n";
-      stream << "foo;origin is here;60000;2022-04-23 19:20:21\n";
+      stream << "foo;origin is here;temperature;42000;2022-04-23 19:18:17\n";
+      stream << "foo;origin is here;temperature;60000;2022-04-23 19:20:21\n";
       REQUIRE( stream.good() );
       stream.close();
     }
@@ -88,7 +88,7 @@ TEST_CASE("db storage")
     reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
-    const auto file_name = "storage-normal.db";
+    const auto file_name = "storage-normal-thermal.db";
 
     db store;
     const auto opt = store.save(data, file_name);
@@ -134,7 +134,7 @@ TEST_CASE("db storage")
     reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
-    const auto file_name = "storage-append-existing.db";
+    const auto file_name = "storage-append-existing-thermal.db";
 
     db store;
     // save first part of data
@@ -160,6 +160,157 @@ TEST_CASE("db storage")
     {
       reading.dev.origin.append(" abc");
       reading.value += 100;
+      reading.time = to_time(2022, 4, 23, 22, 24, i);
+      data.push_back(reading);
+    }
+
+    const auto opt_append = store.save(data, file_name);
+    REQUIRE_FALSE( opt_append.has_value() );
+    REQUIRE( std::filesystem::exists(file_name) );
+
+    const auto size_two = std::filesystem::file_size(file_name);
+
+    REQUIRE( std::filesystem::remove(file_name) );
+
+    // Append means that the file size increased.
+    REQUIRE( size_one < size_two );
+  }
+}
+
+TEST_CASE("db storage: load data")
+{
+  using namespace thermos;
+  using namespace thermos::storage;
+
+  SECTION("file cannot be opened / created")
+  {
+    std::vector<thermos::load::reading> data;
+    load::reading reading;
+    reading.dev.name = "foo";
+    reading.dev.origin = "ori";
+    reading.value = 42000;
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    data.push_back(reading);
+
+    db store;
+    const auto opt = store.save(data, "/path/may-not/exist/for-real-load.db");
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Could not open") != std::string::npos );
+  }
+
+  SECTION("file is not in SQLite 3 format")
+  {
+    const auto file_name = "load-file-is-not-sqlite3.db";
+    {
+      std::ofstream stream(file_name);
+      REQUIRE( stream.good() );
+      stream << "foo;origin is here;temperature;42000;2022-04-23 19:18:17\n";
+      stream << "foo;origin is here;temperature;60000;2022-04-23 19:20:21\n";
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    std::vector<thermos::load::reading> data;
+    load::reading reading;
+    reading.dev.name = "foo";
+    reading.dev.origin = "ori";
+    reading.value = 42000;
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    data.push_back(reading);
+
+    db store;
+    const auto opt = store.save(data, file_name);
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Failed") != std::string::npos );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+
+  SECTION("normal write operation")
+  {
+    std::vector<thermos::load::reading> data;
+    load::reading reading;
+    reading.dev.name = "foo";
+    reading.dev.origin = "origin is here";
+    reading.value = 2400;
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    data.push_back(reading);
+    reading.value = 600;
+    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    data.push_back(reading);
+
+    const auto file_name = "storage-normal-load.db";
+
+    db store;
+    const auto opt = store.save(data, file_name);
+    REQUIRE_FALSE( opt.has_value() );
+    REQUIRE( std::filesystem::exists(file_name) );
+
+    // read data back to check file format
+    std::array<char, 24> buffer;
+    buffer.fill('\0');
+    {
+      std::ifstream stream(file_name);
+      REQUIRE( stream.good() );
+      stream.read(buffer.data(), buffer.size());
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    // First 16 bytes of SQLite 3 file are "SQLite format 3", followed by NUL.
+    const std::string s3 = std::string(buffer.data(), 15);
+    REQUIRE( s3 == "SQLite format 3" );
+    REQUIRE( buffer[15] == '\0' );
+    // Bytes at offset 18 are 0x01, 0x01, 0x00, 0x40, 0x20, 0x20.
+    REQUIRE( buffer[18] == 0x01 );
+    REQUIRE( buffer[19] == 0x01 );
+    REQUIRE( buffer[20] == 0x00 );
+    REQUIRE( buffer[21] == 0x40 );
+    REQUIRE( buffer[22] == 0x20 );
+    REQUIRE( buffer[23] == 0x20 );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+
+  SECTION("save appends to existing file")
+  {
+    std::vector<thermos::load::reading> data;
+    load::reading reading;
+    reading.dev.name = "foo";
+    reading.dev.origin = "origin is here";
+    reading.value = 2400;
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    data.push_back(reading);
+    reading.value = 600;
+    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    data.push_back(reading);
+
+    const auto file_name = "storage-append-existing-load.db";
+
+    db store;
+    // save first part of data
+    const auto opt = store.save(data, file_name);
+    REQUIRE_FALSE( opt.has_value() );
+    REQUIRE( std::filesystem::exists(file_name) );
+
+    const auto size_one = std::filesystem::file_size(file_name);
+    REQUIRE( size_one > 0 );
+
+    // prepare data for append operation
+    data.clear();
+    reading.dev.name = "bar";
+    reading.dev.origin = "somewhere else";
+    reading.value = 4321;
+    reading.time = to_time(2022, 4, 23, 20, 19, 18);
+    data.push_back(reading);
+    reading.value = 1234;
+    reading.time = to_time(2022, 4, 23, 22, 23, 24);
+    data.push_back(reading);
+    // Generate more data to force resize.
+    for (unsigned int i = 1; i < 60; ++i)
+    {
+      reading.dev.origin.append(" abc");
+      reading.value += 1;
       reading.time = to_time(2022, 4, 23, 22, 24, i);
       data.push_back(reading);
     }

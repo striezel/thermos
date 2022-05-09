@@ -11,7 +11,7 @@ set(component_tests_sources
     ../../lib/load/reading.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
-    ../../lib/storage/csv.cpp
+    ../../lib/storage/csv.hpp
     ../../lib/storage/db.cpp
     ../../lib/storage/factory.cpp
     ../../lib/storage/type.cpp

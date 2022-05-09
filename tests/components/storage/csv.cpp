@@ -24,7 +24,7 @@
 #include "../../../lib/storage/csv.hpp"
 #include "to_time.hpp"
 
-TEST_CASE("csv storage")
+TEST_CASE("csv storage: thermal data")
 {
   using namespace thermos;
   using namespace thermos::storage;
@@ -58,7 +58,7 @@ TEST_CASE("csv storage")
     reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
-    const auto file_name = "storage-normal.csv";
+    const auto file_name = "storage-normal-thermal-data.csv";
 
     csv store;
     const auto opt = store.save(data, file_name);
@@ -72,10 +72,10 @@ TEST_CASE("csv storage")
       REQUIRE( stream.good() );
       std::getline(stream, line);
       REQUIRE( stream.good() );
-      REQUIRE( line == "foo;origin is here;42000;2022-04-23 19:18:17" );
+      REQUIRE( line == "foo;origin is here;temperature;42000;2022-04-23 19:18:17" );
       std::getline(stream, line);
       REQUIRE( stream.good() );
-      REQUIRE( line == "foo;origin is here;60000;2022-04-23 19:20:21" );
+      REQUIRE( line == "foo;origin is here;temperature;60000;2022-04-23 19:20:21" );
       stream.close();
     }
 
@@ -95,7 +95,7 @@ TEST_CASE("csv storage")
     reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
-    const auto file_name = "storage-append-existing.csv";
+    const auto file_name = "storage-append-existing-thermal-data.csv";
 
     csv store;
     // save first part of data
@@ -125,16 +125,134 @@ TEST_CASE("csv storage")
       REQUIRE( stream.good() );
       std::getline(stream, line);
       REQUIRE( stream.good() );
-      REQUIRE( line == "foo;origin is here;42000;2022-04-23 19:18:17" );
+      REQUIRE( line == "foo;origin is here;temperature;42000;2022-04-23 19:18:17" );
       std::getline(stream, line);
       REQUIRE( stream.good() );
-      REQUIRE( line == "foo;origin is here;60000;2022-04-23 19:20:21" );
+      REQUIRE( line == "foo;origin is here;temperature;60000;2022-04-23 19:20:21" );
       std::getline(stream, line);
       REQUIRE( stream.good() );
-      REQUIRE( line == "bar;somewhere else;43210;2022-04-23 20:19:18" );
+      REQUIRE( line == "bar;somewhere else;temperature;43210;2022-04-23 20:19:18" );
       std::getline(stream, line);
       REQUIRE( stream.good() );
-      REQUIRE( line == "bar;somewhere else;12345;2022-04-23 22:23:24" );
+      REQUIRE( line == "bar;somewhere else;temperature;12345;2022-04-23 22:23:24" );
+      stream.close();
+    }
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+}
+
+TEST_CASE("csv storage: load data")
+{
+  using namespace thermos;
+  using namespace thermos::storage;
+
+  SECTION("file cannot be opened / created")
+  {
+    std::vector<thermos::load::reading> data;
+    load::reading reading;
+    reading.dev.name = "foo";
+    reading.dev.origin = "ori";
+    reading.value = 2400;
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    data.push_back(reading);
+
+    csv store;
+    const auto opt = store.save(data, "/path/may-not/exist/for-real.csv");
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Failed to create or open file") != std::string::npos );
+  }
+
+  SECTION("normal write operation")
+  {
+    std::vector<thermos::load::reading> data;
+    load::reading reading;
+    reading.dev.name = "foo";
+    reading.dev.origin = "origin is here";
+    reading.value = 2400;
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    data.push_back(reading);
+    reading.value = 600;
+    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    data.push_back(reading);
+
+    const auto file_name = "storage-normal-load.csv";
+
+    csv store;
+    const auto opt = store.save(data, file_name);
+    REQUIRE_FALSE( opt.has_value() );
+    REQUIRE( std::filesystem::exists(file_name) );
+
+    // read data back to check file content
+    std::string line;
+    {
+      std::ifstream stream(file_name);
+      REQUIRE( stream.good() );
+      std::getline(stream, line);
+      REQUIRE( stream.good() );
+      REQUIRE( line == "foo;origin is here;load;2400;2022-04-23 19:18:17" );
+      std::getline(stream, line);
+      REQUIRE( stream.good() );
+      REQUIRE( line == "foo;origin is here;load;600;2022-04-23 19:20:21" );
+      stream.close();
+    }
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+
+  SECTION("save appends to existing file")
+  {
+    std::vector<thermos::load::reading> data;
+    load::reading reading;
+    reading.dev.name = "foo";
+    reading.dev.origin = "origin is here";
+    reading.value = 2400;
+    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    data.push_back(reading);
+    reading.value = 600;
+    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    data.push_back(reading);
+
+    const auto file_name = "storage-append-existing-load.csv";
+
+    csv store;
+    // save first part of data
+    const auto opt = store.save(data, file_name);
+    REQUIRE_FALSE( opt.has_value() );
+    REQUIRE( std::filesystem::exists(file_name) );
+
+    // prepare data for append operation
+    data.clear();
+    reading.dev.name = "bar";
+    reading.dev.origin = "somewhere else";
+    reading.value = 3210;
+    reading.time = to_time(2022, 4, 23, 20, 19, 18);
+    data.push_back(reading);
+    reading.value = 1234;
+    reading.time = to_time(2022, 4, 23, 22, 23, 24);
+    data.push_back(reading);
+
+    const auto opt_append = store.save(data, file_name);
+    REQUIRE_FALSE( opt_append.has_value() );
+    REQUIRE( std::filesystem::exists(file_name) );
+
+    // read data back to check file content
+    std::string line;
+    {
+      std::ifstream stream(file_name);
+      REQUIRE( stream.good() );
+      std::getline(stream, line);
+      REQUIRE( stream.good() );
+      REQUIRE( line == "foo;origin is here;load;2400;2022-04-23 19:18:17" );
+      std::getline(stream, line);
+      REQUIRE( stream.good() );
+      REQUIRE( line == "foo;origin is here;load;600;2022-04-23 19:20:21" );
+      std::getline(stream, line);
+      REQUIRE( stream.good() );
+      REQUIRE( line == "bar;somewhere else;load;3210;2022-04-23 20:19:18" );
+      std::getline(stream, line);
+      REQUIRE( stream.good() );
+      REQUIRE( line == "bar;somewhere else;load;1234;2022-04-23 22:23:24" );
       stream.close();
     }
 

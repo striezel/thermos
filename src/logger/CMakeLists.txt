@@ -6,9 +6,13 @@ project(thermos-logger)
 set(thermos_logger_sources
     ../../lib/device.cpp
     ../../lib/device_reading.cpp
+    ../../lib/load/read.cpp
+    ../../lib/load/read_linux.cpp
+    ../../lib/load/reading.cpp
+    ../../lib/reading_type.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
-    ../../lib/storage/csv.cpp
+    ../../lib/storage/csv.hpp
     ../../lib/storage/db.cpp
     ../../lib/storage/factory.cpp
     ../../lib/storage/type.cpp

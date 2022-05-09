@@ -34,7 +34,7 @@ namespace thermos::storage
 class db: public store
 {
   public:
-    /** \brief Saves device readings to a file.
+    /** \brief Saves thermal device readings to a file.
      *
      * \param data        the device readings that shall be stored
      * \param file_name   the file to which the data shall be saved
@@ -42,6 +42,16 @@ class db: public store
      *         Returns an error message otherwise.
      */
     std::optional<std::string> save(const std::vector<thermos::thermal::reading>& data, const std::string& file_name) final;
+
+
+    /** \brief Saves CPU load readings to a file.
+     *
+     * \param data        the device readings that shall be stored
+     * \param file_name   the file to which the data shall be saved
+     * \return Returns an empty optional, if the data was written successfully.
+     *         Returns an error message otherwise.
+     */
+    std::optional<std::string> save(const std::vector<thermos::load::reading>& data, const std::string& file_name) final;
   private:
     /** \brief Ensures that the tables needed to save information exist.
      *
@@ -50,6 +60,14 @@ class db: public store
      *         Returns an error message otherwise.
      */
     std::optional<std::string> ensure_tables_exist(sqlite::database& db);
+
+    /** \brief Prepares a database file for writing.
+     *
+     * \param file_name   the file to which the data shall be saved
+     * \return Returns an database object, if the database was created successfully.
+     *         Returns an error message otherwise.
+     */
+    nonstd::expected<sqlite::database, std::string> prepare_db(const std::string& file_name);
 
     /** \brief Finds a device in the database or creates it, if it is missing.
      *
@@ -68,6 +86,33 @@ class db: public store
      *         Returns an error message otherwise.
      */
     std::optional<std::string> insert_reading(sqlite::database& db, const device_reading& reading);
+
+    template<typename T>
+    std::optional<std::string> save_impl(const std::vector<T>& data, const std::string& file_name)
+    {
+      // Open the database.
+      auto maybe_db = prepare_db(file_name);
+      if (!maybe_db.has_value())
+      {
+        return maybe_db.error();
+      }
+      auto& db = maybe_db.value();
+
+      for(const auto& reading: data)
+      {
+        // Note: Potentially, this loop could be optimized by avoiding to look up
+        //       the device ids repeatedly for the same devices. However, currently
+        //       the code does not use multiple readings for the same device in one
+        //       call to the save() method yet, so we should still be fine.
+        auto insert = insert_reading(db, reading);
+        if (insert.has_value())
+        {
+          return insert;
+        }
+      }
+
+      return std::nullopt;
+    }
 };
 
 } // namespace

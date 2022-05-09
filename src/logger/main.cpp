@@ -57,7 +57,7 @@ void showHelp()
 
   std::cout << "thermos-logger [OPTIONS]\n"
             << "\n"
-            << "Logs thermal sensor data to a CSV or SQLite 3 file.\n"
+            << "Logs thermal sensor data and CPU load to a CSV or SQLite 3 file.\n"
             << "\n"
             << "options:\n"
             << "  -? | --help            - Shows this help message.\n"
