@@ -6,6 +6,7 @@ project(component_tests)
 
 set(component_tests_sources
     ../../lib/device.cpp
+    ../../lib/device_reading.cpp
     ../../lib/reading_type.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp

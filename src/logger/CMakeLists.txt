@@ -5,6 +5,7 @@ project(thermos-logger)
 
 set(thermos_logger_sources
     ../../lib/device.cpp
+    ../../lib/device_reading.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
     ../../lib/storage/csv.cpp

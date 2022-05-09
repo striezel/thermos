@@ -33,11 +33,11 @@ TEST_CASE("db storage")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<thermal::reading> data;
+    std::vector<thermos::thermal::reading> data;
     thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.millicelsius = 42000;
+    reading.value = 42000;
     reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
@@ -59,11 +59,11 @@ TEST_CASE("db storage")
       stream.close();
     }
 
-    std::vector<thermal::reading> data;
+    std::vector<thermos::thermal::reading> data;
     thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.millicelsius = 42000;
+    reading.value = 42000;
     reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
@@ -77,14 +77,14 @@ TEST_CASE("db storage")
 
   SECTION("normal write operation")
   {
-    std::vector<thermal::reading> data;
+    std::vector<thermos::thermal::reading> data;
     thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.millicelsius = 42000;
+    reading.value = 42000;
     reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.millicelsius = 60000;
+    reading.value = 60000;
     reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
@@ -123,14 +123,14 @@ TEST_CASE("db storage")
 
   SECTION("save appends to existing file")
   {
-    std::vector<thermal::reading> data;
+    std::vector<thermos::thermal::reading> data;
     thermal::reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.millicelsius = 42000;
+    reading.value = 42000;
     reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.millicelsius = 60000;
+    reading.value = 60000;
     reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
@@ -149,17 +149,17 @@ TEST_CASE("db storage")
     data.clear();
     reading.dev.name = "bar";
     reading.dev.origin = "somewhere else";
-    reading.millicelsius = 43210;
+    reading.value = 43210;
     reading.time = to_time(2022, 4, 23, 20, 19, 18);
     data.push_back(reading);
-    reading.millicelsius = 12345;
+    reading.value = 12345;
     reading.time = to_time(2022, 4, 23, 22, 23, 24);
     data.push_back(reading);
     // Generate more data to force resize.
     for (unsigned int i = 1; i < 60; ++i)
     {
       reading.dev.origin.append(" abc");
-      reading.millicelsius += 100;
+      reading.value += 100;
       reading.time = to_time(2022, 4, 23, 22, 24, i);
       data.push_back(reading);
     }

@@ -29,7 +29,7 @@ TEST_CASE("thermal::reading constructor")
   {
     thermal::reading reading;
     REQUIRE_FALSE( reading.dev.filled() );
-    REQUIRE( reading.millicelsius == std::numeric_limits<int64_t>::min() );
+    REQUIRE( reading.value == std::numeric_limits<int64_t>::min() );
     REQUIRE( reading.time == thermal::reading::reading_time_t() );
   }
 }
@@ -54,7 +54,7 @@ TEST_CASE("thermal::reading::filled()")
 
     thermal::reading reading;
     reading.dev = dev;
-    reading.millicelsius = 42000;
+    reading.value = 42000;
     reading.time = std::chrono::system_clock::now();
     REQUIRE( reading.filled() );
   }
@@ -73,9 +73,9 @@ TEST_CASE("thermal::reading::filled()")
       REQUIRE_FALSE( reading.filled() );
     }
 
-    SECTION("only temperature")
+    SECTION("only value")
     {
-      reading.millicelsius = 42000;
+      reading.value = 42000;
       REQUIRE_FALSE( reading.filled() );
     }
 
@@ -85,14 +85,14 @@ TEST_CASE("thermal::reading::filled()")
       REQUIRE_FALSE( reading.filled() );
     }
 
-    SECTION("only dev and temperature")
+    SECTION("only dev and value")
     {
       device dev;
       dev.name = "foo";
       dev.origin = "bar";
 
       reading.dev = dev;
-      reading.millicelsius = 42000;
+      reading.value = 42000;
       REQUIRE_FALSE( reading.filled() );
     }
 
@@ -107,9 +107,9 @@ TEST_CASE("thermal::reading::filled()")
       REQUIRE_FALSE( reading.filled() );
     }
 
-    SECTION("only temperature and time")
+    SECTION("only value and time")
     {
-      reading.millicelsius = 42000;
+      reading.value = 42000;
       reading.time = std::chrono::system_clock::now();
       REQUIRE_FALSE( reading.filled() );
     }
@@ -125,16 +125,16 @@ TEST_CASE("thermal::reading::celsius()")
     thermal::reading reading;
     REQUIRE( reading.celsius() == -9223372036854775.808 );
 
-    reading.millicelsius = 42000;
+    reading.value = 42000;
     REQUIRE( reading.celsius() == 42.0 );
 
-    reading.millicelsius = 55500;
+    reading.value = 55500;
     REQUIRE( reading.celsius() == 55.5 );
 
-    reading.millicelsius = -40000;
+    reading.value = -40000;
     REQUIRE( reading.celsius() == -40.0 );
 
-    reading.millicelsius = -273150;
+    reading.value = -273150;
     REQUIRE( reading.celsius() == -273.15 );
   }
 }
@@ -147,16 +147,16 @@ TEST_CASE("thermal::reading::fahrenheit()")
   {
     thermal::reading reading;
 
-    reading.millicelsius = 0; // 0 °C
+    reading.value = 0; // 0 °C
     REQUIRE( reading.fahrenheit() == 32.0 );
 
-    reading.millicelsius = 100000; // 100 °C
+    reading.value = 100000; // 100 °C
     REQUIRE( reading.fahrenheit() == 212.0 );
 
-    reading.millicelsius = -40000; // -40 °C == -40 °F
+    reading.value = -40000; // -40 °C == -40 °F
     REQUIRE( reading.fahrenheit() == -40.0 );
 
-    reading.millicelsius = -273150;
+    reading.value = -273150;
     REQUIRE( reading.fahrenheit() == -459.67 );
   }
 }

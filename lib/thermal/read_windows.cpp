@@ -221,8 +221,9 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_wmi()
       return nonstd::make_unexpected("Failed to get current temperature from WMI result. "
         + std::string("Error code is ") + std::to_string(hr) + ".");
     }
-    // Temperature is given in tenths of Kelvins as VT_I4 in lVal.
-    reading.millicelsius = property.lVal * 100 - 273200;
+    // Temperature is given in tenths of Kelvins as VT_I4 in lVal, but reading
+    // value is expected to be in thousands of degrees Celsius (millicelsius).
+    reading.value = property.lVal * 100 - 273200;
     VariantClear(&property);
     pObject->Release();
     reading.dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(reading.dev.name);

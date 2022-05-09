@@ -5,6 +5,7 @@ project(thermos-info)
 
 set(thermos_info_sources
     ../../lib/device.cpp
+    ../../lib/device_reading.cpp
     ../../lib/thermal/reading.cpp
     ../../lib/thermal/read.cpp
     ../../lib/thermal/read_linux.cpp

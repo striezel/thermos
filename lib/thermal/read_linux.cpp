@@ -61,7 +61,7 @@ nonstd::expected<thermos::thermal::reading, std::string> read_thermal_device(con
   try
   {
     std::size_t pos = 0;
-    result.millicelsius = std::stoll(maybe_temperature.value(), &pos);
+    result.value = std::stoll(maybe_temperature.value(), &pos);
     if (pos < maybe_temperature.value().size())
       return nonstd::make_unexpected("File " + temperature.native() + " did not contain an integer value.");
   }
@@ -146,7 +146,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
     try
     {
       std::size_t pos = 0;
-      reading.millicelsius = std::stoll(maybe_temperature.value(), &pos);
+      reading.value = std::stoll(maybe_temperature.value(), &pos);
       if (pos < maybe_temperature.value().size())
         return nonstd::make_unexpected("File " + path_mutable.native() + " did not contain an integer value.");
     }

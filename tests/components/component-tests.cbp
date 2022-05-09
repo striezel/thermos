@@ -43,6 +43,8 @@
 		</Linker>
 		<Unit filename="../../lib/device.cpp" />
 		<Unit filename="../../lib/device.hpp" />
+		<Unit filename="../../lib/device_reading.cpp" />
+		<Unit filename="../../lib/device_reading.hpp" />
 		<Unit filename="../../lib/reading_type.cpp" />
 		<Unit filename="../../lib/reading_type.hpp" />
 		<Unit filename="../../lib/sqlite/database.cpp" />
