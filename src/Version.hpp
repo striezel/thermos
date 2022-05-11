@@ -27,7 +27,7 @@ namespace thermos
 {
 
 /** \brief version information */
-const std::string version = "version 0.3.0, 2022-04-29";
+const std::string version = "version 0.4.0, 2022-05-11";
 
 } // namespace
 
