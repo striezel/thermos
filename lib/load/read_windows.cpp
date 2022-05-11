@@ -18,25 +18,26 @@
  -------------------------------------------------------------------------------
 */
 
-#include "read.hpp"
+#include "read_windows.hpp"
+#include "calculator.hpp"
 #if defined(_WIN32) || defined(_WIN64)
-  #include "read_windows.hpp"
-#elif defined(__linux__) || defined(linux)
-  #include "read_linux.hpp"
-#endif
 
-namespace thermos::load
+namespace thermos::windows::load
 {
 
 nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
 {
-  #if defined(_WIN32) || defined(_WIN64)
-    return thermos::windows::load::read_all();
-  #elif defined(__linux__) || defined(linux)
-    return thermos::linux_like::load::read_all();
-  #else
-    #error Unknown or unsupported operating system!
-  #endif
+  static calculator calc;
+
+  constexpr std::chrono::milliseconds wait{250};
+  if (calc.fresh())
+  {
+    return calc.current(wait);
+  }
+
+  return calc.current();
 }
 
 } // namespace
+
+#endif // Windows

@@ -43,10 +43,14 @@
 		<Unit filename="../../lib/device.hpp" />
 		<Unit filename="../../lib/device_reading.cpp" />
 		<Unit filename="../../lib/device_reading.hpp" />
+		<Unit filename="../../lib/load/calculator.cpp" />
+		<Unit filename="../../lib/load/calculator.hpp" />
 		<Unit filename="../../lib/load/read.cpp" />
 		<Unit filename="../../lib/load/read.hpp" />
 		<Unit filename="../../lib/load/read_linux.cpp" />
 		<Unit filename="../../lib/load/read_linux.hpp" />
+		<Unit filename="../../lib/load/read_windows.cpp" />
+		<Unit filename="../../lib/load/read_windows.hpp" />
 		<Unit filename="../../lib/load/reading.cpp" />
 		<Unit filename="../../lib/load/reading.hpp" />
 		<Unit filename="../../lib/thermal/read.cpp" />

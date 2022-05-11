@@ -18,25 +18,26 @@
  -------------------------------------------------------------------------------
 */
 
-#include "read.hpp"
+#ifndef THERMOS_READ_LOAD_WINDOWS_HPP
+#define THERMOS_READ_LOAD_WINDOWS_HPP
+
+#include <string>
+#include <vector>
+#include "../../third-party/nonstd/expected.hpp"
+#include "reading.hpp"
+
 #if defined(_WIN32) || defined(_WIN64)
-  #include "read_windows.hpp"
-#elif defined(__linux__) || defined(linux)
-  #include "read_linux.hpp"
-#endif
-
-namespace thermos::load
+namespace thermos::windows::load
 {
 
-nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
-{
-  #if defined(_WIN32) || defined(_WIN64)
-    return thermos::windows::load::read_all();
-  #elif defined(__linux__) || defined(linux)
-    return thermos::linux_like::load::read_all();
-  #else
-    #error Unknown or unsupported operating system!
-  #endif
-}
+/** \brief Reads all CPU load data.
+ *
+ * \return Returns a vector containing the device readings, if successful.
+ *         Returns an error message, if no readings were available.
+ */
+nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all();
 
 } // namespace
+#endif // Windows
+
+#endif // THERMOS_READ_LOAD_WINDOWS_HPP
