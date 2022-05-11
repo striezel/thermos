@@ -70,7 +70,7 @@ void showHelp()
             << "                               " << type::db << "\n"
             << "                           If the type is '" << type::csv << "', then the readings are stored\n"
             << "                           as character-separated values (CSV). If the type is\n"
-            << "                           '" << type::db << "', then the readings are stored in as SQLite 3\n"
+            << "                           '" << type::db << "', then the readings are stored in a SQLite 3\n"
             << "                           database.\n"
             << "                           If no type is given, then '" << defaultFileType << "' is assumed.\n";
 }

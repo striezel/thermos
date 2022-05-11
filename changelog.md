@@ -1,5 +1,9 @@
 # Version history of thermos
 
+## Next Version (2022-05-??)
+
+A typo in the help text of `thermos-logger` is fixed.
+
 ## Version 0.4.0 (2022-05-11)
 
 `thermos-info` and `thermos-logger` show and log information about the CPU load,
