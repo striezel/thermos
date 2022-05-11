@@ -87,7 +87,7 @@ nonstd::expected<thermos::load::reading, std::string> calculator::current(const 
   const auto one = current();
   if (!one.has_value())
   {
-    return one.error();
+    return nonstd::make_unexpected(one.error());
   }
   std::this_thread::sleep_for(ms);
   return current();

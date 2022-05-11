@@ -24,6 +24,8 @@
 #if defined(_WIN32) || defined(_WIN64)
 #include <chrono>
 #include <cstdint>
+#include <string>
+#include "../../third-party/nonstd/expected.hpp"
 #include "reading.hpp"
 
 namespace thermos::load

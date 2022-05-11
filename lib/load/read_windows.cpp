@@ -27,15 +27,18 @@ namespace thermos::windows::load
 
 nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
 {
-  static calculator calc;
+  static thermos::load::calculator calc;
 
   constexpr std::chrono::milliseconds wait{250};
-  if (calc.fresh())
+  auto single_result = calc.fresh() ? calc.current(wait) : calc.current();
+  if (!single_result.has_value())
   {
-    return calc.current(wait);
+    return nonstd::make_unexpected(single_result.error());
   }
 
-  return calc.current();
+  std::vector<thermos::load::reading> vec;
+  vec.push_back(single_result.value());
+  return vec;
 }
 
 } // namespace
