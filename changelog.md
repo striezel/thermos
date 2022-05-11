@@ -1,5 +1,22 @@
 # Version history of thermos
 
+## Version 0.4.0-pre (2022-05-11)
+
+`thermos-info` and `thermos-logger` show and log information about the CPU load,
+too.
+
+CPU load is given in percent. Zero percent means the system is idle. Non-zero
+percentages have a different meaning, depending on the operating system. On
+Windows systems, a load of 100 % means that all cores are completely busy. On
+Linux systems, a load of 100 % means that one core is completely busy. So the
+interpretation of load values depends on the number of cores in that case. For
+example, imagine a system with four CPU cores. If all four cores are completely
+busy, then the CPU load will be 400 % on Linux, but only 100 % on Windows. If
+only one core is busy on the same system, then the CPU load will be 100 % on Linux, but only 25 % on Windows.
+
+In other words: CPU load scales with the number of CPU cores on Linux, but it
+does not on Windows.
+
 ## Version 0.3.0 (2022-04-29)
 
 `thermo-info` is renamed to `thermos-info`.
