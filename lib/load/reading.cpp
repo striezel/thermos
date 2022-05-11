@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the weather information collector.
-    Copyright (C) 2020, 2021  Dirk Stolle
+    This file is part of thermos.
+    Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,24 +18,24 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_STORAGE_UTILITIES_HPP
-#define THERMOS_STORAGE_UTILITIES_HPP
+#include "reading.hpp"
 
-#include "../../third-party/nonstd/expected.hpp"
-#include "../thermal/reading.hpp"
-
-namespace thermos::storage
+namespace thermos::load
 {
 
-/** \brief Translates a time point to readable format 'YYYY-MM-DD HH:ii:ss'.
- *
- * \param date_time  the time point to transform to string
- * \return Returns a string representing the time point. It is similar to SQL
- *         dates, e. g. "2020-05-25 13:37:00" could be a return value.
- *         If transformation fails, then an error message is returned.
- */
-nonstd::expected<std::string, std::string> time_to_string(const thermal::reading::reading_time_t& date_time);
+reading::reading()
+: device_reading()
+{
+}
+
+double reading::percent() const
+{
+  return static_cast<double>(value);
+}
+
+reading_type reading::type() const
+{
+  return reading_type::load;
+}
 
 } // namespace
-
-#endif // THERMOS_STORAGE_UTILITIES_HPP

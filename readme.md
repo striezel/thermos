@@ -5,7 +5,8 @@
 [![GitHub CI MSVC status](https://github.com/striezel/thermos/workflows/MSVC/badge.svg)](https://github.com/striezel/thermos/actions)
 [![GitLab pipeline status](https://gitlab.com/striezel/thermos/badges/main/pipeline.svg)](https://gitlab.com/striezel/thermos/)
 
-This repository contains code to read the thermal sensors of a system.
+This repository contains code to read the thermal sensors and CPU load of a
+system.
 
 _Note:_ This code is still in an early stage of development. So far it has only
 very few features.

@@ -25,36 +25,33 @@
 namespace thermos::storage
 {
 
-std::optional<std::string> db::save(const std::vector<device_reading>& data, const std::string& file_name)
+nonstd::expected<sqlite::database, std::string> db::prepare_db(const std::string& file_name)
 {
   // Open the database.
   auto maybe_db = sqlite::database::open(file_name);
   if (!maybe_db.has_value())
   {
-    return maybe_db.error();
+    return nonstd::make_unexpected(maybe_db.error());
   }
   auto& db = maybe_db.value();
   // Make sure the schema is correct.
   const auto existence = ensure_tables_exist(db);
   if (existence.has_value())
   {
-    return existence;
+    return nonstd::make_unexpected(existence.value());
   }
 
-  for(const auto& reading: data)
-  {
-    // Note: Potentially, this loop could be optimized by avoiding to look up
-    //       the device ids repeatedly for the same devices. However, currently
-    //       the code does not use multiple readings for the same device in one
-    //       call to the save() method yet, so we should still be fine.
-    auto insert = insert_reading(db, reading);
-    if (insert.has_value())
-    {
-      return insert;
-    }
-  }
+  return std::move(db);
+}
 
-  return std::nullopt;
+std::optional<std::string> db::save(const std::vector<thermos::thermal::reading>& data, const std::string& file_name)
+{
+  return save_impl(data, file_name);
+}
+
+std::optional<std::string> db::save(const std::vector<thermos::load::reading>& data, const std::string& file_name)
+{
+  return save_impl(data, file_name);
 }
 
 std::optional<std::string> db::ensure_tables_exist(sqlite::database& db)
@@ -75,6 +72,7 @@ std::optional<std::string> db::ensure_tables_exist(sqlite::database& db)
         CREATE TABLE reading (
           readingId INTEGER PRIMARY KEY NOT NULL,
           deviceId INTEGER NOT NULL,
+          type TEXT,
           date TEXT,
           value INTEGER
         );
@@ -148,9 +146,10 @@ std::optional<std::string> db::insert_reading(sqlite::database& db, const device
     return time_string.error();
   }
 
-  const std::string sql = "INSERT INTO reading (deviceId, date, value) VALUES ("
-      + std::to_string(dev_id.value()) + ", '" + time_string.value() + "', "
-      + std::to_string(reading.millicelsius) + ");";
+  const std::string sql = "INSERT INTO reading (deviceId, type, date, value) VALUES ("
+      + std::to_string(dev_id.value()) + ", '" + to_string(reading.type())
+      + "', '" + time_string.value() + "', " + std::to_string(reading.value)
+      + ");";
   if (!db.exec(sql))
   {
     return "Could not insert new device reading into database!";

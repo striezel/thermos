@@ -18,43 +18,28 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_DEVICE_READING_HPP
-#define THERMOS_DEVICE_READING_HPP
-
-#include <chrono>
-#include <cstdint>
-#include "device.hpp"
 #include "reading_type.hpp"
+#include <stdexcept>
 
 namespace thermos
 {
 
-struct device_reading
+std::string to_string(const reading_type& t)
 {
-  device_reading();
-  virtual ~device_reading() = default;
+  switch (t)
+  {
+    case reading_type::temperature:
+         return "temperature";
+    case reading_type::load:
+         return "load";
+    default:
+         throw std::invalid_argument("Invalid reading_type value in to_string!");
+  }
+}
 
-  /// shorthand for time point type
-  using reading_time_t = std::chrono::time_point<std::chrono::system_clock>;
-
-  /** \brief Checks whether this instance has valid data.
-   *
-   * \return Returns true, if this instance has valid data.
-   * \remarks When this method returns false, then the data shall not be used.
-   */
-  bool filled() const;
-
-  /** \brief Gets the type of the reading, hinting at the implementation.
-   *
-   * \return Returns the type of the reading.
-   */
-  virtual reading_type type() const = 0;
-
-  device dev; /**< device from which the reading was obtained */
-  int64_t value; /**< value of the reading; meaning depends on type */
-  reading_time_t time; /**< time of the reading */
-};
+std::ostream& operator<<(std::ostream& os, const reading_type& t)
+{
+  return os << to_string(t);
+}
 
 } // namespace
-
-#endif // THERMOS_DEVICE_READING_HPP

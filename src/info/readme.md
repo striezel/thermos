@@ -1,14 +1,14 @@
 # thermos-info
 
 `thermos-info` is a command-line program that show the current thermal sensor
-data.
+data and CPU load.
 
 ## Usage
 
 ```
 thermos-info [OPTIONS]
 
-Reads and displays thermal sensor data.
+Displays thermal sensor data and CPU load average.
 
 options:
   -? | --help       - Shows this help message.

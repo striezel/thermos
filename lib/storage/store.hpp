@@ -25,7 +25,8 @@
 #include <string>
 #include <vector>
 #include "../../third-party/nonstd/expected.hpp"
-#include "../device_reading.hpp"
+#include "../load/reading.hpp"
+#include "../thermal/reading.hpp"
 
 namespace thermos::storage
 {
@@ -46,7 +47,17 @@ class store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    virtual std::optional<std::string> save(const std::vector<device_reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> save(const std::vector<thermos::thermal::reading>& data, const std::string& file_name) = 0;
+
+
+    /** \brief Saves CPU load readings to a file.
+     *
+     * \param data        the device readings that shall be stored
+     * \param file_name   the file to which the data shall be saved
+     * \return Returns an empty optional, if the data was written successfully.
+     *         Returns an error message otherwise.
+     */
+    virtual std::optional<std::string> save(const std::vector<thermos::load::reading>& data, const std::string& file_name) = 0;
 };
 
 } // namespace

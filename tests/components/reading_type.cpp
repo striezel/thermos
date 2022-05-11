@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the weather information collector.
-    Copyright (C) 2020, 2021  Dirk Stolle
+    This file is part of the test suite for thermos.
+    Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,24 +18,35 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_STORAGE_UTILITIES_HPP
-#define THERMOS_STORAGE_UTILITIES_HPP
+#include "find_catch.hpp"
+#include <sstream>
+#include "../../lib/reading_type.hpp"
 
-#include "../../third-party/nonstd/expected.hpp"
-#include "../thermal/reading.hpp"
-
-namespace thermos::storage
+TEST_CASE("reading_type's to_string function")
 {
+  using namespace thermos;
 
-/** \brief Translates a time point to readable format 'YYYY-MM-DD HH:ii:ss'.
- *
- * \param date_time  the time point to transform to string
- * \return Returns a string representing the time point. It is similar to SQL
- *         dates, e. g. "2020-05-25 13:37:00" could be a return value.
- *         If transformation fails, then an error message is returned.
- */
-nonstd::expected<std::string, std::string> time_to_string(const thermal::reading::reading_time_t& date_time);
+  REQUIRE( to_string(reading_type::load) == "load" );
+  REQUIRE( to_string(reading_type::temperature) == "temperature" );
 
-} // namespace
+  REQUIRE_THROWS( to_string(static_cast<reading_type>(25)) );
+}
 
-#endif // THERMOS_STORAGE_UTILITIES_HPP
+TEST_CASE("reading_type's stream operator <<")
+{
+  using namespace thermos;
+
+  SECTION("load")
+  {
+    std::ostringstream stream;
+    stream << reading_type::load;
+    REQUIRE( stream.str() == "load" );
+  }
+
+  SECTION("temperature")
+  {
+    std::ostringstream stream;
+    stream << reading_type::temperature;
+    REQUIRE( stream.str() == "temperature" );
+  }
+}

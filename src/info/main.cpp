@@ -19,6 +19,7 @@
 */
 
 #include <iostream>
+#include "../../lib/load/read.hpp"
 #include "../../lib/thermal/read.hpp"
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
@@ -37,7 +38,7 @@ void showHelp()
 {
   std::cout << "thermos-info [OPTIONS]\n"
             << "\n"
-            << "Reads and displays thermal sensor data.\n"
+            << "Displays thermal sensor data and CPU load average.\n"
             << "\n"
             << "options:\n"
             << "  -? | --help       - Shows this help message.\n"
@@ -75,19 +76,38 @@ int main(int argc, char** argv)
     } // for i
   } // if arguments are there
 
-  const auto readings = thermos::thermal::read_all();
-  if (!readings.has_value() || readings.value().empty())
+  const auto thermal_readings = thermos::thermal::read_all();
+  if (!thermal_readings.has_value() || thermal_readings.value().empty())
   {
     std::cout << "No temperature readings available!\n";
-    if (!readings.has_value())
-      std::cout << readings.error() << std::endl;
-    return 0;
+    if (!thermal_readings.has_value())
+      std::cout << thermal_readings.error() << std::endl;
+  }
+  else
+  {
+    std::cout << "Temperature data:\n";
+    for (const auto& reading: thermal_readings.value())
+    {
+      std::cout << "Device '" << reading.dev.name << "': " << reading.celsius() << " °C\n"
+                << "  (from " << reading.dev.origin << ")\n";
+    }
   }
 
-  for (const auto& reading: readings.value())
+  const auto load_readings = thermos::load::read_all();
+  if (!load_readings.has_value() || load_readings.value().empty())
   {
-    std::cout << "Device '" << reading.dev.name << "': " << reading.celsius() << " °C\n"
-              << "  (from " << reading.dev.origin << ")\n";
+    std::cout << "No CPU load data available!\n";
+    if (!load_readings.has_value())
+      std::cout << load_readings.error() << std::endl;
+  }
+  else
+  {
+    std::cout << "\n\nCPU load:\n";
+    for (const auto& reading: load_readings.value())
+    {
+      std::cout << "Device '" << reading.dev.name << "': " << reading.percent() << " %\n"
+                << "  (from " << reading.dev.origin << ")\n";
+    }
   }
 
   return 0;

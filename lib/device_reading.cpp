@@ -27,7 +27,7 @@ namespace thermos
 
 device_reading::device_reading()
 : dev(device()),
-  millicelsius(std::numeric_limits<decltype(millicelsius)>::min()),
+  value(std::numeric_limits<decltype(value)>::min()),
   time(reading_time_t())
 {
 }
@@ -35,22 +35,8 @@ device_reading::device_reading()
 bool device_reading::filled() const
 {
   return dev.filled()
-      && (millicelsius != std::numeric_limits<decltype(millicelsius)>::min())
+      && (value != std::numeric_limits<decltype(value)>::min())
       && (time != reading_time_t());
-}
-
-double device_reading::celsius() const
-{
-  // Rounded to 1/100th degree Celsius.
-  return std::round(static_cast<double>(millicelsius) / 10.0) / 100.0;
-}
-
-double device_reading::fahrenheit() const
-{
-  // Convert from millicelsius to Fahrenheit.
-  const double f = static_cast<double>(millicelsius) * 0.0018 + 32.0;
-  // Rounded to 1/100th degree Fahrenheit.
-  return std::round(f * 100.0) / 100.0;
 }
 
 } // namespace

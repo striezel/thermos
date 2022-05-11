@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the weather information collector.
-    Copyright (C) 2020, 2021  Dirk Stolle
+    This file is part of thermos.
+    Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,24 +18,26 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_STORAGE_UTILITIES_HPP
-#define THERMOS_STORAGE_UTILITIES_HPP
+#ifndef THERMOS_READ_LOAD_LINUX_HPP
+#define THERMOS_READ_LOAD_LINUX_HPP
 
+#include <string>
+#include <vector>
 #include "../../third-party/nonstd/expected.hpp"
-#include "../thermal/reading.hpp"
+#include "reading.hpp"
 
-namespace thermos::storage
+#if defined(__linux__) || defined(linux)
+namespace thermos::linux_like::load
 {
 
-/** \brief Translates a time point to readable format 'YYYY-MM-DD HH:ii:ss'.
+/** \brief Reads all CPU load data.
  *
- * \param date_time  the time point to transform to string
- * \return Returns a string representing the time point. It is similar to SQL
- *         dates, e. g. "2020-05-25 13:37:00" could be a return value.
- *         If transformation fails, then an error message is returned.
+ * \return Returns a vector containing the device readings, if successful.
+ *         Returns an error message, if no readings were available.
  */
-nonstd::expected<std::string, std::string> time_to_string(const thermal::reading::reading_time_t& date_time);
+nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all();
 
 } // namespace
+#endif // Linux
 
-#endif // THERMOS_STORAGE_UTILITIES_HPP
+#endif // THERMOS_READ_LOAD_LINUX_HPP

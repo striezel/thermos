@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
-    This file is part of the weather information collector.
-    Copyright (C) 2020, 2021  Dirk Stolle
+    This file is part of thermos.
+    Copyright (C) 2022  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,24 +18,25 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_STORAGE_UTILITIES_HPP
-#define THERMOS_STORAGE_UTILITIES_HPP
+#include "read.hpp"
+#if defined(_WIN32) || defined(_WIN64)
+  #include "read_windows.hpp"
+#elif defined(__linux__) || defined(linux)
+  #include "read_linux.hpp"
+#endif
 
-#include "../../third-party/nonstd/expected.hpp"
-#include "../thermal/reading.hpp"
-
-namespace thermos::storage
+namespace thermos::load
 {
 
-/** \brief Translates a time point to readable format 'YYYY-MM-DD HH:ii:ss'.
- *
- * \param date_time  the time point to transform to string
- * \return Returns a string representing the time point. It is similar to SQL
- *         dates, e. g. "2020-05-25 13:37:00" could be a return value.
- *         If transformation fails, then an error message is returned.
- */
-nonstd::expected<std::string, std::string> time_to_string(const thermal::reading::reading_time_t& date_time);
+nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
+{
+  #if defined(_WIN32) || defined(_WIN64)
+    return thermos::windows::load::read_all();
+  #elif defined(__linux__) || defined(linux)
+    return thermos::linux_like::load::read_all();
+  #else
+    #error Unknown or unsupported operating system!
+  #endif
+}
 
 } // namespace
-
-#endif // THERMOS_STORAGE_UTILITIES_HPP
