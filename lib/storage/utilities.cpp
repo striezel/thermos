@@ -67,4 +67,61 @@ nonstd::expected<std::string, std::string> time_to_string(const thermal::reading
          .append(tm.tm_sec < 10, '0').append(std::to_string(tm.tm_sec));
 }
 
+nonstd::expected<thermal::reading::reading_time_t, std::string> string_to_time(const std::string& value)
+{
+  // Value is something like '2020-04-04 12:34:56', so length is 19 chars.
+  if (value.size() != 19 || value[4] != '-' || value[7] != '-' || value[13] != ':' || value[16] != ':')
+  {
+    return nonstd::make_unexpected("The given string is not a valid date/time, it must follow the pattern 'YYYY-MM-DD hh:mm:ss'.");
+  }
+
+  std::size_t pos;
+  const int year = std::stoi(value, &pos);
+  if (pos != 4 || year < 0)
+  {
+    return nonstd::make_unexpected(value + " is not a valid date/time. Maybe '" + value.substr(0, pos) + "' is not a valid year.");
+  }
+  const int month = std::stoi(value.substr(5, 2), &pos);
+  if (pos != 2 || month > 12 || month < 1)
+  {
+    return nonstd::make_unexpected(value + " is not a valid date/time. Maybe '" + value.substr(5, 2) + "' is not a valid month.");
+  }
+  const int day = std::stoi(value.substr(8, 2), &pos);
+  if (pos != 2 || day < 1 || day > 31)
+  {
+    return nonstd::make_unexpected(value + " is not a valid date/time. Maybe '" + value.substr(8, 2) + "' is not a valid day.");
+  }
+
+  const int hour = std::stoi(value.substr(11, 2), &pos);
+  if (pos != 2 || hour < 0 || hour > 23)
+  {
+    return nonstd::make_unexpected(value + " is not a valid date/time. Maybe '" + value.substr(11, 2) + "' is not a valid hour.");
+  }
+  const int minute = std::stoi(value.substr(14, 2), &pos);
+  if (pos != 2 || minute < 0 || minute > 59)
+  {
+    return nonstd::make_unexpected(value + " is not a valid date/time. Maybe '" + value.substr(14, 2) + "' is not a valid minute.");
+  }
+  const int second = std::stoi(value.substr(17, 2), &pos);
+  if (pos != 2 || second < 0 || second > 59)
+  {
+    return nonstd::make_unexpected(value + " is not a valid date/time. Maybe '" + value.substr(17, 2) + "' is not a valid second.");
+  }
+
+  struct tm tm;
+  tm.tm_sec = second;
+  tm.tm_min = minute;
+  tm.tm_hour = hour;
+  tm.tm_mday = day;
+  tm.tm_mon = month - 1;
+  tm.tm_year = year - 1900;
+  tm.tm_isdst = -1;
+  const time_t tt = mktime(&tm);
+  if (tt == static_cast<time_t>(-1))
+  {
+    return nonstd::make_unexpected("mktime() failed when converting " + value + " to time_t.");
+  }
+  return std::chrono::system_clock::from_time_t(tt);
+}
+
 } // namespace

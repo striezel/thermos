@@ -36,6 +36,15 @@ namespace thermos::storage
  */
 nonstd::expected<std::string, std::string> time_to_string(const thermal::reading::reading_time_t& date_time);
 
+
+/** \brief Translates a date in the format 'YYYY-MM-DD HH:ii:ss' to a time point.
+ *
+ * \param sv  the string containing the date
+ * \return Returns a time point equivalent to the date in the string.
+ *         If transformation fails, then an error message is returned.
+ */
+nonstd::expected<thermal::reading::reading_time_t, std::string> string_to_time(const std::string& value);
+
 } // namespace
 
 #endif // THERMOS_STORAGE_UTILITIES_HPP
