@@ -26,7 +26,7 @@
 #include "to_time.hpp"
 
 #if !defined(THERMOS_NO_SQLITE)
-TEST_CASE("db storage: thermal data")
+TEST_CASE("db storage: save thermal data")
 {
   using namespace thermos;
   using namespace thermos::storage;
@@ -177,7 +177,7 @@ TEST_CASE("db storage: thermal data")
   }
 }
 
-TEST_CASE("db storage: load data")
+TEST_CASE("db storage: save CPU load data")
 {
   using namespace thermos;
   using namespace thermos::storage;
@@ -325,6 +325,189 @@ TEST_CASE("db storage: load data")
 
     // Append means that the file size increased.
     REQUIRE( size_one < size_two );
+  }
+}
+
+TEST_CASE("db storage: load thermal data")
+{
+  using namespace thermos;
+  using namespace thermos::storage;
+
+  SECTION("file cannot be opened / created")
+  {
+    std::vector<thermos::thermal::reading> data;
+    db store;
+    const auto opt = store.load(data, "/path/may-not/exist/for-real.db");
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Could not open") != std::string::npos );
+  }
+
+  SECTION("file is not in SQLite 3 format")
+  {
+    const auto file_name = "thermal-file-is-not-sqlite3-retrieve.db";
+    {
+      std::ofstream stream(file_name);
+      REQUIRE( stream.good() );
+      stream << "foo;origin is here;temperature;42000;2022-04-23 19:18:17\n";
+      stream << "foo;origin is here;temperature;60000;2022-04-23 19:20:21\n";
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    std::vector<thermos::thermal::reading> data;
+    db store;
+    const auto opt = store.load(data, file_name);
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Failed") != std::string::npos );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+
+  SECTION("normal read operation")
+  {
+    thermal::reading reading_one;
+    reading_one.dev.name = "foo_therm";
+    reading_one.dev.origin = "origin is here";
+    reading_one.value = 42000;
+    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
+    thermal::reading reading_two;
+    reading_two.dev.name = "foo_therm";
+    reading_two.dev.origin = "origin is here";
+    reading_two.value = 60000;
+    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+
+    const auto file_name = "storage-normal-thermal-retrieve.db";
+    {
+      // Save thermal data.
+      std::vector<thermos::thermal::reading> data;
+      data.push_back(reading_one);
+      data.push_back(reading_two);
+      db store;
+      const auto opt = store.save(data, file_name);
+      REQUIRE_FALSE( opt.has_value() );
+      // Add some CPU load data (should not be retrieved later).
+      std::vector<thermos::load::reading> data2;
+      load::reading reading_other;
+      reading_other.dev.name = "foo";
+      reading_other.dev.origin = "origin is here";
+      reading_other.value = 2400;
+      reading_other.time = to_time(2022, 4, 23, 19, 19, 19);
+      data2.push_back(reading_other);
+      const auto opt2 = store.save(data2, file_name);
+      REQUIRE_FALSE( opt2.has_value() );
+    }
+
+    // Load data from file.
+    std::vector<thermos::thermal::reading> data;
+    db store;
+    const auto opt = store.load(data, file_name);
+    REQUIRE_FALSE( opt.has_value() );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+
+    REQUIRE( data.size() == 2 );
+    // Check first value.
+    REQUIRE( reading_one.dev.name == data[0].dev.name );
+    REQUIRE( reading_one.dev.origin == data[0].dev.origin );
+    REQUIRE( reading_one.value == data[0].value );
+    REQUIRE( reading_one.time == data[0].time );
+    // Check second value.
+    REQUIRE( reading_two.dev.name == data[1].dev.name );
+    REQUIRE( reading_two.dev.origin == data[1].dev.origin );
+    REQUIRE( reading_two.value == data[1].value );
+    REQUIRE( reading_two.time == data[1].time );
+  }
+}
+
+TEST_CASE("db storage: load CPU load data")
+{
+  using namespace thermos;
+  using namespace thermos::storage;
+
+  SECTION("file cannot be opened / created")
+  {
+    std::vector<thermos::load::reading> data;
+
+    db store;
+    const auto opt = store.load(data, "/path/may-not/exist/for-real-load.db");
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Could not open") != std::string::npos );
+  }
+
+  SECTION("file is not in SQLite 3 format")
+  {
+    const auto file_name = "load-file-is-not-sqlite3-retrieve.db";
+    {
+      std::ofstream stream(file_name);
+      REQUIRE( stream.good() );
+      stream << "foo;origin is here;temperature;42000;2022-04-23 19:18:17\n";
+      stream << "foo;origin is here;temperature;60000;2022-04-23 19:20:21\n";
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    std::vector<thermos::load::reading> data;
+    db store;
+    const auto opt = store.load(data, file_name);
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Failed") != std::string::npos );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+
+  SECTION("normal read operation")
+  {
+    load::reading reading_one;
+    reading_one.dev.name = "foo";
+    reading_one.dev.origin = "origin is here";
+    reading_one.value = 2400;
+    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
+    load::reading reading_two;
+    reading_two.dev.name = "foo";
+    reading_two.dev.origin = "origin is here";
+    reading_two.value = 600;
+    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+
+    const auto file_name = "storage-normal-load-retrieve.db";
+    {
+      // Save CPU load data.
+      std::vector<thermos::load::reading> data;
+      data.push_back(reading_one);
+      data.push_back(reading_two);
+      db store;
+      const auto opt = store.save(data, file_name);
+      REQUIRE_FALSE( opt.has_value() );
+      // Add some thermal data (should not be retrieved later).
+      std::vector<thermos::thermal::reading> data2;
+      thermal::reading reading_other;
+      reading_other.dev.name = "foo2";
+      reading_other.dev.origin = "origin was here";
+      reading_other.value = 24000;
+      reading_other.time = to_time(2022, 4, 23, 19, 19, 19);
+      data2.push_back(reading_other);
+      const auto opt2 = store.save(data2, file_name);
+      REQUIRE_FALSE( opt2.has_value() );
+    }
+
+    // Load data from file.
+    std::vector<thermos::load::reading> data;
+    db store;
+    const auto opt = store.load(data, file_name);
+    REQUIRE_FALSE( opt.has_value() );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+
+    REQUIRE( data.size() == 2 );
+    // Check first value.
+    REQUIRE( reading_one.dev.name == data[0].dev.name );
+    REQUIRE( reading_one.dev.origin == data[0].dev.origin );
+    REQUIRE( reading_one.value == data[0].value );
+    REQUIRE( reading_one.time == data[0].time );
+    // Check second value.
+    REQUIRE( reading_two.dev.name == data[1].dev.name );
+    REQUIRE( reading_two.dev.origin == data[1].dev.origin );
+    REQUIRE( reading_two.value == data[1].value );
+    REQUIRE( reading_two.time == data[1].time );
   }
 }
 #endif // SQLite feature guard

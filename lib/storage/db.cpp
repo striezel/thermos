@@ -20,7 +20,6 @@
 
 #if !defined(THERMOS_NO_SQLITE)
 #include "db.hpp"
-#include "utilities.hpp"
 
 namespace thermos::storage
 {
@@ -52,6 +51,16 @@ std::optional<std::string> db::save(const std::vector<thermos::thermal::reading>
 std::optional<std::string> db::save(const std::vector<thermos::load::reading>& data, const std::string& file_name)
 {
   return save_impl(data, file_name);
+}
+
+std::optional<std::string> db::load(std::vector<thermos::thermal::reading>& data, const std::string& file_name)
+{
+  return load_impl<thermos::thermal::reading>(data, file_name);
+}
+
+std::optional<std::string> db::load(std::vector<thermos::load::reading>& data, const std::string& file_name)
+{
+  return load_impl<thermos::load::reading>(data, file_name);
 }
 
 std::optional<std::string> db::ensure_tables_exist(sqlite::database& db)

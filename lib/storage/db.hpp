@@ -22,16 +22,18 @@
 #define THERMOS_STORAGE_DB_HPP
 
 #if !defined(THERMOS_NO_SQLITE)
+#include "retrieve.hpp"
 #include "store.hpp"
 #include "../../third-party/nonstd/expected.hpp"
 #include "../sqlite/database.hpp"
+#include "utilities.hpp"
 
 namespace thermos::storage
 {
 
 /** \brief Class for storing device readings in a SQLite 3 database.
  */
-class db: public store
+class db: public store, public retrieve
 {
   public:
     /** \brief Saves thermal device readings to a file.
@@ -52,6 +54,26 @@ class db: public store
      *         Returns an error message otherwise.
      */
     std::optional<std::string> save(const std::vector<thermos::load::reading>& data, const std::string& file_name) final;
+
+
+    /** \brief Loads device readings from a file.
+     *
+     * \param data        the vector where the device readings shall be stored
+     * \param file_name   the file from which the data shall be loaded
+     * \return Returns an empty optional, if the data was read successfully.
+     *         Returns an error message otherwise.
+     */
+    std::optional<std::string> load(std::vector<thermos::thermal::reading>& data, const std::string& file_name) final;
+
+
+    /** \brief Loads CPU load readings from a file.
+     *
+     * \param data        the vector where the device readings shall be stored
+     * \param file_name   the file from which the data shall be loaded
+     * \return Returns an empty optional, if the data was read successfully.
+     *         Returns an error message otherwise.
+     */
+    std::optional<std::string> load(std::vector<thermos::load::reading>& data, const std::string& file_name) final;
   private:
     /** \brief Ensures that the tables needed to save information exist.
      *
@@ -109,6 +131,62 @@ class db: public store
         {
           return insert;
         }
+      }
+
+      return std::nullopt;
+    }
+
+    template<typename T>
+    std::optional<std::string> load_impl(std::vector<T>& data, const std::string& file_name)
+    {
+      // Open the database.
+      auto maybe_db = sqlite::database::open(file_name);
+      if (!maybe_db.has_value())
+      {
+        return maybe_db.error();
+      }
+      auto& db = maybe_db.value();
+
+      auto maybe_stmt = db.prepare("SELECT name, origin, reading.deviceId, date, value FROM reading JOIN device ON reading.deviceId=device.deviceId WHERE type=@t ORDER BY reading.deviceId ASC, date ASC;");
+      if (!maybe_stmt.has_value())
+      {
+        return maybe_stmt.error();
+      }
+      auto& stmt = maybe_stmt.value();
+
+      T r;
+      if (!stmt.bind(1, to_string(r.type())))
+      {
+        return "Failed to bind reading type to prepared statement.";
+      }
+
+      int last_device_id = -1;
+      r.dev.name = "uninitialized";
+      r.dev.origin = "uninitialized";
+      int rc = -1;
+      while ((rc = sqlite3_step(stmt.ptr())) == SQLITE_ROW)
+      {
+        const int current_device_id = sqlite3_column_int(stmt.ptr(), 2);
+        if (current_device_id != last_device_id)
+        {
+          r.dev.name = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 0)));
+          r.dev.origin = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 1)));
+          last_device_id = current_device_id;
+        }
+        const std::string date(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 3)));
+        const auto maybe_time = string_to_time(date);
+        if (!maybe_time.has_value())
+        {
+          return maybe_time.error();
+        }
+        r.time = maybe_time.value();
+        r.value = sqlite3_column_int64(stmt.ptr(), 4);
+        data.push_back(r);
+      }
+      if (rc != SQLITE_DONE)
+      {
+        // An error occurred.
+        return "Failed to retrieve data from database query.";
       }
 
       return std::nullopt;

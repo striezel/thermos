@@ -58,6 +58,7 @@
 		<Unit filename="../../lib/storage/db.hpp" />
 		<Unit filename="../../lib/storage/factory.cpp" />
 		<Unit filename="../../lib/storage/factory.hpp" />
+		<Unit filename="../../lib/storage/retrieve.hpp" />
 		<Unit filename="../../lib/storage/store.hpp" />
 		<Unit filename="../../lib/storage/type.cpp" />
 		<Unit filename="../../lib/storage/type.hpp" />
