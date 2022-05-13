@@ -18,21 +18,29 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_RETURNCODES_HPP
-#define THERMOS_RETURNCODES_HPP
+#ifndef THERMOS_DB2CSV_HPP
+#define THERMOS_DB2CSV_HPP
+
+#include <string>
 
 namespace thermos
 {
 
-/** \brief exit code for invalid command line parameters */
-constexpr int rcInvalidParameter = 1;
+/** \brief Writes data from an SQLite 3 file to a CSV file.
+ *
+ * \param db_path   path to the database file
+ * \return Returns zero, if operation was successful.
+ *         Returns non-zero exit code, if an error occurred.
+ */
+int db2csv(const std::string& db_path);
 
-/** \brief exit code for failed or aborted logging */
-constexpr int rcLoggingFailure = 2;
-
-/** \brief exit code for failed I/O */
-constexpr int rcInputOutputFailure = 3;
+/** \brief Generates a file name for the CSV file.
+ *
+ * \param db_path   the database path
+ * \return Returns a suitable file name for the CSV file.
+ */
+std::string csv_name(const std::string& db_path);
 
 } // namespace
 
-#endif // THERMOS_RETURNCODES_HPP
+#endif // THERMOS_DB2CSV_HPP

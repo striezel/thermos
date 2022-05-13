@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="thermos-db2csv" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/thermos-db2csv" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/thermos-db2csv" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Weffc++" />
+			<Add option="-pedantic" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-std=c++17" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Linker>
+			<Add library="sqlite3" />
+		</Linker>
+		<Unit filename="../../lib/device.cpp" />
+		<Unit filename="../../lib/device.hpp" />
+		<Unit filename="../../lib/device_reading.cpp" />
+		<Unit filename="../../lib/device_reading.hpp" />
+		<Unit filename="../../lib/load/reading.cpp" />
+		<Unit filename="../../lib/load/reading.hpp" />
+		<Unit filename="../../lib/reading_type.cpp" />
+		<Unit filename="../../lib/reading_type.hpp" />
+		<Unit filename="../../lib/sqlite/database.cpp" />
+		<Unit filename="../../lib/sqlite/database.hpp" />
+		<Unit filename="../../lib/sqlite/statement.cpp" />
+		<Unit filename="../../lib/sqlite/statement.hpp" />
+		<Unit filename="../../lib/storage/csv.hpp" />
+		<Unit filename="../../lib/storage/db.cpp" />
+		<Unit filename="../../lib/storage/db.hpp" />
+		<Unit filename="../../lib/storage/retrieve.hpp" />
+		<Unit filename="../../lib/storage/store.hpp" />
+		<Unit filename="../../lib/storage/utilities.cpp" />
+		<Unit filename="../../lib/storage/utilities.hpp" />
+		<Unit filename="../../lib/thermal/reading.cpp" />
+		<Unit filename="../../lib/thermal/reading.hpp" />
+		<Unit filename="../ReturnCodes.hpp" />
+		<Unit filename="../Version.hpp" />
+		<Unit filename="../util/GitInfos.cpp" />
+		<Unit filename="../util/GitInfos.hpp" />
+		<Unit filename="db2csv.cpp" />
+		<Unit filename="db2csv.hpp" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

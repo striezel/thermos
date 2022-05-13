@@ -2,6 +2,9 @@
 
 ## Next Version (2022-05-??)
 
+`thermos-db2csv`, a command line application that converts logged data of
+`thermos-logger`from the SQLite 3 database format into the CSV format, is added.
+
 A typo in the help text of `thermos-logger` is fixed.
 
 ## Version 0.4.0 (2022-05-11)
