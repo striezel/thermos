@@ -1,0 +1,13 @@
+Source: thermos
+Section: unknown
+Priority: optional
+Maintainer: Dirk Stolle <striezel-dev@web.de>
+Build-Depends: debhelper (>= 10), cmake, libsqlite3-dev
+Standards-Version: 4.1.2
+Homepage: https://gitlab.com/striezel/thermos
+Vcs-Git: https://gitlab.com/striezel/thermos.git
+
+Package: thermos
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Utilities to read and log thermal sensor data and CPU load.
