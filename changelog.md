@@ -1,6 +1,6 @@
 # Version history of thermos
 
-## Next Version (2022-05-??)
+## Version 0.5.0 (2022-05-13)
 
 `thermos-db2csv`, a command line application that converts logged data of
 `thermos-logger` from the SQLite 3 database format into the CSV format, is
