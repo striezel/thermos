@@ -1,6 +1,6 @@
 # Version history of thermos
 
-## Next Version (2022-05-??)
+## Version 0.5.1 (2022-05-17)
 
 On Linux systems, the information about thermal readings does now contain values
 from both `/sys/devices/virtual/thermal` and `/sys/class/hwmon`, not just one of

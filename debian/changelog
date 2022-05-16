@@ -1,3 +1,11 @@
+thermos (0.5.1-1) UNRELEASED; urgency=medium
+
+  * On Linux systems, the information about thermal readings does now contain
+    values from both `/sys/devices/virtual/thermal` and `/sys/class/hwmon`, not
+    just one of them.
+
+ -- Dirk Stolle <striezel-dev@web.de>  Tue, 17 May 2022 00:59:23 +0200
+
 thermos (0.5.0-1) UNRELEASED; urgency=medium
 
   * thermos-db2csv, a command line application that converts logged data of
