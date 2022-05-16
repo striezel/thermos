@@ -102,7 +102,7 @@ int main(int argc, char** argv)
   }
   else
   {
-    std::cout << "\n\nCPU load:\n";
+    std::cout << "\nCPU load:\n";
     for (const auto& reading: load_readings.value())
     {
       std::cout << "Device '" << reading.dev.name << "': " << reading.percent() << " %\n"
