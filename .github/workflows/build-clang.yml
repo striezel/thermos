@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         version: [8, 9, 10, 11]
+      fail-fast: false
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE.
       - uses: actions/checkout@v2
@@ -45,3 +46,11 @@ jobs:
         run: |
           cd "$GITHUB_WORKSPACE"/build-no-sqlite
           ctest -V
+      - name: Build with Clang ${{ matrix.version }} - static linking
+        run: |
+          export CXX=clang++-${{ matrix.version }}
+          export CC=clang-${{ matrix.version }}
+          cd $GITHUB_WORKSPACE
+          ./build-static.sh
+        # Only do static build on latest version in the matrix.
+        if: matrix.version == 11
