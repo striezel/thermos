@@ -1,5 +1,11 @@
 # Version history of thermos
 
+## Next Version (2022-05-??)
+
+On Linux systems, the information about thermal readings does now contain values
+from both `/sys/devices/virtual/thermal` and `/sys/class/hwmon`, not just one of
+them.
+
 ## Version 0.5.0 (2022-05-13)
 
 `thermos-db2csv`, a command line application that converts logged data of

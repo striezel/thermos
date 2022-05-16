@@ -22,6 +22,7 @@
 #if defined(__linux__) || defined(linux)
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <regex>
 
 namespace thermos::linux_like::thermal
@@ -78,11 +79,18 @@ nonstd::expected<thermos::thermal::reading, std::string> read_thermal_device(con
 
 nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all()
 {
-  const auto thermal_devs = read_thermal();
-  if (thermal_devs.has_value() && !thermal_devs.value().empty())
+  auto thermal_devs = read_thermal();
+  if (!thermal_devs.has_value())
     return thermal_devs;
 
-  return read_hwmon();
+  auto hwmon_devs = read_hwmon();
+  if (!hwmon_devs.has_value())
+    return hwmon_devs;
+
+  thermal_devs.value().insert(thermal_devs.value().end(),
+      std::make_move_iterator(hwmon_devs.value().begin()),
+      std::make_move_iterator(hwmon_devs.value().end()));
+  return thermal_devs;
 }
 
 nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_thermal()
@@ -132,15 +140,21 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
     {
       continue;
     }
+    // Check whether related input file exists, e. g. "temp0_input".
+    const auto input_name = fn.substr(0, fn.find("_label")) + "_input";
+    auto path_input{entry.path()};
+    path_input.replace_filename(input_name);
+    if (!std::filesystem::exists(path_input, error) || error)
+    {
+      continue;
+    }
 
     thermos::thermal::reading reading;
     const auto maybe_name = first_line(entry.path());
     if (!maybe_name.has_value())
       return nonstd::make_unexpected(maybe_name.error());
     reading.dev.name = maybe_name.value();
-    const auto input_name = fn.substr(0, fn.find("_label")) + "_input";
-    auto path_mutable{entry.path()};
-    const auto maybe_temperature = first_line(path_mutable.replace_filename(input_name));
+    const auto maybe_temperature = first_line(path_input);
     if (!maybe_temperature.has_value())
       return nonstd::make_unexpected(maybe_temperature.error());
     try
@@ -148,13 +162,13 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
       std::size_t pos = 0;
       reading.value = std::stoll(maybe_temperature.value(), &pos);
       if (pos < maybe_temperature.value().size())
-        return nonstd::make_unexpected("File " + path_mutable.native() + " did not contain an integer value.");
+        return nonstd::make_unexpected("File " + path_input.native() + " did not contain an integer value.");
     }
     catch (const std::exception& ex)
     {
       return nonstd::make_unexpected(ex.what());
     }
-    reading.dev.origin = path_mutable.native();
+    reading.dev.origin = path_input.native();
     reading.time = std::chrono::system_clock::now();
     result.emplace_back(reading);
   }
