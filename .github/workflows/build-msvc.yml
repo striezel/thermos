@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-${{ matrix.version }}
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE.
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build with Visual Studio ${{ matrix.version }} - no SQLite
         run: |
           cd "%GITHUB_WORKSPACE%"
