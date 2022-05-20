@@ -74,6 +74,16 @@ class db: public store, public retrieve
      *         Returns an error message otherwise.
      */
     std::optional<std::string> load(std::vector<thermos::load::reading>& data, const std::string& file_name) final;
+
+
+    /** \brief Loads all available devices (NOT their readings) from a file.
+     *
+     * \param data        the vector where the devices shall be stored
+     * \param file_name   the file from which the data shall be loaded
+     * \return Returns an empty optional, if the data was read successfully.
+     *         Returns an error message otherwise.
+     */
+    std::optional<std::string> get_devices(std::vector<thermos::device>& data, const std::string& file_name) final;
   private:
     /** \brief Ensures that the tables needed to save information exist.
      *

@@ -168,5 +168,42 @@ std::optional<std::string> db::insert_reading(sqlite::database& db, const device
   return std::nullopt;
 }
 
+std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, const std::string& file_name)
+{
+  // Open the database.
+  auto maybe_db = sqlite::database::open(file_name);
+  if (!maybe_db.has_value())
+  {
+    return maybe_db.error();
+  }
+  auto& db = maybe_db.value();
+
+  auto maybe_stmt = db.prepare("SELECT deviceId, name, origin FROM device ORDER BY name ASC;");
+  if (!maybe_stmt.has_value())
+  {
+    return maybe_stmt.error();
+  }
+  auto& stmt = maybe_stmt.value();
+
+  device dev;
+  dev.name = "uninitialized";
+  dev.origin = "uninitialized";
+  int rc = -1;
+  while ((rc = sqlite3_step(stmt.ptr())) == SQLITE_ROW)
+  {
+    dev.name = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 1)));
+    dev.origin = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 2)));
+    data.push_back(dev);
+  }
+
+  if (rc != SQLITE_DONE)
+  {
+    // An error occurred.
+    return "Failed to retrieve data from database query.";
+  }
+
+  return std::nullopt;
+}
+
 } // namespace
 #endif // SQLite

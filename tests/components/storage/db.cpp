@@ -510,4 +510,83 @@ TEST_CASE("db storage: load CPU load data")
     REQUIRE( reading_two.time == data[1].time );
   }
 }
+
+TEST_CASE("db storage: load device list")
+{
+  using namespace thermos;
+  using namespace thermos::storage;
+
+  SECTION("file cannot be opened / created")
+  {
+    std::vector<thermos::device> data;
+
+    db store;
+    const auto opt = store.get_devices(data, "/path/may-not/exist/for-real-load.db");
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Could not open") != std::string::npos );
+  }
+
+  SECTION("file is not in SQLite 3 format")
+  {
+    const auto file_name = "get-devices-file-is-not-sqlite3-retrieve.db";
+    {
+      std::ofstream stream(file_name);
+      REQUIRE( stream.good() );
+      stream << "foo;origin is here;temperature;42000;2022-04-23 19:18:17\n";
+      stream << "foo;origin is here;temperature;60000;2022-04-23 19:20:21\n";
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    std::vector<thermos::device> data;
+    db store;
+    const auto opt = store.get_devices(data, file_name);
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Failed") != std::string::npos );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+
+  SECTION("normal query")
+  {
+    load::reading reading_one;
+    reading_one.dev.name = "foo";
+    reading_one.dev.origin = "origin is here";
+    reading_one.value = 2400;
+    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
+    load::reading reading_two;
+    reading_two.dev.name = "bar";
+    reading_two.dev.origin = "baz is here";
+    reading_two.value = 600;
+    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+
+    const auto file_name = "storage-normal-get-devices.db";
+    {
+      // Save some CPU load data.
+      std::vector<thermos::load::reading> data;
+      data.push_back(reading_one);
+      data.push_back(reading_two);
+      db store;
+      const auto opt = store.save(data, file_name);
+      REQUIRE_FALSE( opt.has_value() );
+    }
+
+    // Load devices from file.
+    std::vector<thermos::device> data;
+    db store;
+    const auto opt = store.get_devices(data, file_name);
+    REQUIRE_FALSE( opt.has_value() );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+
+    REQUIRE( data.size() == 2 );
+    // Check first value.
+    // (Values are sorted by device name, so 2nd device is 1st now.)
+    REQUIRE( reading_two.dev.name == data[0].name );
+    REQUIRE( reading_two.dev.origin == data[0].origin );
+    // Check second value.
+    REQUIRE( reading_one.dev.name == data[1].name );
+    REQUIRE( reading_one.dev.origin == data[1].origin );
+  }
+}
 #endif // SQLite feature guard
