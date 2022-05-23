@@ -66,6 +66,8 @@
 		<Unit filename="../../lib/storage/utilities.hpp" />
 		<Unit filename="../../lib/templating/htmlspecialchars.cpp" />
 		<Unit filename="../../lib/templating/htmlspecialchars.hpp" />
+		<Unit filename="../../lib/templating/template.cpp" />
+		<Unit filename="../../lib/templating/template.hpp" />
 		<Unit filename="../../lib/thermal/reading.cpp" />
 		<Unit filename="../../lib/thermal/reading.hpp" />
 		<Unit filename="../../third-party/nonstd/expected.hpp" />
@@ -84,6 +86,7 @@
 		<Unit filename="storage/type.cpp" />
 		<Unit filename="storage/utilities.cpp" />
 		<Unit filename="templating/htmlspecialchars.cpp" />
+		<Unit filename="templating/template.cpp" />
 		<Unit filename="thermal/reading.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

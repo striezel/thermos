@@ -35,9 +35,18 @@
 			<Add option="-std=c++17" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add library="sqlite3" />
+		</Linker>
+		<Unit filename="../../lib/templating/htmlspecialchars.cpp" />
+		<Unit filename="../../lib/templating/htmlspecialchars.hpp" />
+		<Unit filename="../../lib/templating/template.cpp" />
+		<Unit filename="../../lib/templating/template.hpp" />
+		<Unit filename="../ReturnCodes.hpp" />
+		<Unit filename="../Version.hpp" />
+		<Unit filename="../util/GitInfos.cpp" />
+		<Unit filename="../util/GitInfos.hpp" />
 		<Unit filename="main.cpp" />
-		<Unit filename="template.cpp" />
-		<Unit filename="template.hpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

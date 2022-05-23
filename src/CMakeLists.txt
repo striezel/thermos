@@ -6,6 +6,9 @@ if (NOT NO_SQLITE)
     add_subdirectory (db2csv)
 endif ()
 
+# Recurse into subdirectory for the graph generator executable.
+add_subdirectory (graph-generator)
+
 # Recurse into subdirectory for the info executable.
 add_subdirectory (info)
 

@@ -17,6 +17,7 @@ set(component_tests_sources
     ../../lib/storage/type.cpp
     ../../lib/storage/utilities.cpp
     ../../lib/templating/htmlspecialchars.cpp
+    ../../lib/templating/template.cpp
     ../../lib/thermal/reading.cpp
     device.cpp
     reading_type.cpp
@@ -30,6 +31,7 @@ set(component_tests_sources
     storage/type.cpp
     storage/utilities.cpp
     templating/htmlspecialchars.cpp
+    templating/template.cpp
     thermal/reading.cpp
     main.cpp)
 
