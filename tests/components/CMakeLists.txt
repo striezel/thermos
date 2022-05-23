@@ -16,6 +16,7 @@ set(component_tests_sources
     ../../lib/storage/factory.cpp
     ../../lib/storage/type.cpp
     ../../lib/storage/utilities.cpp
+    ../../lib/templating/htmlspecialchars.cpp
     ../../lib/thermal/reading.cpp
     device.cpp
     reading_type.cpp
@@ -28,6 +29,7 @@ set(component_tests_sources
     storage/to_time.cpp
     storage/type.cpp
     storage/utilities.cpp
+    templating/htmlspecialchars.cpp
     thermal/reading.cpp
     main.cpp)
 
