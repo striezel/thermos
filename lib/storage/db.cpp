@@ -168,7 +168,7 @@ std::optional<std::string> db::insert_reading(sqlite::database& db, const device
   return std::nullopt;
 }
 
-std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, const std::string& file_name)
+std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, const thermos::reading_type type, const std::string& file_name)
 {
   // Open the database.
   auto maybe_db = sqlite::database::open(file_name);
@@ -178,13 +178,20 @@ std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, c
   }
   auto& db = maybe_db.value();
 
-  auto maybe_stmt = db.prepare("SELECT deviceId, name, origin FROM device ORDER BY name ASC;");
+  auto maybe_stmt = db.prepare(R"(SELECT deviceId, name, origin FROM device JOIN
+                                    (SELECT DISTINCT deviceId AS devid, type FROM reading WHERE reading.type=@t)
+                                    ON device.deviceId = devid ORDER BY name ASC;)");
   if (!maybe_stmt.has_value())
   {
     return maybe_stmt.error();
   }
   auto& stmt = maybe_stmt.value();
+  if (!stmt.bind(1, to_string(type)))
+  {
+    return "Could not bind reading type to prepared statement!";
+  }
 
+  data.clear();
   device dev;
   dev.name = "uninitialized";
   dev.origin = "uninitialized";

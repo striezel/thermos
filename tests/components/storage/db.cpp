@@ -521,7 +521,7 @@ TEST_CASE("db storage: load device list")
     std::vector<thermos::device> data;
 
     db store;
-    const auto opt = store.get_devices(data, "/path/may-not/exist/for-real-load.db");
+    const auto opt = store.get_devices(data, thermos::reading_type::load, "/path/may-not/exist/for-real-load.db");
     REQUIRE( opt.has_value() );
     REQUIRE( opt.value().find("Could not open") != std::string::npos );
   }
@@ -540,11 +540,9 @@ TEST_CASE("db storage: load device list")
 
     std::vector<thermos::device> data;
     db store;
-    const auto opt = store.get_devices(data, file_name);
-    REQUIRE( opt.has_value() );
-    REQUIRE( opt.value().find("Failed") != std::string::npos );
-
+    const auto opt = store.get_devices(data, thermos::reading_type::load, file_name);
     REQUIRE( std::filesystem::remove(file_name) );
+    REQUIRE( opt.has_value() );
   }
 
   SECTION("normal query")
@@ -571,13 +569,27 @@ TEST_CASE("db storage: load device list")
       REQUIRE_FALSE( opt.has_value() );
     }
 
+    {
+      // Save some temperature data.
+      std::vector<thermos::thermal::reading> data;
+      thermal::reading reading_one;
+      reading_one.dev.name = "foo's thermal sibling";
+      reading_one.dev.origin = "origin was here";
+      reading_one.value = 25000;
+      reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
+      data.push_back(reading_one);
+      reading_one.time = to_time(2022, 4, 23, 20, 19, 18);
+      data.push_back(reading_one);
+      db store;
+      const auto opt = store.save(data, file_name);
+      REQUIRE_FALSE( opt.has_value() );
+    }
+
     // Load devices from file.
     std::vector<thermos::device> data;
     db store;
-    const auto opt = store.get_devices(data, file_name);
+    const auto opt = store.get_devices(data, thermos::reading_type::load, file_name);
     REQUIRE_FALSE( opt.has_value() );
-
-    REQUIRE( std::filesystem::remove(file_name) );
 
     REQUIRE( data.size() == 2 );
     // Check first value.
@@ -587,6 +599,17 @@ TEST_CASE("db storage: load device list")
     // Check second value.
     REQUIRE( reading_one.dev.name == data[1].name );
     REQUIRE( reading_one.dev.origin == data[1].origin );
+
+    // Load thermal devices from file.
+    const auto opt_thermal = store.get_devices(data, thermos::reading_type::temperature, file_name);
+    REQUIRE_FALSE( opt_thermal.has_value() );
+
+    REQUIRE( data.size() == 1 );
+    // Check first value.
+    REQUIRE( "foo's thermal sibling" == data[0].name );
+    REQUIRE( "origin was here" == data[0].origin );
+
+    REQUIRE( std::filesystem::remove(file_name) );
   }
 }
 #endif // SQLite feature guard
