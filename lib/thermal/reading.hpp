@@ -22,11 +22,12 @@
 #define THERMOS_THERMAL_READING_HPP
 
 #include "../device_reading.hpp"
+#include "../reading_base.hpp"
 
 namespace thermos::thermal
 {
 
-struct reading: public thermos::device_reading
+struct reading: public thermos::reading_base
 {
   reading();
 
@@ -48,6 +49,8 @@ struct reading: public thermos::device_reading
    */
   virtual reading_type type() const;
 };
+
+using device_reading = thermos::device_reading<reading>;
 
 } // namespace
 

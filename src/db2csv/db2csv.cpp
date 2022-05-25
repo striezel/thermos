@@ -46,7 +46,7 @@ int db2csv(const std::string& db_path)
 
   // thermal data
   {
-    std::vector<thermal::reading> data;
+    std::vector<thermal::device_reading> data;
     auto opt_error = db.load(data, db_path);
     if (opt_error.has_value())
     {
@@ -67,7 +67,7 @@ int db2csv(const std::string& db_path)
 
   // CPU load data
   {
-    std::vector<load::reading> data;
+    std::vector<load::device_reading> data;
     auto opt_error = db.load(data, db_path);
     if (opt_error.has_value())
     {

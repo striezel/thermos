@@ -18,34 +18,35 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_LOAD_READING_HPP
-#define THERMOS_LOAD_READING_HPP
+#ifndef THERMOS_READING_BASE_HPP
+#define THERMOS_READING_BASE_HPP
 
-#include "../device_reading.hpp"
-#include "../reading_base.hpp"
+#include <chrono>
+#include <cstdint>
+#include "reading_type.hpp"
 
-namespace thermos::load
+namespace thermos
 {
 
-struct reading: public thermos::reading_base
+struct reading_base
 {
-  reading();
+  reading_base();
+  virtual ~reading_base() = default;
 
-  /** \brief Gets the load as percentage, possibly rounded.
-   *
-   * \return Returns the CPU load in percent.
-   */
-  double percent() const;
+  /// shorthand for time point type
+  using reading_time_t = std::chrono::time_point<std::chrono::system_clock>;
+
 
   /** \brief Gets the type of the reading, hinting at the implementation.
    *
    * \return Returns the type of the reading.
    */
-  virtual reading_type type() const;
-};
+  virtual reading_type type() const = 0;
 
-using device_reading = thermos::device_reading<reading>;
+  int64_t value; /**< value of the reading; meaning depends on type */
+  reading_time_t time; /**< time of the reading */
+};
 
 } // namespace
 
-#endif // THERMOS_LOAD_READING_HPP
+#endif // THERMOS_READING_BASE_HPP

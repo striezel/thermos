@@ -18,25 +18,16 @@
  -------------------------------------------------------------------------------
 */
 
-#include "device_reading.hpp"
-#include <cmath>
+#include "reading_base.hpp"
 #include <limits>
 
 namespace thermos
 {
 
-device_reading::device_reading()
-: dev(device()),
-  value(std::numeric_limits<decltype(value)>::min()),
+reading_base::reading_base()
+: value(std::numeric_limits<decltype(value)>::min()),
   time(reading_time_t())
 {
-}
-
-bool device_reading::filled() const
-{
-  return dev.filled()
-      && (value != std::numeric_limits<decltype(value)>::min())
-      && (time != reading_time_t());
 }
 
 } // namespace

@@ -40,7 +40,7 @@ class csv: public store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> save(const std::vector<thermos::thermal::reading>& data, const std::string& file_name) final
+    std::optional<std::string> save(const std::vector<thermos::thermal::device_reading>& data, const std::string& file_name) final
     {
       return save_impl(data, file_name);
     }
@@ -52,7 +52,7 @@ class csv: public store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> save(const std::vector<thermos::load::reading>& data, const std::string& file_name) final
+    std::optional<std::string> save(const std::vector<thermos::load::device_reading>& data, const std::string& file_name) final
     {
       return save_impl(data, file_name);
     }
@@ -71,13 +71,13 @@ class csv: public store
 
       for(const auto& reading: data)
       {
-        const auto time_string = time_to_string(reading.time);
+        const auto time_string = time_to_string(reading.reading.time);
         if (!time_string.has_value())
         {
           return time_string.error();
         }
         stream << reading.dev.name << separator << reading.dev.origin << separator
-               << reading.type() << separator << reading.value << separator
+               << reading.reading.type() << separator << reading.reading.value << separator
                << time_string.value() << "\n";
       }
       stream.flush();

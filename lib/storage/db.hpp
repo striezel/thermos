@@ -43,7 +43,7 @@ class db: public store, public retrieve
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> save(const std::vector<thermos::thermal::reading>& data, const std::string& file_name) final;
+    std::optional<std::string> save(const std::vector<thermos::thermal::device_reading>& data, const std::string& file_name) final;
 
 
     /** \brief Saves CPU load readings to a file.
@@ -53,7 +53,7 @@ class db: public store, public retrieve
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> save(const std::vector<thermos::load::reading>& data, const std::string& file_name) final;
+    std::optional<std::string> save(const std::vector<thermos::load::device_reading>& data, const std::string& file_name) final;
 
 
     /** \brief Loads device readings from a file.
@@ -63,7 +63,7 @@ class db: public store, public retrieve
      * \return Returns an empty optional, if the data was read successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> load(std::vector<thermos::thermal::reading>& data, const std::string& file_name) final;
+    std::optional<std::string> load(std::vector<thermos::thermal::device_reading>& data, const std::string& file_name) final;
 
 
     /** \brief Loads CPU load readings from a file.
@@ -73,7 +73,7 @@ class db: public store, public retrieve
      * \return Returns an empty optional, if the data was read successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> load(std::vector<thermos::load::reading>& data, const std::string& file_name) final;
+    std::optional<std::string> load(std::vector<thermos::load::device_reading>& data, const std::string& file_name) final;
 
 
     /** \brief Loads all available devices (NOT their readings) from a file.
@@ -130,7 +130,32 @@ class db: public store, public retrieve
      * \return Returns an empty optional, if insertion was successful.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> insert_reading(sqlite::database& db, const device_reading& reading);
+    template<typename T>
+    std::optional<std::string> insert_reading(sqlite::database& db, const device_reading<T>& reading)
+    {
+      const auto dev_id = find_or_create_device(db, reading.dev);
+      if (!dev_id.has_value())
+      {
+        return dev_id.error();
+      }
+      const auto time_string = time_to_string(reading.reading.time);
+      if (!time_string.has_value())
+      {
+        return time_string.error();
+      }
+
+      const std::string sql = "INSERT INTO reading (deviceId, type, date, value) VALUES ("
+          + std::to_string(dev_id.value()) + ", '" + to_string(reading.reading.type())
+          + "', '" + time_string.value() + "', " + std::to_string(reading.reading.value)
+          + ");";
+      if (!db.exec(sql))
+      {
+        return "Could not insert new device reading into database!";
+      }
+
+      // Insertion was successful.
+      return std::nullopt;
+    }
 
     template<typename T>
     std::optional<std::string> save_impl(const std::vector<T>& data, const std::string& file_name)
@@ -177,23 +202,23 @@ class db: public store, public retrieve
       }
       auto& stmt = maybe_stmt.value();
 
-      T r;
-      if (!stmt.bind(1, to_string(r.type())))
+      T dr;
+      if (!stmt.bind(1, to_string(dr.reading.type())))
       {
         return "Failed to bind reading type to prepared statement.";
       }
 
       int last_device_id = -1;
-      r.dev.name = "uninitialized";
-      r.dev.origin = "uninitialized";
+      dr.dev.name = "uninitialized";
+      dr.dev.origin = "uninitialized";
       int rc = -1;
       while ((rc = sqlite3_step(stmt.ptr())) == SQLITE_ROW)
       {
         const int current_device_id = sqlite3_column_int(stmt.ptr(), 2);
         if (current_device_id != last_device_id)
         {
-          r.dev.name = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 0)));
-          r.dev.origin = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 1)));
+          dr.dev.name = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 0)));
+          dr.dev.origin = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 1)));
           last_device_id = current_device_id;
         }
         const std::string date(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 3)));
@@ -202,9 +227,9 @@ class db: public store, public retrieve
         {
           return maybe_time.error();
         }
-        r.time = maybe_time.value();
-        r.value = sqlite3_column_int64(stmt.ptr(), 4);
-        data.push_back(r);
+        dr.reading.time = maybe_time.value();
+        dr.reading.value = sqlite3_column_int64(stmt.ptr(), 4);
+        data.push_back(dr);
       }
       if (rc != SQLITE_DONE)
       {

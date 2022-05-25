@@ -47,7 +47,7 @@ class store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    virtual std::optional<std::string> save(const std::vector<thermos::thermal::reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> save(const std::vector<thermos::thermal::device_reading>& data, const std::string& file_name) = 0;
 
 
     /** \brief Saves CPU load readings to a file.
@@ -57,7 +57,7 @@ class store
      * \return Returns an empty optional, if the data was written successfully.
      *         Returns an error message otherwise.
      */
-    virtual std::optional<std::string> save(const std::vector<thermos::load::reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> save(const std::vector<thermos::load::device_reading>& data, const std::string& file_name) = 0;
 };
 
 } // namespace

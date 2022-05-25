@@ -35,7 +35,7 @@ namespace thermos::linux_like::load
  * \return Returns a vector containing the device readings, if successful.
  *         Returns an error message, if no readings were available.
  */
-nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all();
+nonstd::expected<std::vector<thermos::load::device_reading>, std::string> read_all();
 
 } // namespace
 #endif // Linux

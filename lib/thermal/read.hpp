@@ -35,7 +35,7 @@ namespace thermos::thermal
  *         Returns a string containing an error message, if no readings were
  *         available.
  */
-nonstd::expected<std::vector<reading>, std::string> read_all();
+nonstd::expected<std::vector<device_reading>, std::string> read_all();
 
 } // namespace
 

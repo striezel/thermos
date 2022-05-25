@@ -31,12 +31,12 @@ TEST_CASE("csv storage: thermal data")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<thermos::thermal::reading> data;
-    thermal::reading reading;
+    std::vector<thermos::thermal::device_reading> data;
+    thermal::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
     csv store;
@@ -47,15 +47,15 @@ TEST_CASE("csv storage: thermal data")
 
   SECTION("normal write operation")
   {
-    std::vector<thermos::thermal::reading> data;
-    thermal::reading reading;
+    std::vector<thermos::thermal::device_reading> data;
+    thermal::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 60000;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 60000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-normal-thermal-data.csv";
@@ -84,15 +84,15 @@ TEST_CASE("csv storage: thermal data")
 
   SECTION("save appends to existing file")
   {
-    std::vector<thermos::thermal::reading> data;
-    thermal::reading reading;
+    std::vector<thermos::thermal::device_reading> data;
+    thermal::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 60000;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 60000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-append-existing-thermal-data.csv";
@@ -107,11 +107,11 @@ TEST_CASE("csv storage: thermal data")
     data.clear();
     reading.dev.name = "bar";
     reading.dev.origin = "somewhere else";
-    reading.value = 43210;
-    reading.time = to_time(2022, 4, 23, 20, 19, 18);
+    reading.reading.value = 43210;
+    reading.reading.time = to_time(2022, 4, 23, 20, 19, 18);
     data.push_back(reading);
-    reading.value = 12345;
-    reading.time = to_time(2022, 4, 23, 22, 23, 24);
+    reading.reading.value = 12345;
+    reading.reading.time = to_time(2022, 4, 23, 22, 23, 24);
     data.push_back(reading);
 
     const auto opt_append = store.save(data, file_name);
@@ -149,12 +149,12 @@ TEST_CASE("csv storage: load data")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<thermos::load::reading> data;
-    load::reading reading;
+    std::vector<thermos::load::device_reading> data;
+    load::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.value = 2400;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 2400;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
     csv store;
@@ -165,15 +165,15 @@ TEST_CASE("csv storage: load data")
 
   SECTION("normal write operation")
   {
-    std::vector<thermos::load::reading> data;
-    load::reading reading;
+    std::vector<thermos::load::device_reading> data;
+    load::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 2400;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 2400;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 600;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 600;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-normal-load.csv";
@@ -202,15 +202,15 @@ TEST_CASE("csv storage: load data")
 
   SECTION("save appends to existing file")
   {
-    std::vector<thermos::load::reading> data;
-    load::reading reading;
+    std::vector<thermos::load::device_reading> data;
+    load::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 2400;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 2400;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 600;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 600;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-append-existing-load.csv";
@@ -225,11 +225,11 @@ TEST_CASE("csv storage: load data")
     data.clear();
     reading.dev.name = "bar";
     reading.dev.origin = "somewhere else";
-    reading.value = 3210;
-    reading.time = to_time(2022, 4, 23, 20, 19, 18);
+    reading.reading.value = 3210;
+    reading.reading.time = to_time(2022, 4, 23, 20, 19, 18);
     data.push_back(reading);
-    reading.value = 1234;
-    reading.time = to_time(2022, 4, 23, 22, 23, 24);
+    reading.reading.value = 1234;
+    reading.reading.time = to_time(2022, 4, 23, 22, 23, 24);
     data.push_back(reading);
 
     const auto opt_append = store.save(data, file_name);

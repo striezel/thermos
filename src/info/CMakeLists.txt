@@ -5,12 +5,13 @@ project(thermos-info)
 
 set(thermos_info_sources
     ../../lib/device.cpp
-    ../../lib/device_reading.cpp
+    ../../lib/device_reading.hpp
     ../../lib/load/calculator.cpp
     ../../lib/load/reading.cpp
     ../../lib/load/read.cpp
     ../../lib/load/read_linux.cpp
     ../../lib/load/read_windows.cpp
+    ../../lib/reading_base.cpp
     ../../lib/thermal/reading.cpp
     ../../lib/thermal/read.cpp
     ../../lib/thermal/read_linux.cpp

@@ -40,7 +40,7 @@ std::string sloppy_narrowing(const wchar_t* wc_str)
   return std::string(wide_string.begin(), wide_string.end());
 }
 
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_wmi()
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_wmi()
 {
   // Initialize COM. (Yes, WMI uses COM.)
   HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -200,8 +200,8 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_wmi()
         + std::string("Error code is ") + std::to_string(hr) + ".");
     }
 
-    thermos::thermal::reading reading;
-    reading.dev.name = sloppy_narrowing(property.bstrVal);
+    thermos::thermal::device_reading d_reading;
+    d_reading.dev.name = sloppy_narrowing(property.bstrVal);
     VariantClear(&property);
 
     hr = pObject->Get(
@@ -223,12 +223,12 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_wmi()
     }
     // Temperature is given in tenths of Kelvins as VT_I4 in lVal, but reading
     // value is expected to be in thousands of degrees Celsius (millicelsius).
-    reading.value = property.lVal * 100 - 273200;
+    d_reading.reading.value = property.lVal * 100 - 273200;
     VariantClear(&property);
     pObject->Release();
-    reading.dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(reading.dev.name);
-    reading.time = std::chrono::system_clock::now();
-    result.emplace_back(reading);
+    d_reading.dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(reading.dev.name);
+    d_reading.reading.time = std::chrono::system_clock::now();
+    result.emplace_back(d_reading);
   }
 
   pEnumerator->Release();
@@ -239,7 +239,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_wmi()
   return result;
 }
 
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all()
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_all()
 {
   return read_wmi();
 }

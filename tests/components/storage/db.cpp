@@ -33,12 +33,12 @@ TEST_CASE("db storage: save thermal data")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<thermos::thermal::reading> data;
-    thermal::reading reading;
+    std::vector<thermos::thermal::device_reading> data;
+    thermal::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
     db store;
@@ -59,12 +59,12 @@ TEST_CASE("db storage: save thermal data")
       stream.close();
     }
 
-    std::vector<thermos::thermal::reading> data;
-    thermal::reading reading;
+    std::vector<thermos::thermal::device_reading> data;
+    thermal::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
     db store;
@@ -77,15 +77,15 @@ TEST_CASE("db storage: save thermal data")
 
   SECTION("normal write operation")
   {
-    std::vector<thermos::thermal::reading> data;
-    thermal::reading reading;
+    std::vector<thermos::thermal::device_reading> data;
+    thermal::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 60000;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 60000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-normal-thermal.db";
@@ -123,15 +123,15 @@ TEST_CASE("db storage: save thermal data")
 
   SECTION("save appends to existing file")
   {
-    std::vector<thermos::thermal::reading> data;
-    thermal::reading reading;
+    std::vector<thermos::thermal::device_reading> data;
+    thermal::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 60000;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 60000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-append-existing-thermal.db";
@@ -149,18 +149,18 @@ TEST_CASE("db storage: save thermal data")
     data.clear();
     reading.dev.name = "bar";
     reading.dev.origin = "somewhere else";
-    reading.value = 43210;
-    reading.time = to_time(2022, 4, 23, 20, 19, 18);
+    reading.reading.value = 43210;
+    reading.reading.time = to_time(2022, 4, 23, 20, 19, 18);
     data.push_back(reading);
-    reading.value = 12345;
-    reading.time = to_time(2022, 4, 23, 22, 23, 24);
+    reading.reading.value = 12345;
+    reading.reading.time = to_time(2022, 4, 23, 22, 23, 24);
     data.push_back(reading);
     // Generate more data to force resize.
     for (unsigned int i = 1; i < 60; ++i)
     {
       reading.dev.origin.append(" abc");
-      reading.value += 100;
-      reading.time = to_time(2022, 4, 23, 22, 24, i);
+      reading.reading.value += 100;
+      reading.reading.time = to_time(2022, 4, 23, 22, 24, i);
       data.push_back(reading);
     }
 
@@ -184,12 +184,12 @@ TEST_CASE("db storage: save CPU load data")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<thermos::load::reading> data;
-    load::reading reading;
+    std::vector<thermos::load::device_reading> data;
+    load::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
     db store;
@@ -210,12 +210,12 @@ TEST_CASE("db storage: save CPU load data")
       stream.close();
     }
 
-    std::vector<thermos::load::reading> data;
-    load::reading reading;
+    std::vector<thermos::load::device_reading> data;
+    load::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "ori";
-    reading.value = 42000;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 42000;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
 
     db store;
@@ -228,15 +228,15 @@ TEST_CASE("db storage: save CPU load data")
 
   SECTION("normal write operation")
   {
-    std::vector<thermos::load::reading> data;
-    load::reading reading;
+    std::vector<thermos::load::device_reading> data;
+    load::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 2400;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 2400;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 600;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 600;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-normal-load.db";
@@ -274,15 +274,15 @@ TEST_CASE("db storage: save CPU load data")
 
   SECTION("save appends to existing file")
   {
-    std::vector<thermos::load::reading> data;
-    load::reading reading;
+    std::vector<thermos::load::device_reading> data;
+    load::device_reading reading;
     reading.dev.name = "foo";
     reading.dev.origin = "origin is here";
-    reading.value = 2400;
-    reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    reading.reading.value = 2400;
+    reading.reading.time = to_time(2022, 4, 23, 19, 18, 17);
     data.push_back(reading);
-    reading.value = 600;
-    reading.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading.reading.value = 600;
+    reading.reading.time = to_time(2022, 4, 23, 19, 20, 21);
     data.push_back(reading);
 
     const auto file_name = "storage-append-existing-load.db";
@@ -300,18 +300,18 @@ TEST_CASE("db storage: save CPU load data")
     data.clear();
     reading.dev.name = "bar";
     reading.dev.origin = "somewhere else";
-    reading.value = 4321;
-    reading.time = to_time(2022, 4, 23, 20, 19, 18);
+    reading.reading.value = 4321;
+    reading.reading.time = to_time(2022, 4, 23, 20, 19, 18);
     data.push_back(reading);
-    reading.value = 1234;
-    reading.time = to_time(2022, 4, 23, 22, 23, 24);
+    reading.reading.value = 1234;
+    reading.reading.time = to_time(2022, 4, 23, 22, 23, 24);
     data.push_back(reading);
     // Generate more data to force resize.
     for (unsigned int i = 1; i < 60; ++i)
     {
       reading.dev.origin.append(" abc");
-      reading.value += 1;
-      reading.time = to_time(2022, 4, 23, 22, 24, i);
+      reading.reading.value += 1;
+      reading.reading.time = to_time(2022, 4, 23, 22, 24, i);
       data.push_back(reading);
     }
 
@@ -335,7 +335,7 @@ TEST_CASE("db storage: load thermal data")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<thermos::thermal::reading> data;
+    std::vector<thermos::thermal::device_reading> data;
     db store;
     const auto opt = store.load(data, "/path/may-not/exist/for-real.db");
     REQUIRE( opt.has_value() );
@@ -354,7 +354,7 @@ TEST_CASE("db storage: load thermal data")
       stream.close();
     }
 
-    std::vector<thermos::thermal::reading> data;
+    std::vector<thermos::thermal::device_reading> data;
     db store;
     const auto opt = store.load(data, file_name);
     REQUIRE( opt.has_value() );
@@ -365,40 +365,40 @@ TEST_CASE("db storage: load thermal data")
 
   SECTION("normal read operation")
   {
-    thermal::reading reading_one;
+    thermal::device_reading reading_one;
     reading_one.dev.name = "foo_therm";
     reading_one.dev.origin = "origin is here";
-    reading_one.value = 42000;
-    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
-    thermal::reading reading_two;
+    reading_one.reading.value = 42000;
+    reading_one.reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    thermal::device_reading reading_two;
     reading_two.dev.name = "foo_therm";
     reading_two.dev.origin = "origin is here";
-    reading_two.value = 60000;
-    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading_two.reading.value = 60000;
+    reading_two.reading.time = to_time(2022, 4, 23, 19, 20, 21);
 
     const auto file_name = "storage-normal-thermal-retrieve.db";
     {
       // Save thermal data.
-      std::vector<thermos::thermal::reading> data;
+      std::vector<thermos::thermal::device_reading> data;
       data.push_back(reading_one);
       data.push_back(reading_two);
       db store;
       const auto opt = store.save(data, file_name);
       REQUIRE_FALSE( opt.has_value() );
       // Add some CPU load data (should not be retrieved later).
-      std::vector<thermos::load::reading> data2;
-      load::reading reading_other;
+      std::vector<thermos::load::device_reading> data2;
+      load::device_reading reading_other;
       reading_other.dev.name = "foo";
       reading_other.dev.origin = "origin is here";
-      reading_other.value = 2400;
-      reading_other.time = to_time(2022, 4, 23, 19, 19, 19);
+      reading_other.reading.value = 2400;
+      reading_other.reading.time = to_time(2022, 4, 23, 19, 19, 19);
       data2.push_back(reading_other);
       const auto opt2 = store.save(data2, file_name);
       REQUIRE_FALSE( opt2.has_value() );
     }
 
     // Load data from file.
-    std::vector<thermos::thermal::reading> data;
+    std::vector<thermos::thermal::device_reading> data;
     db store;
     const auto opt = store.load(data, file_name);
     REQUIRE_FALSE( opt.has_value() );
@@ -409,13 +409,13 @@ TEST_CASE("db storage: load thermal data")
     // Check first value.
     REQUIRE( reading_one.dev.name == data[0].dev.name );
     REQUIRE( reading_one.dev.origin == data[0].dev.origin );
-    REQUIRE( reading_one.value == data[0].value );
-    REQUIRE( reading_one.time == data[0].time );
+    REQUIRE( reading_one.reading.value == data[0].reading.value );
+    REQUIRE( reading_one.reading.time == data[0].reading.time );
     // Check second value.
     REQUIRE( reading_two.dev.name == data[1].dev.name );
     REQUIRE( reading_two.dev.origin == data[1].dev.origin );
-    REQUIRE( reading_two.value == data[1].value );
-    REQUIRE( reading_two.time == data[1].time );
+    REQUIRE( reading_two.reading.value == data[1].reading.value );
+    REQUIRE( reading_two.reading.time == data[1].reading.time );
   }
 }
 
@@ -426,7 +426,7 @@ TEST_CASE("db storage: load CPU load data")
 
   SECTION("file cannot be opened / created")
   {
-    std::vector<thermos::load::reading> data;
+    std::vector<thermos::load::device_reading> data;
 
     db store;
     const auto opt = store.load(data, "/path/may-not/exist/for-real-load.db");
@@ -446,7 +446,7 @@ TEST_CASE("db storage: load CPU load data")
       stream.close();
     }
 
-    std::vector<thermos::load::reading> data;
+    std::vector<thermos::load::device_reading> data;
     db store;
     const auto opt = store.load(data, file_name);
     REQUIRE( opt.has_value() );
@@ -457,40 +457,40 @@ TEST_CASE("db storage: load CPU load data")
 
   SECTION("normal read operation")
   {
-    load::reading reading_one;
+    load::device_reading reading_one;
     reading_one.dev.name = "foo";
     reading_one.dev.origin = "origin is here";
-    reading_one.value = 2400;
-    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
-    load::reading reading_two;
+    reading_one.reading.value = 2400;
+    reading_one.reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    load::device_reading reading_two;
     reading_two.dev.name = "foo";
     reading_two.dev.origin = "origin is here";
-    reading_two.value = 600;
-    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading_two.reading.value = 600;
+    reading_two.reading.time = to_time(2022, 4, 23, 19, 20, 21);
 
     const auto file_name = "storage-normal-load-retrieve.db";
     {
       // Save CPU load data.
-      std::vector<thermos::load::reading> data;
+      std::vector<thermos::load::device_reading> data;
       data.push_back(reading_one);
       data.push_back(reading_two);
       db store;
       const auto opt = store.save(data, file_name);
       REQUIRE_FALSE( opt.has_value() );
       // Add some thermal data (should not be retrieved later).
-      std::vector<thermos::thermal::reading> data2;
-      thermal::reading reading_other;
+      std::vector<thermos::thermal::device_reading> data2;
+      thermal::device_reading reading_other;
       reading_other.dev.name = "foo2";
       reading_other.dev.origin = "origin was here";
-      reading_other.value = 24000;
-      reading_other.time = to_time(2022, 4, 23, 19, 19, 19);
+      reading_other.reading.value = 24000;
+      reading_other.reading.time = to_time(2022, 4, 23, 19, 19, 19);
       data2.push_back(reading_other);
       const auto opt2 = store.save(data2, file_name);
       REQUIRE_FALSE( opt2.has_value() );
     }
 
     // Load data from file.
-    std::vector<thermos::load::reading> data;
+    std::vector<thermos::load::device_reading> data;
     db store;
     const auto opt = store.load(data, file_name);
     REQUIRE_FALSE( opt.has_value() );
@@ -501,13 +501,13 @@ TEST_CASE("db storage: load CPU load data")
     // Check first value.
     REQUIRE( reading_one.dev.name == data[0].dev.name );
     REQUIRE( reading_one.dev.origin == data[0].dev.origin );
-    REQUIRE( reading_one.value == data[0].value );
-    REQUIRE( reading_one.time == data[0].time );
+    REQUIRE( reading_one.reading.value == data[0].reading.value );
+    REQUIRE( reading_one.reading.time == data[0].reading.time );
     // Check second value.
     REQUIRE( reading_two.dev.name == data[1].dev.name );
     REQUIRE( reading_two.dev.origin == data[1].dev.origin );
-    REQUIRE( reading_two.value == data[1].value );
-    REQUIRE( reading_two.time == data[1].time );
+    REQUIRE( reading_two.reading.value == data[1].reading.value );
+    REQUIRE( reading_two.reading.time == data[1].reading.time );
   }
 }
 
@@ -547,21 +547,21 @@ TEST_CASE("db storage: load device list")
 
   SECTION("normal query")
   {
-    load::reading reading_one;
+    load::device_reading reading_one;
     reading_one.dev.name = "foo";
     reading_one.dev.origin = "origin is here";
-    reading_one.value = 2400;
-    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
-    load::reading reading_two;
+    reading_one.reading.value = 2400;
+    reading_one.reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    load::device_reading reading_two;
     reading_two.dev.name = "bar";
     reading_two.dev.origin = "baz is here";
-    reading_two.value = 600;
-    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading_two.reading.value = 600;
+    reading_two.reading.time = to_time(2022, 4, 23, 19, 20, 21);
 
     const auto file_name = "storage-normal-get-devices.db";
     {
       // Save some CPU load data.
-      std::vector<thermos::load::reading> data;
+      std::vector<thermos::load::device_reading> data;
       data.push_back(reading_one);
       data.push_back(reading_two);
       db store;
@@ -571,14 +571,14 @@ TEST_CASE("db storage: load device list")
 
     {
       // Save some temperature data.
-      std::vector<thermos::thermal::reading> data;
-      thermal::reading reading_one;
+      std::vector<thermos::thermal::device_reading> data;
+      thermal::device_reading reading_one;
       reading_one.dev.name = "foo's thermal sibling";
       reading_one.dev.origin = "origin was here";
-      reading_one.value = 25000;
-      reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
+      reading_one.reading.value = 25000;
+      reading_one.reading.time = to_time(2022, 4, 23, 19, 18, 17);
       data.push_back(reading_one);
-      reading_one.time = to_time(2022, 4, 23, 20, 19, 18);
+      reading_one.reading.time = to_time(2022, 4, 23, 20, 19, 18);
       data.push_back(reading_one);
       db store;
       const auto opt = store.save(data, file_name);
@@ -652,21 +652,21 @@ TEST_CASE("db storage: get_device_id")
 
   SECTION("normal query")
   {
-    load::reading reading_one;
+    load::device_reading reading_one;
     reading_one.dev.name = "foo";
     reading_one.dev.origin = "bar";
-    reading_one.value = 2400;
-    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
-    load::reading reading_two;
+    reading_one.reading.value = 2400;
+    reading_one.reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    load::device_reading reading_two;
     reading_two.dev.name = "bar";
     reading_two.dev.origin = "baz is here";
-    reading_two.value = 600;
-    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+    reading_two.reading.value = 600;
+    reading_two.reading.time = to_time(2022, 4, 23, 19, 20, 21);
 
     const auto file_name = "storage-normal-get-device-id.db";
     {
       // Save some CPU load data.
-      std::vector<thermos::load::reading> data;
+      std::vector<thermos::load::device_reading> data;
       data.push_back(reading_one);
       data.push_back(reading_two);
       db store;

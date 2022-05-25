@@ -41,7 +41,7 @@ nonstd::expected<std::string, std::string> first_line(const std::filesystem::pat
   return line;
 }
 
-nonstd::expected<thermos::thermal::reading, std::string> read_thermal_device(const std::filesystem::path& device_directory)
+nonstd::expected<thermos::thermal::device_reading, std::string> read_thermal_device(const std::filesystem::path& device_directory)
 {
   const std::filesystem::path type (device_directory / "type");
   std::error_code error;
@@ -51,7 +51,7 @@ nonstd::expected<thermos::thermal::reading, std::string> read_thermal_device(con
   if (!std::filesystem::exists(temperature, error) || error)
     return nonstd::make_unexpected("File " + temperature.string() + " does not exist.");
 
-  thermos::thermal::reading result;
+  thermos::thermal::device_reading result;
   const auto maybe_name = first_line(type);
   if (!maybe_name.has_value())
     return nonstd::make_unexpected(maybe_name.error());
@@ -62,7 +62,7 @@ nonstd::expected<thermos::thermal::reading, std::string> read_thermal_device(con
   try
   {
     std::size_t pos = 0;
-    result.value = std::stoll(maybe_temperature.value(), &pos);
+    result.reading.value = std::stoll(maybe_temperature.value(), &pos);
     if (pos < maybe_temperature.value().size())
       return nonstd::make_unexpected("File " + temperature.native() + " did not contain an integer value.");
   }
@@ -72,12 +72,12 @@ nonstd::expected<thermos::thermal::reading, std::string> read_thermal_device(con
     return nonstd::make_unexpected(ex.what());
   }
   result.dev.origin = temperature.native();
-  result.time = std::chrono::system_clock::now();
+  result.reading.time = std::chrono::system_clock::now();
 
   return result;
 }
 
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all()
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_all()
 {
   auto thermal_devs = read_thermal();
   if (!thermal_devs.has_value())
@@ -93,7 +93,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all()
   return thermal_devs;
 }
 
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_thermal()
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_thermal()
 {
   const std::filesystem::path thermal{"/sys/devices/virtual/thermal"};
 
@@ -102,7 +102,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_therm
   if (error)
     return nonstd::make_unexpected("Cannot iterate over directory " + thermal.native() + ".");
 
-  std::vector<thermos::thermal::reading> readings;
+  std::vector<thermos::thermal::device_reading> readings;
   for (const auto& entry: iterator)
   {
     if (entry.is_directory(error) && !error)
@@ -118,7 +118,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_therm
   return readings;
 }
 
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon_devices(const std::filesystem::path& device_directory)
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_hwmon_devices(const std::filesystem::path& device_directory)
 {
   std::error_code error;
   const auto iterator = std::filesystem::directory_iterator(device_directory, error);
@@ -126,7 +126,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
     return nonstd::make_unexpected("Cannot iterate over directory " + device_directory.native() + ".");
 
   const std::regex label_exp("temp([0-9]+)_label");
-  std::vector<thermos::thermal::reading> result;
+  std::vector<thermos::thermal::device_reading> result;
   for (const auto& entry: iterator)
   {
     if (!entry.is_regular_file(error) || error)
@@ -149,7 +149,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
       continue;
     }
 
-    thermos::thermal::reading reading;
+    thermos::thermal::device_reading reading;
     const auto maybe_name = first_line(entry.path());
     if (!maybe_name.has_value())
       return nonstd::make_unexpected(maybe_name.error());
@@ -160,7 +160,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
     try
     {
       std::size_t pos = 0;
-      reading.value = std::stoll(maybe_temperature.value(), &pos);
+      reading.reading.value = std::stoll(maybe_temperature.value(), &pos);
       if (pos < maybe_temperature.value().size())
         return nonstd::make_unexpected("File " + path_input.native() + " did not contain an integer value.");
     }
@@ -169,14 +169,14 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
       return nonstd::make_unexpected(ex.what());
     }
     reading.dev.origin = path_input.native();
-    reading.time = std::chrono::system_clock::now();
+    reading.reading.time = std::chrono::system_clock::now();
     result.emplace_back(reading);
   }
 
   return result;
 }
 
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon()
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_hwmon()
 {
   const std::filesystem::path hwmon{"/sys/class/hwmon"};
 
@@ -185,7 +185,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon
   if (error)
     return nonstd::make_unexpected("Cannot iterate over directory " + hwmon.string() + ".");
 
-  std::vector<thermos::thermal::reading> readings;
+  std::vector<thermos::thermal::device_reading> readings;
   for (const auto& entry: iterator)
   {
     if (entry.is_directory(error) && !error)

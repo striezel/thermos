@@ -25,7 +25,7 @@ namespace thermos::thermal
 {
 
 reading::reading()
-: device_reading()
+: reading_base()
 {
 }
 

@@ -24,7 +24,7 @@ namespace thermos::load
 {
 
 reading::reading()
-: device_reading()
+: reading_base()
 {
 }
 

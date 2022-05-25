@@ -6,9 +6,10 @@ project(component_tests)
 
 set(component_tests_sources
     ../../lib/device.cpp
-    ../../lib/device_reading.cpp
+    ../../lib/device_reading.hpp
     ../../lib/reading_type.cpp
     ../../lib/load/reading.cpp
+    ../../lib/reading_base.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
     ../../lib/storage/csv.hpp
@@ -21,6 +22,7 @@ set(component_tests_sources
     ../../lib/thermal/reading.cpp
     device.cpp
     reading_type.cpp
+    load/device_reading.cpp
     load/reading.cpp
     sqlite/database.cpp
     sqlite/statement.cpp
@@ -32,6 +34,7 @@ set(component_tests_sources
     storage/utilities.cpp
     templating/htmlspecialchars.cpp
     templating/template.cpp
+    thermal/device_reading.cpp
     thermal/reading.cpp
     main.cpp)
 

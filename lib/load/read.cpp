@@ -28,7 +28,7 @@
 namespace thermos::load
 {
 
-nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
+nonstd::expected<std::vector<thermos::load::device_reading>, std::string> read_all()
 {
   #if defined(_WIN32) || defined(_WIN64)
     return thermos::windows::load::read_all();

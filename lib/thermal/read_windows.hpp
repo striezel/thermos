@@ -35,7 +35,7 @@ namespace thermos::windows::thermal
  * \return Returns a vector containing the device readings, if successful.
  *         Returns an error message, if no readings were available.
  */
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all();
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_all();
 
 /** \brief Reads thermal data from WMI.
  *
@@ -45,7 +45,7 @@ nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all()
  *          actual data. Standard user accounts may get errors or an empty
  *          vector instead.
  */
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_wmi();
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_wmi();
 
 } // namespace
 #endif // Windows

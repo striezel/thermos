@@ -47,7 +47,7 @@ class retrieve
      * \return Returns an empty optional, if the data was read successfully.
      *         Returns an error message otherwise.
      */
-    virtual std::optional<std::string> load(std::vector<thermos::thermal::reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> load(std::vector<thermos::thermal::device_reading>& data, const std::string& file_name) = 0;
 
 
     /** \brief Loads CPU load readings from a file.
@@ -57,7 +57,7 @@ class retrieve
      * \return Returns an empty optional, if the data was read successfully.
      *         Returns an error message otherwise.
      */
-    virtual std::optional<std::string> load(std::vector<thermos::load::reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> load(std::vector<thermos::load::device_reading>& data, const std::string& file_name) = 0;
 
 
     /** \brief Loads all available devices (NOT their readings) from a file.

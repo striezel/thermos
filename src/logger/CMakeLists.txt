@@ -5,12 +5,13 @@ project(thermos-logger)
 
 set(thermos_logger_sources
     ../../lib/device.cpp
-    ../../lib/device_reading.cpp
+    ../../lib/device_reading.hpp
     ../../lib/load/calculator.cpp
     ../../lib/load/read.cpp
     ../../lib/load/read_linux.cpp
     ../../lib/load/read_windows.cpp
     ../../lib/load/reading.cpp
+    ../../lib/reading_base.cpp
     ../../lib/reading_type.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp

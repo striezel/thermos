@@ -43,24 +43,24 @@ nonstd::expected<sqlite::database, std::string> db::prepare_db(const std::string
   return std::move(db);
 }
 
-std::optional<std::string> db::save(const std::vector<thermos::thermal::reading>& data, const std::string& file_name)
+std::optional<std::string> db::save(const std::vector<thermos::thermal::device_reading>& data, const std::string& file_name)
 {
   return save_impl(data, file_name);
 }
 
-std::optional<std::string> db::save(const std::vector<thermos::load::reading>& data, const std::string& file_name)
+std::optional<std::string> db::save(const std::vector<thermos::load::device_reading>& data, const std::string& file_name)
 {
   return save_impl(data, file_name);
 }
 
-std::optional<std::string> db::load(std::vector<thermos::thermal::reading>& data, const std::string& file_name)
+std::optional<std::string> db::load(std::vector<thermos::thermal::device_reading>& data, const std::string& file_name)
 {
-  return load_impl<thermos::thermal::reading>(data, file_name);
+  return load_impl<thermos::thermal::device_reading>(data, file_name);
 }
 
-std::optional<std::string> db::load(std::vector<thermos::load::reading>& data, const std::string& file_name)
+std::optional<std::string> db::load(std::vector<thermos::load::device_reading>& data, const std::string& file_name)
 {
-  return load_impl<thermos::load::reading>(data, file_name);
+  return load_impl<thermos::load::device_reading>(data, file_name);
 }
 
 std::optional<std::string> db::ensure_tables_exist(sqlite::database& db)
@@ -140,32 +140,6 @@ nonstd::expected<int64_t, std::string> db::find_or_create_device(sqlite::databas
     return nonstd::make_unexpected(message);
   }
   return db.last_insert_id();
-}
-
-std::optional<std::string> db::insert_reading(sqlite::database& db, const device_reading& reading)
-{
-  const auto dev_id = find_or_create_device(db, reading.dev);
-  if (!dev_id.has_value())
-  {
-    return dev_id.error();
-  }
-  const auto time_string = time_to_string(reading.time);
-  if (!time_string.has_value())
-  {
-    return time_string.error();
-  }
-
-  const std::string sql = "INSERT INTO reading (deviceId, type, date, value) VALUES ("
-      + std::to_string(dev_id.value()) + ", '" + to_string(reading.type())
-      + "', '" + time_string.value() + "', " + std::to_string(reading.value)
-      + ");";
-  if (!db.exec(sql))
-  {
-    return "Could not insert new device reading into database!";
-  }
-
-  // Insertion was successful.
-  return std::nullopt;
 }
 
 std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, const thermos::reading_type type, const std::string& file_name)

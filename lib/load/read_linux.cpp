@@ -26,7 +26,7 @@
 namespace thermos::linux_like::load
 {
 
-nonstd::expected<std::vector<thermos::load::reading>, std::string> read_proc_loadavg()
+nonstd::expected<std::vector<thermos::load::device_reading>, std::string> read_proc_loadavg()
 {
   const std::filesystem::path loadavg ("/proc/loadavg");
   std::error_code error;
@@ -40,12 +40,12 @@ nonstd::expected<std::vector<thermos::load::reading>, std::string> read_proc_loa
     return nonstd::make_unexpected("Error while reading load average (1 min) from /proc/loadavg.");
   }
   const auto now = std::chrono::system_clock::now();
-  std::vector<thermos::load::reading> result;
-  thermos::load::reading data;
+  std::vector<thermos::load::device_reading> result;
+  thermos::load::device_reading data;
   data.dev.name = "loadavg1";
   data.dev.origin = "/proc/loadavg_1";
-  data.time = now;
-  data.value = static_cast<int64_t>(load * 100.0);
+  data.reading.time = now;
+  data.reading.value = static_cast<int64_t>(load * 100.0);
   result.push_back(data);
   if (!(stream >> load))
   {
@@ -53,8 +53,8 @@ nonstd::expected<std::vector<thermos::load::reading>, std::string> read_proc_loa
   }
   data.dev.name = "loadavg5";
   data.dev.origin = "/proc/loadavg_5";
-  data.time = now;
-  data.value = static_cast<int64_t>(load * 100.0);
+  data.reading.time = now;
+  data.reading.value = static_cast<int64_t>(load * 100.0);
   result.push_back(data);
   if (!(stream >> load))
   {
@@ -62,14 +62,14 @@ nonstd::expected<std::vector<thermos::load::reading>, std::string> read_proc_loa
   }
   data.dev.name = "loadavg15";
   data.dev.origin = "/proc/loadavg_15";
-  data.time = now;
-  data.value = static_cast<int64_t>(load * 100.0);
+  data.reading.time = now;
+  data.reading.value = static_cast<int64_t>(load * 100.0);
   result.push_back(data);
 
   return result;
 }
 
-nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
+nonstd::expected<std::vector<thermos::load::device_reading>, std::string> read_all()
 {
   return read_proc_loadavg();
 }

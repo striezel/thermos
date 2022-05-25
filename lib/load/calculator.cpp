@@ -44,7 +44,7 @@ std::uint64_t file_time_to_u64(const FILETIME& ft)
         | static_cast<std::uint64_t>(ft.dwLowDateTime);
 }
 
-nonstd::expected<thermos::load::reading, std::string> calculator::current()
+nonstd::expected<thermos::load::device_reading, std::string> calculator::current()
 {
   FILETIME idle_time, kernel_time, user_time;
   if (GetSystemTimes(&idle_time, &kernel_time, &user_time) == 0)
@@ -61,19 +61,19 @@ nonstd::expected<thermos::load::reading, std::string> calculator::current()
   const std::uint64_t total_delta = total - previous_total;
   const std::uint64_t idle_delta = idle - previous_idle;
 
-  thermos::load::reading result;
+  thermos::load::device_reading result;
   result.dev.name = "load";
   result.dev.origin = "GetSystemTimes";
-  result.time = now;
+  result.reading.time = now;
 
   if (total_delta != 0)
   {
     const double active = 1.0 - static_cast<double>(idle_delta) / static_cast<double>(total_delta);
-    result.value = static_cast<decltype(result.value)>(active * 100.0);
+    result.reading.value = static_cast<decltype(result.value)>(active * 100.0);
   }
   else
   {
-    result.value = 0;
+    result.reading.value = 0;
   }
 
   previous_idle = idle;
@@ -82,7 +82,7 @@ nonstd::expected<thermos::load::reading, std::string> calculator::current()
   return result;
 }
 
-nonstd::expected<thermos::load::reading, std::string> calculator::current(const std::chrono::milliseconds ms)
+nonstd::expected<thermos::load::device_reading, std::string> calculator::current(const std::chrono::milliseconds ms)
 {
   const auto one = current();
   if (!one.has_value())

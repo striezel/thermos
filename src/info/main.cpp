@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     std::cout << "Temperature data:\n";
     for (const auto& reading: thermal_readings.value())
     {
-      std::cout << "Device '" << reading.dev.name << "': " << reading.celsius() << " °C\n"
+      std::cout << "Device '" << reading.dev.name << "': " << reading.reading.celsius() << " °C\n"
                 << "  (from " << reading.dev.origin << ")\n";
     }
   }
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
     std::cout << "\nCPU load:\n";
     for (const auto& reading: load_readings.value())
     {
-      std::cout << "Device '" << reading.dev.name << "': " << reading.percent() << " %\n"
+      std::cout << "Device '" << reading.dev.name << "': " << reading.reading.percent() << " %\n"
                 << "  (from " << reading.dev.origin << ")\n";
     }
   }

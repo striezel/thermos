@@ -35,21 +35,21 @@ namespace thermos::linux_like::thermal
  * \return Returns a vector containing the device readings, if successful.
  *         Returns an error message, if no readings were available.
  */
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_all();
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_all();
 
 /** \brief Reads thermal devices from /sys/devices/virtual/thermal/.
  *
  * \return Returns a vector containing the device readings.
  *         Returns an error message, if no readings were available.
  */
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_thermal();
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_thermal();
 
 /** \brief Reads thermal devices from /sys/class/hwmon/.
  *
  * \return Returns a vector containing the device readings.
  *         Returns an error message, if no readings were available.
  */
-nonstd::expected<std::vector<thermos::thermal::reading>, std::string> read_hwmon();
+nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_hwmon();
 
 } // namespace
 #endif // Linux

@@ -25,7 +25,7 @@
 namespace thermos::windows::load
 {
 
-nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
+nonstd::expected<std::vector<thermos::load::device_reading>, std::string> read_all()
 {
   static thermos::load::calculator calc;
 
@@ -36,7 +36,7 @@ nonstd::expected<std::vector<thermos::load::reading>, std::string> read_all()
     return nonstd::make_unexpected(single_result.error());
   }
 
-  std::vector<thermos::load::reading> vec;
+  std::vector<thermos::load::device_reading> vec;
   vec.push_back(single_result.value());
   return vec;
 }

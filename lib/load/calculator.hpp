@@ -49,7 +49,7 @@ class calculator
      * \return Returns a load readings, if successful.
      *         Returns an error message, if no reading was available.
      */
-    nonstd::expected<thermos::load::reading, std::string> current();
+    nonstd::expected<thermos::load::device_reading, std::string> current();
 
 
     /** \brief Gets the average load over a given time span, blocking for that time.
@@ -60,7 +60,7 @@ class calculator
      * \return Returns a load readings, if successful.
      *         Returns an error message, if no reading was available.
      */
-    nonstd::expected<thermos::load::reading, std::string> current(const std::chrono::milliseconds ms);
+    nonstd::expected<thermos::load::device_reading, std::string> current(const std::chrono::milliseconds ms);
   private:
     std::uint64_t previous_idle;
     std::uint64_t previous_total;

@@ -23,36 +23,39 @@
 
 #include <chrono>
 #include <cstdint>
+#include <limits>
 #include "device.hpp"
-#include "reading_type.hpp"
+#include "reading_base.hpp"
 
 namespace thermos
 {
 
+template<typename reading_t>
 struct device_reading
 {
-  device_reading();
-  virtual ~device_reading() = default;
+  device_reading()
+  : dev(device()),
+    reading(reading_t())
+  {
+  }
 
-  /// shorthand for time point type
-  using reading_time_t = std::chrono::time_point<std::chrono::system_clock>;
+  ~device_reading() = default;
 
   /** \brief Checks whether this instance has valid data.
    *
    * \return Returns true, if this instance has valid data.
    * \remarks When this method returns false, then the data shall not be used.
    */
-  bool filled() const;
+  bool filled() const
+  {
+    return dev.filled()
+      && (reading.value != std::numeric_limits<decltype(reading.value)>::min())
+      && (reading.time != reading_base::reading_time_t());
+  }
 
-  /** \brief Gets the type of the reading, hinting at the implementation.
-   *
-   * \return Returns the type of the reading.
-   */
-  virtual reading_type type() const = 0;
 
   device dev; /**< device from which the reading was obtained */
-  int64_t value; /**< value of the reading; meaning depends on type */
-  reading_time_t time; /**< time of the reading */
+  reading_t reading; /**< value and time of the reading */
 };
 
 } // namespace

@@ -9,9 +9,10 @@ endif ()
 
 set(thermos_db2csv_sources
     ../../lib/device.cpp
-    ../../lib/device_reading.cpp
+    ../../lib/device_reading.hpp
     ../../lib/load/calculator.cpp
     ../../lib/load/reading.cpp
+    ../../lib/reading_base.cpp
     ../../lib/reading_type.cpp
     ../../lib/sqlite/database.cpp
     ../../lib/sqlite/statement.cpp
