@@ -85,6 +85,18 @@ class db: public store, public retrieve
      *         Returns an error message otherwise.
      */
     std::optional<std::string> get_devices(std::vector<thermos::device>& data, const thermos::reading_type type, const std::string& file_name) final;
+
+
+    /** \brief Gets the internal id of a device from a file.
+     *
+     * \param dev         the device for which the id shall be retrieved
+     * \param file_name   the database file from which the data shall be loaded
+     * \return Returns the id, if the database contains a matching device.
+     *         Returns zero, if the database does not contain a matching device.
+     *         (Zero is not used as a valid device id.)
+     *         Returns an error message otherwise.
+     */
+    nonstd::expected<int64_t, std::string> get_device_id(const thermos::device& dev, const std::string& file_name);
   private:
     /** \brief Ensures that the tables needed to save information exist.
      *

@@ -612,4 +612,100 @@ TEST_CASE("db storage: load device list")
     REQUIRE( std::filesystem::remove(file_name) );
   }
 }
+
+TEST_CASE("db storage: get_device_id")
+{
+  using namespace thermos;
+  using namespace thermos::storage;
+
+  SECTION("file cannot be opened / created")
+  {
+    device dev;
+    dev.name = "foo";
+    dev.origin = "bar";
+    db store;
+    const auto id = store.get_device_id(dev, "/path/may-not/exist/for-real/devices.db");
+    REQUIRE_FALSE( id.has_value() );
+    REQUIRE( id.error().find("Could not open") != std::string::npos );
+  }
+
+  SECTION("file is not in SQLite 3 format")
+  {
+    const auto file_name = "get-device-id_file-is-not-sqlite3.db";
+    {
+      std::ofstream stream(file_name);
+      REQUIRE( stream.good() );
+      stream << "foo;origin is here;temperature;42000;2022-04-23 19:18:17\n";
+      stream << "foo;origin is here;temperature;60000;2022-04-23 19:20:21\n";
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    device dev;
+    dev.name = "foo";
+    dev.origin = "bar";
+    db store;
+    const auto id = store.get_device_id(dev, file_name);
+    REQUIRE( std::filesystem::remove(file_name) );
+    REQUIRE_FALSE( id.has_value() );
+  }
+
+  SECTION("normal query")
+  {
+    load::reading reading_one;
+    reading_one.dev.name = "foo";
+    reading_one.dev.origin = "bar";
+    reading_one.value = 2400;
+    reading_one.time = to_time(2022, 4, 23, 19, 18, 17);
+    load::reading reading_two;
+    reading_two.dev.name = "bar";
+    reading_two.dev.origin = "baz is here";
+    reading_two.value = 600;
+    reading_two.time = to_time(2022, 4, 23, 19, 20, 21);
+
+    const auto file_name = "storage-normal-get-device-id.db";
+    {
+      // Save some CPU load data.
+      std::vector<thermos::load::reading> data;
+      data.push_back(reading_one);
+      data.push_back(reading_two);
+      db store;
+      const auto opt = store.save(data, file_name);
+      REQUIRE_FALSE( opt.has_value() );
+    }
+
+    // Get first device id from file.
+    {
+      device dev_one;
+      dev_one.name = "foo";
+      dev_one.origin = "bar";
+      db store;
+      const auto id_one = store.get_device_id(dev_one, file_name);
+      REQUIRE( id_one.has_value() );
+      REQUIRE( id_one.value() == 1 );
+    }
+    // Get second device id from file.
+    {
+      device dev_two;
+      dev_two.name = "bar";
+      dev_two.origin = "baz is here";
+      db store;
+      const auto id_two = store.get_device_id(dev_two, file_name);
+      REQUIRE( id_two.has_value() );
+      REQUIRE( id_two.value() == 2 );
+    }
+    // Get device id zero for non-existing device.
+    {
+      device dev_none;
+      dev_none.name = "nothing";
+      dev_none.origin = "here";
+      db store;
+      const auto id_none = store.get_device_id(dev_none, file_name);
+      REQUIRE( id_none.has_value() );
+      REQUIRE( id_none.value() == 0 );
+    }
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+}
 #endif // SQLite feature guard

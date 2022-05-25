@@ -212,5 +212,35 @@ std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, c
   return std::nullopt;
 }
 
+nonstd::expected<int64_t, std::string> db::get_device_id(const thermos::device& dev, const std::string& file_name)
+{
+  auto maybe_db = sqlite::database::open(file_name);
+  if (!maybe_db.has_value())
+  {
+    return nonstd::make_unexpected(maybe_db.error());
+  }
+  auto& db = maybe_db.value();
+  auto maybe_stmt = db.prepare("SELECT deviceId FROM device WHERE name=@nom AND origin=@ori LIMIT 1;");
+  if (!maybe_stmt.has_value())
+  {
+    return nonstd::make_unexpected(maybe_stmt.error());
+  }
+  auto& stmt = maybe_stmt.value();
+  if (!stmt.bind(1, dev.name) || !stmt.bind(2, dev.origin))
+  {
+    return nonstd::make_unexpected("Could not bind device data to prepared statement!");
+  }
+  const int rc = sqlite3_step(stmt.ptr());
+  switch (rc)
+  {
+    case SQLITE_ROW:
+         return sqlite3_column_int64(stmt.ptr(), 0);
+    case SQLITE_DONE:
+         return static_cast<std::int64_t>(0);
+    default:
+         return nonstd::make_unexpected("Failed to retrieve deviceId from database.");
+  }
+}
+
 } // namespace
 #endif // SQLite
