@@ -69,7 +69,7 @@ nonstd::expected<thermos::load::device_reading, std::string> calculator::current
   if (total_delta != 0)
   {
     const double active = 1.0 - static_cast<double>(idle_delta) / static_cast<double>(total_delta);
-    result.reading.value = static_cast<decltype(result.value)>(active * 100.0);
+    result.reading.value = static_cast<decltype(result.reading.value)>(active * 100.0);
   }
   else
   {
