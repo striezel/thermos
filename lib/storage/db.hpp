@@ -22,6 +22,7 @@
 #define THERMOS_STORAGE_DB_HPP
 
 #if !defined(THERMOS_NO_SQLITE)
+#include <cmath>
 #include "retrieve.hpp"
 #include "store.hpp"
 #include "../../third-party/nonstd/expected.hpp"
@@ -104,11 +105,14 @@ class db: public store, public retrieve
      * \param dev         the device for which the readings shall be retrieved
      * \param data        the vector where the readings shall be stored
      * \param file_name   the file from which the data shall be loaded
+     * \param time_span   the time span from which the data shall be included;
+     *                    Settings this to e. g. two hours will retrieve the
+     *                    data from the latest time up to two hours back.
      * \return Returns an empty optional, if the data was read successfully.
      *         Returns an error message otherwise.
      */
-    std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<load::reading>& data, const std::string& file_name);
-    std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<thermal::reading>& data, const std::string& file_name);
+    std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<load::reading>& data, const std::string& file_name, const std::chrono::hours time_span);
+    std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<thermal::reading>& data, const std::string& file_name, const std::chrono::hours time_span);
   private:
     /** \brief Ensures that the tables needed to save information exist.
      *
@@ -253,7 +257,7 @@ class db: public store, public retrieve
     }
 
     template<typename read_t>
-    std::optional<std::string> get_device_readings_impl(const thermos::device& dev, std::vector<read_t>& data, const std::string& file_name)
+    std::optional<std::string> get_device_readings_impl(const thermos::device& dev, std::vector<read_t>& data, const std::string& file_name, const std::chrono::hours time_span)
     {
       const auto maybe_id = get_device_id(dev, file_name);
       if (!maybe_id.has_value())
@@ -292,9 +296,10 @@ class db: public store, public retrieve
         }
       }
 
+      const auto hours = std::to_string(abs(static_cast<long long int>(time_span.count())));
       auto maybe_stmt = db.prepare("SELECT date, value FROM reading WHERE deviceId ="
           + std::to_string(maybe_id.value())
-          + " AND type = @t AND date >= datetime(@max_d, '-48 hours');");
+          + " AND type = @t AND date >= datetime(@max_d, '-" + hours + " hours');");
       if (!maybe_stmt.has_value())
       {
         return maybe_stmt.error();

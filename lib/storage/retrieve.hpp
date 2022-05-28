@@ -21,6 +21,7 @@
 #ifndef THERMOS_STORAGE_RETRIEVE_HPP
 #define THERMOS_STORAGE_RETRIEVE_HPP
 
+#include <chrono>
 #include <optional>
 #include <string>
 #include <vector>
@@ -76,11 +77,14 @@ class retrieve
      * \param dev         the device for which the readings shall be retrieved
      * \param data        the vector where the readings shall be stored
      * \param file_name   the file from which the data shall be loaded
+     * \param time_span   the time span from which the data shall be included;
+     *                    Settings this to e. g. two hours will retrieve the
+     *                    data from the latest time up to two hours back.
      * \return Returns an empty optional, if the data was read successfully.
      *         Returns an error message otherwise.
      */
-    virtual std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<load::reading>& data, const std::string& file_name) = 0;
-    virtual std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<thermal::reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<load::reading>& data, const std::string& file_name, const std::chrono::hours time_span) = 0;
+    virtual std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<thermal::reading>& data, const std::string& file_name, const std::chrono::hours time_span) = 0;
 };
 
 } // namespace

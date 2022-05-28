@@ -714,6 +714,8 @@ TEST_CASE("db storage: get_device_readings - CPU load")
   using namespace thermos;
   using namespace thermos::storage;
 
+  const auto hours = std::chrono::hours(5);
+
   SECTION("file cannot be opened / created")
   {
     device dev;
@@ -722,7 +724,7 @@ TEST_CASE("db storage: get_device_readings - CPU load")
     std::vector<thermos::load::reading> data;
 
     db store;
-    const auto opt = store.get_device_readings(dev, data, "/path/may-not/exist/for-real/get_device_readings.db");
+    const auto opt = store.get_device_readings(dev, data, "/path/may-not/exist/for-real/get_device_readings.db", hours);
     REQUIRE( opt.has_value() );
     REQUIRE( opt.value().find("Could not open") != std::string::npos );
   }
@@ -744,7 +746,7 @@ TEST_CASE("db storage: get_device_readings - CPU load")
     dev.origin = "bar";
     std::vector<thermos::load::reading> data;
     db store;
-    const auto opt = store.get_device_readings(dev, data, file_name);
+    const auto opt = store.get_device_readings(dev, data, file_name, hours);
     REQUIRE( opt.has_value() );
 
     REQUIRE( std::filesystem::remove(file_name) );
@@ -752,6 +754,11 @@ TEST_CASE("db storage: get_device_readings - CPU load")
 
   SECTION("normal query")
   {
+    load::device_reading reading_zero;
+    reading_zero.dev.name = "foo";
+    reading_zero.dev.origin = "bar";
+    reading_zero.reading.value = 1600;
+    reading_zero.reading.time = to_time(2022, 4, 23, 14, 12, 12);
     load::device_reading reading_one;
     reading_one.dev.name = "foo";
     reading_one.dev.origin = "bar";
@@ -766,6 +773,7 @@ TEST_CASE("db storage: get_device_readings - CPU load")
     {
       // Save some CPU load data.
       std::vector<thermos::load::device_reading> data;
+      data.push_back(reading_zero);
       data.push_back(reading_one);
       data.push_back(reading_two);
       db store;
@@ -779,7 +787,7 @@ TEST_CASE("db storage: get_device_readings - CPU load")
       std::vector<thermos::load::reading> data;
 
       db store;
-      const auto errors = store.get_device_readings(dev, data, file_name);
+      const auto errors = store.get_device_readings(dev, data, file_name, hours);
       REQUIRE_FALSE( errors.has_value() );
       REQUIRE( data.size() == 2 );
 
@@ -796,9 +804,29 @@ TEST_CASE("db storage: get_device_readings - CPU load")
       std::vector<thermos::thermal::reading> data;
 
       db store;
-      const auto errors = store.get_device_readings(dev, data, file_name);
+      const auto errors = store.get_device_readings(dev, data, file_name, hours);
       REQUIRE_FALSE( errors.has_value() );
       REQUIRE( data.empty() );
+    }
+
+    // Get data from file, but with longer time span.
+    {
+      const device dev = reading_one.dev;
+      std::vector<thermos::load::reading> data;
+
+      db store;
+      const auto errors = store.get_device_readings(dev, data, file_name, std::chrono::hours(6));
+      REQUIRE_FALSE( errors.has_value() );
+      REQUIRE( data.size() == 3 );
+
+      REQUIRE( data[0].time == reading_zero.reading.time );
+      REQUIRE( data[0].value == reading_zero.reading.value );
+
+      REQUIRE( data[1].time == reading_one.reading.time );
+      REQUIRE( data[1].value == reading_one.reading.value );
+
+      REQUIRE( data[2].time == reading_two.reading.time );
+      REQUIRE( data[2].value == reading_two.reading.value );
     }
 
     REQUIRE( std::filesystem::remove(file_name) );
