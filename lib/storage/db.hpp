@@ -97,6 +97,18 @@ class db: public store, public retrieve
      *         Returns an error message otherwise.
      */
     nonstd::expected<int64_t, std::string> get_device_id(const thermos::device& dev, const std::string& file_name);
+
+
+    /** \brief Loads readings of a devices from a file.
+     *
+     * \param dev         the device for which the readings shall be retrieved
+     * \param data        the vector where the readings shall be stored
+     * \param file_name   the file from which the data shall be loaded
+     * \return Returns an empty optional, if the data was read successfully.
+     *         Returns an error message otherwise.
+     */
+    std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<load::reading>& data, const std::string& file_name);
+    std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<thermal::reading>& data, const std::string& file_name);
   private:
     /** \brief Ensures that the tables needed to save information exist.
      *
@@ -230,6 +242,81 @@ class db: public store, public retrieve
         dr.reading.time = maybe_time.value();
         dr.reading.value = sqlite3_column_int64(stmt.ptr(), 4);
         data.push_back(dr);
+      }
+      if (rc != SQLITE_DONE)
+      {
+        // An error occurred.
+        return "Failed to retrieve data from database query.";
+      }
+
+      return std::nullopt;
+    }
+
+    template<typename read_t>
+    std::optional<std::string> get_device_readings_impl(const thermos::device& dev, std::vector<read_t>& data, const std::string& file_name)
+    {
+      const auto maybe_id = get_device_id(dev, file_name);
+      if (!maybe_id.has_value())
+      {
+        return maybe_id.error();
+      }
+
+      auto maybe_db = sqlite::database::open(file_name);
+      if (!maybe_db.has_value())
+      {
+        return maybe_db.error();
+      }
+      auto& db = maybe_db.value();
+
+      std::string max_date;
+      {
+        auto maybe_stmt = db.prepare("SELECT MAX(date) FROM reading WHERE deviceId ="
+                                    + std::to_string(maybe_id.value()) + " LIMIT 1;");
+        if (!maybe_stmt.has_value())
+        {
+          return maybe_stmt.error();
+        }
+        auto& stmt = maybe_stmt.value();
+        data.clear();
+        const int rc = sqlite3_step(stmt.ptr());
+        switch (rc)
+        {
+          case SQLITE_ROW:
+               max_date = reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 0));
+               break;
+          case SQLITE_DONE:
+               // No data.
+               return std::nullopt;
+          default:
+               return "Failed to retrieve maximum date value from database.";
+        }
+      }
+
+      auto maybe_stmt = db.prepare("SELECT date, value FROM reading WHERE deviceId ="
+          + std::to_string(maybe_id.value())
+          + " AND type = @t AND date >= datetime(@max_d, '-48 hours');");
+      if (!maybe_stmt.has_value())
+      {
+        return maybe_stmt.error();
+      }
+      auto& stmt = maybe_stmt.value();
+      read_t r;
+      if (!stmt.bind(1, to_string(r.type())) || !stmt.bind(2, max_date))
+      {
+        return "Could not bind reading data and maximum date to prepared statement!";
+      }
+      int rc = -1;
+      while ((rc = sqlite3_step(stmt.ptr())) == SQLITE_ROW)
+      {
+        const std::string date(reinterpret_cast<const char*>(sqlite3_column_text(stmt.ptr(), 0)));
+        const auto maybe_time = string_to_time(date);
+        if (!maybe_time.has_value())
+        {
+          return maybe_time.error();
+        }
+        r.time = maybe_time.value();
+        r.value = sqlite3_column_int64(stmt.ptr(), 1);
+        data.push_back(r);
       }
       if (rc != SQLITE_DONE)
       {

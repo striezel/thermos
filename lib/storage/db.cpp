@@ -216,5 +216,15 @@ nonstd::expected<int64_t, std::string> db::get_device_id(const thermos::device& 
   }
 }
 
+std::optional<std::string> db::get_device_readings(const thermos::device& dev, std::vector<load::reading>& data, const std::string& file_name)
+{
+  return get_device_readings_impl(dev, data, file_name);
+}
+
+std::optional<std::string> db::get_device_readings(const thermos::device& dev, std::vector<thermal::reading>& data, const std::string& file_name)
+{
+  return get_device_readings_impl(dev, data, file_name);
+}
+
 } // namespace
 #endif // SQLite

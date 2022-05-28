@@ -69,6 +69,18 @@ class retrieve
      *         Returns an error message otherwise.
      */
     virtual std::optional<std::string> get_devices(std::vector<thermos::device>& data, const thermos::reading_type type, const std::string& file_name) = 0;
+
+
+    /** \brief Loads readings of a devices from a file.
+     *
+     * \param dev         the device for which the readings shall be retrieved
+     * \param data        the vector where the readings shall be stored
+     * \param file_name   the file from which the data shall be loaded
+     * \return Returns an empty optional, if the data was read successfully.
+     *         Returns an error message otherwise.
+     */
+    virtual std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<load::reading>& data, const std::string& file_name) = 0;
+    virtual std::optional<std::string> get_device_readings(const thermos::device& dev, std::vector<thermal::reading>& data, const std::string& file_name) = 0;
 };
 
 } // namespace

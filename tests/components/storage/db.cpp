@@ -708,4 +708,100 @@ TEST_CASE("db storage: get_device_id")
     REQUIRE( std::filesystem::remove(file_name) );
   }
 }
+
+TEST_CASE("db storage: get_device_readings - CPU load")
+{
+  using namespace thermos;
+  using namespace thermos::storage;
+
+  SECTION("file cannot be opened / created")
+  {
+    device dev;
+    dev.name = "foo";
+    dev.origin = "bar";
+    std::vector<thermos::load::reading> data;
+
+    db store;
+    const auto opt = store.get_device_readings(dev, data, "/path/may-not/exist/for-real/get_device_readings.db");
+    REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("Could not open") != std::string::npos );
+  }
+
+  SECTION("file is not in SQLite 3 format")
+  {
+    const auto file_name = "get_device_readings-file-is-not-sqlite3-retrieve.db";
+    {
+      std::ofstream stream(file_name);
+      REQUIRE( stream.good() );
+      stream << "foo;origin is here;temperature;42000;2022-04-23 19:18:17\n";
+      stream << "foo;origin is here;temperature;60000;2022-04-23 19:20:21\n";
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    device dev;
+    dev.name = "foo";
+    dev.origin = "bar";
+    std::vector<thermos::load::reading> data;
+    db store;
+    const auto opt = store.get_device_readings(dev, data, file_name);
+    REQUIRE( opt.has_value() );
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+
+  SECTION("normal query")
+  {
+    load::device_reading reading_one;
+    reading_one.dev.name = "foo";
+    reading_one.dev.origin = "bar";
+    reading_one.reading.value = 2400;
+    reading_one.reading.time = to_time(2022, 4, 23, 19, 18, 17);
+    load::device_reading reading_two;
+    reading_two.dev = reading_one.dev;
+    reading_two.reading.value = 600;
+    reading_two.reading.time = to_time(2022, 4, 23, 19, 20, 21);
+
+    const auto file_name = "storage-normal-get-device-readings.db";
+    {
+      // Save some CPU load data.
+      std::vector<thermos::load::device_reading> data;
+      data.push_back(reading_one);
+      data.push_back(reading_two);
+      db store;
+      const auto opt = store.save(data, file_name);
+      REQUIRE_FALSE( opt.has_value() );
+    }
+
+    // Get data from file.
+    {
+      const device dev = reading_one.dev;
+      std::vector<thermos::load::reading> data;
+
+      db store;
+      const auto errors = store.get_device_readings(dev, data, file_name);
+      REQUIRE_FALSE( errors.has_value() );
+      REQUIRE( data.size() == 2 );
+
+      REQUIRE( data[0].time == reading_one.reading.time );
+      REQUIRE( data[0].value == reading_one.reading.value );
+
+      REQUIRE( data[1].time == reading_two.reading.time );
+      REQUIRE( data[1].value == reading_two.reading.value );
+    }
+
+    // Get data from file, but with "wrong" type.
+    {
+      const device dev = reading_one.dev;
+      std::vector<thermos::thermal::reading> data;
+
+      db store;
+      const auto errors = store.get_device_readings(dev, data, file_name);
+      REQUIRE_FALSE( errors.has_value() );
+      REQUIRE( data.empty() );
+    }
+
+    REQUIRE( std::filesystem::remove(file_name) );
+  }
+}
 #endif // SQLite feature guard
