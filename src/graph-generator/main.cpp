@@ -18,6 +18,7 @@
  -------------------------------------------------------------------------------
 */
 
+#include <filesystem>
 #include <iostream>
 #if !defined(THERMOS_NO_SQLITE)
 #include <sqlite3.h>
@@ -25,6 +26,7 @@
 #include "../util/GitInfos.hpp"
 #include "../ReturnCodes.hpp"
 #include "../Version.hpp"
+#include "generator.hpp"
 
 void showVersion()
 {
@@ -50,15 +52,22 @@ void showHelp()
             << "Generates graphs from logged data.\n"
             << "\n"
             << "options:\n"
-            << "  -? | --help            - Shows this help message.\n"
-            << "  -v | --version         - Shows version information.\n"
-            << "  -f FILE | --file FILE  - Sets the file name of the log file to use to\n"
-            << "                            generate the graphs.\n";
+            << "  -? | --help               - Shows this help message.\n"
+            << "  -v | --version            - Shows version information.\n"
+            << "  -f FILE | --file FILE     - Sets the file name of the log file to use to\n"
+            << "                              generate the graphs. This must be a database\n"
+            << "                              file (SQLite) and not a CSV file.\n"
+            << "  -t FILE | --template FILE - Sets the file name of the template file to use\n"
+            << "                              to generate the graphs.\n"
+            << "  -o FILE | --output FILE   - Sets the destination of the generated file to\n"
+            << "                              FILE. This file must not exist yet.\n";
 }
 
 int main(int argc, char** argv)
 {
   std::string logFile;
+  std::string templateFile;
+  std::filesystem::path destination;
 
   if ((argc > 1) && (argv != nullptr))
   {
@@ -98,10 +107,54 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param <<"\"." << std::endl;
+                    << param << "\"." << std::endl;
           return thermos::rcInvalidParameter;
         }
       } // if log file
+      else if ((param == "--template") || (param == "-t"))
+      {
+        if (!templateFile.empty())
+        {
+          std::cerr << "Error: Template file was already set to " << templateFile << "!"
+                    << std::endl;
+          return thermos::rcInvalidParameter;
+        }
+        // enough parameters?
+        if ((i+1 < argc) && (argv[i+1] != nullptr))
+        {
+          templateFile = std::string(argv[i+1]);
+          // Skip next parameter, because it's already used as file path.
+          ++i;
+        }
+        else
+        {
+          std::cerr << "Error: You have to enter a file path after \""
+                    << param << "\"." << std::endl;
+          return thermos::rcInvalidParameter;
+        }
+      } // if template file
+      else if ((param == "--output") || (param == "-o"))
+      {
+        if (!destination.empty())
+        {
+          std::cerr << "Error: Output file was already set to " << destination << "!"
+                    << std::endl;
+          return thermos::rcInvalidParameter;
+        }
+        // enough parameters?
+        if ((i+1 < argc) && (argv[i+1] != nullptr))
+        {
+          destination = std::string(argv[i+1]);
+          // Skip next parameter, because it's already used as file path.
+          ++i;
+        }
+        else
+        {
+          std::cerr << "Error: You have to enter a file path after \""
+                    << param << "\"." << std::endl;
+          return thermos::rcInvalidParameter;
+        }
+      } // if output file
       else
       {
         std::cerr << "Error: Unknown parameter " << param << "!\n"
@@ -111,6 +164,49 @@ int main(int argc, char** argv)
     } // for i
   } // if arguments are there
 
-  std::cout << "Not implemented yet!" << std::endl;
+  if (logFile.empty())
+  {
+    std::cerr << "Error: You have to specify a log file to get the data from.\n"
+              << "Use the parameter --file to specify a file, e.g.\n\n"
+              << "    thermos-graph-generator --file data.db ...\n";
+    return thermos::rcInvalidParameter;
+  }
+
+  if (templateFile.empty())
+  {
+    std::cerr << "Error: You have to specify a template file for graph generation.\n"
+              << "Use the parameter --template to specify a file, e.g.\n\n"
+              << "    thermos-graph-generator --template graph.tpl ...\n";
+    return thermos::rcInvalidParameter;
+  }
+
+  if (destination.empty())
+  {
+    std::cerr << "Error: You have to specify an output path for graph generation.\n"
+              << "Use the parameter --output to specify a file, e.g.\n\n"
+              << "    thermos-graph-generator --output graph.html ...\n";
+    return thermos::rcInvalidParameter;
+  }
+  std::error_code ec;
+  if (std::filesystem::exists(destination, ec) || ec)
+  {
+    std::cerr << "Error: File " << destination << " already exists.\n";
+    return thermos::rcInputOutputFailure;
+  }
+
+  thermos::Template tpl;
+  if (!tpl.load_from_file(templateFile))
+  {
+    std::cerr << "Failed to load template from " << templateFile << "!\n";
+    return thermos::rcInputOutputFailure;
+  }
+
+  const auto opt = thermos::generate(logFile, tpl, std::chrono::hours(48), destination);
+  if (opt.has_value())
+  {
+    std::cerr << "Error: Template generation failed!\n" << opt.value() << "\n";
+    return thermos::rcInputOutputFailure;
+  }
+
   return 0;
 }

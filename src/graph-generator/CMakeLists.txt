@@ -4,9 +4,20 @@ cmake_minimum_required (VERSION 3.8)
 project(thermos-graph-generator)
 
 set(thermos_graph_generator_sources
+    ../../lib/device.cpp
+    ../../lib/load/reading.cpp
+    ../../lib/reading_base.cpp
+    ../../lib/reading_type.cpp
+    ../../lib/sqlite/database.cpp
+    ../../lib/sqlite/statement.cpp
+    ../../lib/storage/db.cpp
+    ../../lib/storage/utilities.cpp
     ../../lib/templating/htmlspecialchars.cpp
     ../../lib/templating/template.cpp
+    ../../lib/templating/vectorize.cpp
+    ../../lib/thermal/reading.cpp
     ../util/GitInfos.cpp
+    generator.cpp
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

@@ -1,5 +1,12 @@
 # Version history of thermos
 
+## Next Version (2022-05-??)
+
+`thermos-graph-generator`, a command line application that generated graphs from
+logged data of `thermos-logger`, is added.
+Currently, `thermos-graph-generator` only supports logged data in the SQLite 3
+database format and cannot generate graphs from CSV data.
+
 ## Version 0.5.1 (2022-05-17)
 
 On Linux systems, the information about thermal readings does now contain values

@@ -40,7 +40,7 @@ Template::Template()
 {
 }
 
-bool Template::load_from_file(const std::string& file_name)
+bool Template::load_from_file(const std::filesystem::path& file_name)
 {
   std::ifstream stream(file_name, std::ios::in | std::ios::binary);
   if (!stream.good())

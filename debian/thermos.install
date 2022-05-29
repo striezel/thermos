@@ -1,3 +1,4 @@
 obj*/src/db2csv/thermos-db2csv usr/bin
+obj*/src/graph-generator/thermos-graph-generator usr/bin
 obj*/src/info/thermos-info usr/bin
 obj*/src/logger/thermos-logger usr/bin

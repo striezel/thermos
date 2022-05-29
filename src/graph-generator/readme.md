@@ -11,10 +11,15 @@ thermos-graph-generator [OPTIONS]
 Generates graphs from logged data.
 
 options:
-  -? | --help            - Shows this help message.
-  -v | --version         - Shows version information.
-  -f FILE | --file FILE  - Sets the file name of the log file to use to
-                            generate the graphs.
+  -? | --help               - Shows this help message.
+  -v | --version            - Shows version information.
+  -f FILE | --file FILE     - Sets the file name of the log file to use to
+                              generate the graphs. This must be a database
+                              file (SQLite) and not a CSV file.
+  -t FILE | --template FILE - Sets the file name of the template file to use
+                              to generate the graphs.
+  -o FILE | --output FILE   - Sets the destination of the generated file to
+                              FILE. This file must not exist yet.
 ```
 
 _Note:_ This program is not completely implemented yet.

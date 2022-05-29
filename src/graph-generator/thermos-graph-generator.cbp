@@ -38,14 +38,37 @@
 		<Linker>
 			<Add library="sqlite3" />
 		</Linker>
+		<Unit filename="../../lib/device.cpp" />
+		<Unit filename="../../lib/device.hpp" />
+		<Unit filename="../../lib/load/reading.cpp" />
+		<Unit filename="../../lib/load/reading.hpp" />
+		<Unit filename="../../lib/reading_base.cpp" />
+		<Unit filename="../../lib/reading_base.hpp" />
+		<Unit filename="../../lib/reading_type.cpp" />
+		<Unit filename="../../lib/reading_type.hpp" />
+		<Unit filename="../../lib/sqlite/database.cpp" />
+		<Unit filename="../../lib/sqlite/database.hpp" />
+		<Unit filename="../../lib/sqlite/statement.cpp" />
+		<Unit filename="../../lib/sqlite/statement.hpp" />
+		<Unit filename="../../lib/storage/db.cpp" />
+		<Unit filename="../../lib/storage/db.hpp" />
+		<Unit filename="../../lib/storage/utilities.cpp" />
+		<Unit filename="../../lib/storage/utilities.hpp" />
 		<Unit filename="../../lib/templating/htmlspecialchars.cpp" />
 		<Unit filename="../../lib/templating/htmlspecialchars.hpp" />
 		<Unit filename="../../lib/templating/template.cpp" />
 		<Unit filename="../../lib/templating/template.hpp" />
+		<Unit filename="../../lib/templating/vectorize.cpp" />
+		<Unit filename="../../lib/templating/vectorize.hpp" />
+		<Unit filename="../../lib/thermal/reading.cpp" />
+		<Unit filename="../../lib/thermal/reading.hpp" />
+		<Unit filename="../../third-party/nonstd/expected.hpp" />
 		<Unit filename="../ReturnCodes.hpp" />
 		<Unit filename="../Version.hpp" />
 		<Unit filename="../util/GitInfos.cpp" />
 		<Unit filename="../util/GitInfos.hpp" />
+		<Unit filename="generator.cpp" />
+		<Unit filename="generator.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

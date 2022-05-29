@@ -18,6 +18,10 @@
  -------------------------------------------------------------------------------
 */
 
+#ifndef THERMOS_TEMPLATING_TEMPLATE_HPP
+#define THERMOS_TEMPLATING_TEMPLATE_HPP
+
+#include <filesystem>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -43,7 +47,7 @@ class Template
      * @return Returns true, if template was loaded successfully.
      *         Returns false otherwise.
      */
-    bool load_from_file(const std::string& file_name);
+    bool load_from_file(const std::filesystem::path& file_name);
 
 
     /**
@@ -103,3 +107,5 @@ class Template
 };
 
 } // namespace
+
+#endif // THERMOS_TEMPLATING_TEMPLATE_HPP
