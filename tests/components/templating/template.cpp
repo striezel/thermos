@@ -19,6 +19,8 @@
 */
 
 #include "../find_catch.hpp"
+#include <filesystem>
+#include <fstream>
 #include "../../../lib/templating/template.hpp"
 
 TEST_CASE("Template class")
@@ -53,6 +55,76 @@ TEST_CASE("Template class")
     const auto it = tpl.includes.find("foo");
     REQUIRE( it != tpl.includes.end() );
     REQUIRE( it->second == "<b>bar</b>" );
+  }
+
+  SECTION("load_from_file: file does not exist")
+  {
+    Template tpl;
+    REQUIRE_FALSE( tpl.load_from_file("/this/file/does-not/exist.tpl") );
+  }
+
+  SECTION("load_from_file: single section")
+  {
+    Template tpl;
+
+    const std::string simple_template("<!--section-start::test--><li><a href=\"{{url}}\">{{text}}</a></li><!--section-end::test-->");
+    const auto file_name = "load_from_file_single_section.tpl";
+    {
+      std::ofstream stream(file_name);
+      stream.write(simple_template.c_str(), simple_template.length());
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+
+    REQUIRE( tpl.load_from_file(file_name) );
+    REQUIRE( std::filesystem::remove(file_name) );
+    REQUIRE( tpl.sections.size() == 1 );
+    const auto it = tpl.sections.find("test");
+    REQUIRE( it != tpl.sections.end() );
+    REQUIRE( it->second == "<li><a href=\"{{url}}\">{{text}}</a></li>" );
+  }
+
+  SECTION("load_from_file: new lines")
+  {
+    Template tpl;
+
+    const std::string simple_template("<!--section-start::test--><li>\n  <a href=\"{{url}}\">{{text}}</a>\r\n</li><!--section-end::test-->");
+    const auto file_name = "load_from_file_new_lines.tpl";
+    {
+      std::ofstream stream(file_name);
+      stream.write(simple_template.c_str(), simple_template.length());
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+    REQUIRE( tpl.load_from_file(file_name) );
+    REQUIRE( std::filesystem::remove(file_name) );
+    REQUIRE( tpl.sections.size() == 1 );
+    const auto it = tpl.sections.find("test");
+    REQUIRE( it != tpl.sections.end() );
+    REQUIRE( it->second == "<li>\n  <a href=\"{{url}}\">{{text}}</a>\r\n</li>" );
+  }
+
+  SECTION("load_from_file: multiple sections with new lines")
+  {
+    Template tpl;
+
+    const std::string simple_template("<!--section-start::test--><li>\n  <a href=\"{{url}}\">{{text}}</a>\r\n</li><!--section-end::test-->\n<!--section-start::foo--><b>Info\nFoo\r\nBar\rBaz:</b> {{info}}<!--section-end::foo-->");
+    const auto file_name = "load_from_file_multiple_sections_with_new_lines.tpl";
+    {
+      std::ofstream stream(file_name);
+      stream.write(simple_template.c_str(), simple_template.length());
+      REQUIRE( stream.good() );
+      stream.close();
+    }
+    REQUIRE( tpl.load_from_file(file_name) );
+    REQUIRE( std::filesystem::remove(file_name) );
+    REQUIRE( tpl.sections.size() == 2 );
+    auto it = tpl.sections.find("test");
+    REQUIRE( it != tpl.sections.end() );
+    REQUIRE( it->second == "<li>\n  <a href=\"{{url}}\">{{text}}</a>\r\n</li>" );
+    it = tpl.sections.find("foo");
+    REQUIRE( it != tpl.sections.end() );
+    REQUIRE( it->second == "<b>Info\nFoo\r\nBar\rBaz:</b> {{info}}" );
   }
 
   SECTION("load_from_str: single section")

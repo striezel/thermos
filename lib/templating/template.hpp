@@ -36,12 +36,22 @@ class Template
 
     Template();
 
+    /**
+     * Loads template from a file.
+     *
+     * @param file_name  path to the template file
+     * @return Returns true, if template was loaded successfully.
+     *         Returns false otherwise.
+     */
+    bool load_from_file(const std::string& file_name);
+
 
     /**
-     * Loads template from a string slice.
+     * Loads template from a string.
      *
      * @param content  content of the template
-     * @return true, if template was loaded successfully; false otherwise
+     * @return Returns true, if template was loaded successfully.
+     *         Returns false otherwise.
      */
     bool load_from_str(const std::string& content);
 

@@ -19,6 +19,7 @@
 */
 
 #include "template.hpp"
+#include <fstream>
 #include <iostream>
 #include <regex>
 #include "htmlspecialchars.hpp"
@@ -37,6 +38,19 @@ Template::Template()
   includes({}),
   tpl(std::nullopt)
 {
+}
+
+bool Template::load_from_file(const std::string& file_name)
+{
+  std::ifstream stream(file_name, std::ios::in | std::ios::binary);
+  if (!stream.good())
+    return false;
+  std::string content;
+  std::getline(stream, content,
+               std::string::traits_type::to_char_type(std::string::traits_type::eof()));
+  if (!stream)
+    return false;
+  return load_from_str(content);
 }
 
 bool Template::load_from_str(const std::string& content)
