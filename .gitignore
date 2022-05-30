@@ -10,6 +10,7 @@ obj/
 
 # build directory
 build/
+build-bundled/
 build-no-sqlite/
 build-static/
 b/

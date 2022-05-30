@@ -40,6 +40,19 @@ set(component_tests_sources
     thermal/reading.cpp
     main.cpp)
 
+if (NOT NO_SQLITE AND USE_BUNDLED_SQLITE)
+    list(APPEND component_tests_sources
+    ../../third-party/sqlite/sqlite3.c)
+    # add definitions to get rid of some unused stuff
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        add_definitions ( -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DQS=0 -DSQLITE_OMIT_DECLTYPE=1 -DSQLITE_OMIT_DEPRECATED=1 -DSQLITE_OMIT_JSON=1 )
+    elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        add_definitions ( /DSQLITE_DEFAULT_MEMSTATUS=0 /DSQLITE_DQS=0 /DSQLITE_OMIT_DECLTYPE=1 /DSQLITE_OMIT_DEPRECATED=1 /DSQLITE_OMIT_JSON=1 )
+    endif ()
+
+    message(STATUS "Tests are built with bundled version of SQLite.")
+endif()
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_definitions (-Wall -fexceptions)
     if (CODE_COVERAGE)
@@ -62,21 +75,29 @@ add_executable(component_tests ${component_tests_sources})
 
 if (NOT NO_SQLITE)
   # find sqlite3 library
-  if (CMAKE_VERSION VERSION_LESS "3.14.0")
-    # Find module for sqlite3 was added in CMake 3.14.0, so any earlier version
-    # needs an extra configuration file to find it.
-    set(SQLite3_DIR "../../cmake/" )
-  endif ()
-  find_package (SQLite3)
-  if (SQLite3_FOUND)
-    include_directories(${SQLite3_INCLUDE_DIRS})
-    target_link_libraries (component_tests ${SQLite3_LIBRARIES})
-    if (ENABLE_STATIC_LINKING)
-      target_link_libraries(component_tests dl z pthread)
+  if (USE_BUNDLED_SQLITE)
+    include_directories("../../third-party/sqlite/")
+    # link to some libraries required on Linux / Unix-like systems
+    if (UNIX)
+        target_link_libraries(component_tests dl pthread)
     endif ()
   else ()
-    message ( FATAL_ERROR "SQLite3 was not found!" )
-  endif (SQLite3_FOUND)
+    if (CMAKE_VERSION VERSION_LESS "3.14.0")
+      # Find module for sqlite3 was added in CMake 3.14.0, so any earlier
+      # version needs an extra configuration file to find it.
+      set(SQLite3_DIR "../../cmake/" )
+    endif ()
+    find_package (SQLite3)
+    if (SQLite3_FOUND)
+      include_directories(${SQLite3_INCLUDE_DIRS})
+      target_link_libraries (component_tests ${SQLite3_LIBRARIES})
+      if (ENABLE_STATIC_LINKING)
+        target_link_libraries(component_tests dl z pthread)
+      endif ()
+    else ()
+      message ( FATAL_ERROR "SQLite3 was not found!" )
+    endif (SQLite3_FOUND)
+  endif ()
 endif ()
 
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.

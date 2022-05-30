@@ -52,6 +52,14 @@ endif ()
 # during the build, then all features using SQLite 3 are removed.
 option(NO_SQLITE "Remove SQLite 3 functionality" OFF)
 
+# If the option USE_BUNDLED_SQLITE is enabled (e. g. via
+#`cmake -DUSE_BUNDLED_SQLITE=ON`) during the build, then the SQLite 3 version
+# provided in the directory third-party/ is used. If it is disabled, then the
+# SQLite 3 library that is provided by the operating system is used instead.
+# This option can be useful on operating systems where the package manager does
+# not provide SQLite 3 or that do not have a package manger (e. g. Windows).
+option(USE_BUNDLED_SQLITE "Use the bundled version of the SQLite 3 library." OFF)
+
 # Recurse into subdirectory for the executable.
 add_subdirectory (src)
 

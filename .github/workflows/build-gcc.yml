@@ -50,3 +50,18 @@ jobs:
           ./build-static.sh
         # Only do static build on latest version in the matrix.
         if: matrix.version == 11
+      - name: Build with GNU GCC ${{ matrix.version }} - bundled SQLite
+        run: |
+          export CXX=g++-${{ matrix.version }}
+          export CC=gcc-${{ matrix.version }}
+          cd $GITHUB_WORKSPACE
+          mkdir build-bundled
+          cd build-bundled
+          cmake ../ -DUSE_BUNDLED_SQLITE=ON -DENABLE_LTO=ON
+          make -j4
+        if: matrix.version == 10
+      - name: Tests - bundled SQLite
+        run: |
+          cd "$GITHUB_WORKSPACE"/build-bundled
+          ctest -V
+        if: matrix.version == 10

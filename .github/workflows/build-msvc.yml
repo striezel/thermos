@@ -24,3 +24,16 @@ jobs:
           cd "%GITHUB_WORKSPACE%\build-no-sqlite"
           ctest -C Debug -V
         shell: cmd
+      - name: Build with Visual Studio ${{ matrix.version }} - bundled SQLite
+        run: |
+          cd "%GITHUB_WORKSPACE%"
+          md build-bundled
+          cd build-bundled
+          cmake .. -DUSE_BUNDLED_SQLITE=ON -DENABLE_LTO=ON
+          cmake --build .
+        shell: cmd
+      - name: Tests - bundled SQLite
+        run: |
+          cd "%GITHUB_WORKSPACE%\build-bundled"
+          ctest -C Debug -V
+        shell: cmd

@@ -42,6 +42,14 @@ fedora:
     # tests
     - ctest -V
     - cd ..
+    # build with bundled SQLite version
+    - mkdir build-bundled
+    - cd build-bundled
+    - cmake ../ -DUSE_BUNDLED_SQLITE=ON -DENABLE_LTO=ON
+    - make -j4
+    # tests
+    - ctest -V
+    - cd ..
     # normal build with SQLite support
     - mkdir build
     - cd build
