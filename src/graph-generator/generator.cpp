@@ -20,9 +20,8 @@
 
 #include "generator.hpp"
 #include <fstream>
-#include "../../lib/storage/db.hpp"
 #include "../../lib/templating/template.hpp"
-#include "../../lib/templating/vectorize.hpp"
+#include "generate_traces.hpp"
 
 namespace thermos
 {
@@ -48,65 +47,18 @@ std::optional<std::string> generate(const std::string& db_file_name, Template& t
     header = tpl.generate().value();
   }
 
-  if (!tpl.load_section("trace"))
+  auto maybe_traces = generate_traces<thermal::reading>(db_file_name, tpl, time_span, "yaxis: 'y2',");
+  if (!maybe_traces)
   {
-    return "Failed to load section 'trace' from template.";
+    return maybe_traces.error();
   }
-  std::string traces;
-
-  storage::db the_db;
-  std::vector<device> devs;
-  auto opt = the_db.get_devices(devs, reading_type::temperature, db_file_name);
-  if (opt.has_value())
+  std::string traces {std::move(maybe_traces.value())};
+  maybe_traces = generate_traces<load::reading>(db_file_name, tpl, time_span, "");
+  if (!maybe_traces)
   {
-    return opt;
+    return maybe_traces.error();
   }
-  for (const auto& dev: devs)
-  {
-    std::vector<thermal::reading> readings;
-    opt = the_db.get_device_readings(dev, readings, db_file_name, time_span);
-    if (opt.has_value())
-    {
-      return opt;
-    }
-    const auto vec_data = vectorize(readings);
-    if (!vec_data.has_value())
-    {
-      return vec_data.error();
-    }
-    tpl.integrate("dates", vec_data.value().dates);
-    tpl.integrate("values", vec_data.value().values);
-    tpl.integrate("yaxis", "yaxis: 'y2',");
-    tpl.tag("name", dev.name);
-
-    traces += tpl.generate().value();
-  }
-
-  opt = the_db.get_devices(devs, reading_type::load, db_file_name);
-  if (opt.has_value())
-  {
-    return opt;
-  }
-  for (const auto& dev: devs)
-  {
-    std::vector<load::reading> readings;
-    opt = the_db.get_device_readings(dev, readings, db_file_name, time_span);
-    if (opt.has_value())
-    {
-      return opt;
-    }
-    const auto vec_data = vectorize(readings);
-    if (!vec_data.has_value())
-    {
-      return vec_data.error();
-    }
-    tpl.integrate("dates", vec_data.value().dates);
-    tpl.integrate("values", vec_data.value().values);
-    tpl.integrate("yaxis", "");
-    tpl.tag("name", dev.name);
-
-    traces += tpl.generate().value();
-  }
+  traces += maybe_traces.value();
 
   if (!tpl.load_section("graph"))
   {
