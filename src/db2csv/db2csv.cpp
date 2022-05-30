@@ -98,17 +98,17 @@ std::string csv_name(const std::string& db_path)
   const auto ext = path.extension();
   const auto stem = path.stem();
 
-  fs::path csv(stem.native() + std::string(".csv"));
+  fs::path csv(stem.string() + std::string(".csv"));
   path.replace_filename(csv);
   std::error_code error;
   uint_least32_t counter = 0;
   while (fs::exists(path, error) && !error)
   {
     ++counter;
-    csv = stem.native() + std::string("_") + std::to_string(counter) + std::string(".csv");
+    csv = stem.string() + std::string("_") + std::to_string(counter) + std::string(".csv");
     path.replace_filename(csv);
   }
-  return path;
+  return path.string();
 }
 
 } // namespace
