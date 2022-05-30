@@ -67,6 +67,7 @@
 		<Unit filename="../Version.hpp" />
 		<Unit filename="../util/GitInfos.cpp" />
 		<Unit filename="../util/GitInfos.hpp" />
+		<Unit filename="generate_traces.hpp" />
 		<Unit filename="generator.cpp" />
 		<Unit filename="generator.hpp" />
 		<Unit filename="main.cpp" />
