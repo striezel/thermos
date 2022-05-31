@@ -7,6 +7,9 @@ add_subdirectory (components)
 if (NOT NO_SQLITE)
     # Recurse into subdirectory for db2csv tests.
     add_subdirectory (db2csv)
+
+    # Recurse into subdirectory for graph-generator tests.
+    add_subdirectory (graph-generator)
 endif ()
 
 # Recurse into subdirectory for logger tests.
