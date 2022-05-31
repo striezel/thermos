@@ -181,6 +181,7 @@ nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> rea
     }
 
     VARIANT property;
+    VariantInit(&property);
     // Get the value of the InstanceName property
     hr = pObject->Get(
            L"InstanceName", // name of the property
@@ -223,7 +224,7 @@ nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> rea
     }
     // Temperature is given in tenths of Kelvins as VT_I4 in lVal, but reading
     // value is expected to be in thousands of degrees Celsius (millicelsius).
-    d_reading.reading.value = property.lVal * 100 - 273200;
+    d_reading.reading.value = static_cast<int64_t>(property.lVal) * 100 - 273200;
     VariantClear(&property);
     pObject->Release();
     d_reading.dev.origin = std::string("ROOT\\WMI:MSAcpi_ThermalZoneTemperature:").append(d_reading.dev.name);
