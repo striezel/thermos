@@ -70,7 +70,7 @@ TEST_CASE("db storage: save thermal data")
     db store;
     const auto opt = store.save(data, file_name);
     REQUIRE( opt.has_value() );
-    REQUIRE( opt.value().find("Failed") != std::string::npos );
+    REQUIRE( opt.value().find("not a database") != std::string::npos );
 
     REQUIRE( std::filesystem::remove(file_name) );
   }
@@ -221,7 +221,7 @@ TEST_CASE("db storage: save CPU load data")
     db store;
     const auto opt = store.save(data, file_name);
     REQUIRE( opt.has_value() );
-    REQUIRE( opt.value().find("Failed") != std::string::npos );
+    REQUIRE( opt.value().find("not a database") != std::string::npos );
 
     REQUIRE( std::filesystem::remove(file_name) );
   }
@@ -358,7 +358,7 @@ TEST_CASE("db storage: load thermal data")
     db store;
     const auto opt = store.load(data, file_name);
     REQUIRE( opt.has_value() );
-    REQUIRE( opt.value().find("Failed") != std::string::npos );
+    REQUIRE( opt.value().find("not a database") != std::string::npos );
 
     REQUIRE( std::filesystem::remove(file_name) );
   }
@@ -450,7 +450,7 @@ TEST_CASE("db storage: load CPU load data")
     db store;
     const auto opt = store.load(data, file_name);
     REQUIRE( opt.has_value() );
-    REQUIRE( opt.value().find("Failed") != std::string::npos );
+    REQUIRE( opt.value().find("not a database") != std::string::npos );
 
     REQUIRE( std::filesystem::remove(file_name) );
   }
@@ -543,6 +543,7 @@ TEST_CASE("db storage: load device list")
     const auto opt = store.get_devices(data, thermos::reading_type::load, file_name);
     REQUIRE( std::filesystem::remove(file_name) );
     REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("not a database") != std::string::npos );
   }
 
   SECTION("normal query")
@@ -648,6 +649,7 @@ TEST_CASE("db storage: get_device_id")
     const auto id = store.get_device_id(dev, file_name);
     REQUIRE( std::filesystem::remove(file_name) );
     REQUIRE_FALSE( id.has_value() );
+    REQUIRE( id.error().find("not a database") != std::string::npos );
   }
 
   SECTION("normal query")
@@ -748,6 +750,7 @@ TEST_CASE("db storage: get_device_readings - CPU load")
     db store;
     const auto opt = store.get_device_readings(dev, data, file_name, hours);
     REQUIRE( opt.has_value() );
+    REQUIRE( opt.value().find("not a database") != std::string::npos );
 
     REQUIRE( std::filesystem::remove(file_name) );
   }

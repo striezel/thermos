@@ -20,6 +20,7 @@
 
 #include "database.hpp"
 #include <iostream>
+#include <limits>
 
 #if !defined(THERMOS_NO_SQLITE)
 namespace thermos::sqlite
@@ -75,13 +76,18 @@ std::string database::quote(const std::string& str)
 
 nonstd::expected<statement, std::string> database::prepare(const std::string& sqlStmt)
 {
+  const auto len = sqlStmt.size();
+  if (static_cast<std::string::size_type>(std::numeric_limits<int>::max()) < len)
+  {
+    return nonstd::make_unexpected("SQL statement is too long to be prepared!");
+  }
   sqlite3_stmt * stmt = nullptr;
-  const int errorCode = sqlite3_prepare_v2(handle.get(), sqlStmt.c_str(), sqlStmt.size(), &stmt, nullptr);
+  const int errorCode = sqlite3_prepare_v2(handle.get(), sqlStmt.c_str(), static_cast<int>(len), &stmt, nullptr);
   if (errorCode != SQLITE_OK)
   {
-    std::cerr << "Error: Could not create prepared statement for '" << sqlStmt << "'!\n"
-              << sqlite3_errmsg(handle.get()) << std::endl;
-    return statement({ nullptr, sqlite3_finalize });
+    std::string message{"Error: Could not create prepared statement for '"};
+    message.append(sqlStmt).append("'!\n").append(sqlite3_errmsg(handle.get()));
+    return nonstd::make_unexpected(message);
   }
 
   return statement({ stmt, sqlite3_finalize });
