@@ -24,20 +24,30 @@
 #include <comdef.h>
 #include <wbemidl.h>
 #pragma comment(lib, "wbemuuid.lib")
+#if defined(__STDC_LIB_EXT1__)
+#define __STDC_WANT_LIB_EXT1__ 1
+#endif
+#include <cwchar>
+#include <vector>
 
 namespace thermos::windows::thermal
 {
 
-std::string sloppy_narrowing(const wchar_t* wc_str)
+std::string better_narrowing(const wchar_t* wc_str)
 {
-  if (nullptr == wc_str)
-    return std::string();
+    if (nullptr == wc_str)
+        return std::string();
 
-  // Warning: This conversion loses information when converting from non-ASCII
-  // characters.
-  // TODO: Use actual UTF-16 to UTF-8 conversion here.
-  const std::wstring wide_string(wc_str);
-  return std::string(wide_string.begin(), wide_string.end());
+    std::mbstate_t state = std::mbstate_t();
+    std::size_t len = static_cast<std::size_t>(-1);
+    const auto error = wcsrtombs_s(&len, nullptr, 0, &wc_str, 0, &state);
+    if (error != 0)
+    {
+        throw std::invalid_argument("UTF-16 string cannot be narrowed to UTF-8!");
+    }
+    std::vector<char> vec_string(len);
+    wcsrtombs_s(&len, vec_string.data(), vec_string.size(), &wc_str, vec_string.size(), &state);
+    return std::string(vec_string.data(), vec_string.size() - 1);
 }
 
 nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> read_wmi()
@@ -202,7 +212,7 @@ nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> rea
     }
 
     thermos::thermal::device_reading d_reading;
-    d_reading.dev.name = sloppy_narrowing(property.bstrVal);
+    d_reading.dev.name = better_narrowing(property.bstrVal);
     VariantClear(&property);
 
     hr = pObject->Get(
