@@ -59,8 +59,38 @@ void showHelp()
             << "                              file (SQLite) and not a CSV file.\n"
             << "  -t FILE | --template FILE - Sets the file name of the template file to use\n"
             << "                              to generate the graphs.\n"
-            << "  -o FILE | --output FILE   - Sets the destination of the generated file to\n"
-            << "                              FILE. This file must not exist yet.\n";
+            << "  -o DIR | --output DIR     - Sets the destination of the generated files to\n"
+            << "                              the directory DIR.\n";
+}
+
+int check_directory(const std::filesystem::path& destination)
+{
+  try
+  {
+    if (!std::filesystem::exists(destination))
+    {
+      if (!std::filesystem::create_directories(destination))
+      {
+        std::cerr << "Error: Directory " << destination << " could not be created.\n";
+        return thermos::rcInputOutputFailure;
+      }
+    }
+    else
+    {
+      if (!std::filesystem::is_directory(destination))
+      {
+        std::cerr << "Error: " << destination << " is not a directory.\n";
+        return thermos::rcInputOutputFailure;
+      }
+    }
+  }
+  catch(const std::filesystem::filesystem_error& ex)
+  {
+    std::cerr << "Error: " << ex.code().message() << "\n";
+    return thermos::rcInputOutputFailure;
+  }
+
+  return 0;
 }
 
 int main(int argc, char** argv)
@@ -187,12 +217,6 @@ int main(int argc, char** argv)
               << "    thermos-graph-generator --output graph.html ...\n";
     return thermos::rcInvalidParameter;
   }
-  std::error_code ec;
-  if (std::filesystem::exists(destination, ec) || ec)
-  {
-    std::cerr << "Error: File " << destination << " already exists.\n";
-    return thermos::rcInputOutputFailure;
-  }
 
   thermos::Template tpl;
   if (!tpl.load_from_file(templateFile))
@@ -201,7 +225,12 @@ int main(int argc, char** argv)
     return thermos::rcInputOutputFailure;
   }
 
-  const auto opt = thermos::generate(logFile, tpl, std::chrono::hours(48), destination);
+  if (int code = check_directory(destination))
+  {
+    return code;
+  }
+
+  const auto opt = thermos::generate(logFile, tpl, destination);
   if (opt.has_value())
   {
     std::cerr << "Error: Template generation failed!\n" << opt.value() << "\n";

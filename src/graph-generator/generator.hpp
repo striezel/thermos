@@ -30,7 +30,21 @@
 namespace thermos
 {
 
-/** \brief Generates a HTML file containing the plot.
+/** \brief Generates the HTML file containing the plots in the given directory.
+ *
+ * \param db_file_name  path to the SQLite database file
+ *                      (Note: This file should have been created with the
+                         thermos-logger program.)
+ * \param tpl                 a loaded template for graph generation
+ * \param output_directory    path of directory where to save the generated files
+ * \return Returns an empty optional, if graph generation was successful.
+ *         Returns an optional containing an error message otherwise.
+ */
+std::optional<std::string> generate(const std::string& db_file_name, Template& tpl,
+                                    const std::filesystem::path& output_directory);
+
+
+/** \brief Generates a single HTML file containing the plot.
  *
  * \param db_file_name  path to the SQLite database file
  *                      (Note: This file should have been created with the
@@ -41,8 +55,8 @@ namespace thermos
  * \return Returns an empty optional, if graph generation was successful.
  *         Returns an optional containing an error message otherwise.
  */
-std::optional<std::string> generate(const std::string& db_file_name, Template& tpl,
-                                    const std::chrono::hours time_span, const std::filesystem::path& output);
+std::optional<std::string> generate_plot(const std::string& db_file_name, Template& tpl,
+                                         const std::chrono::hours time_span, const std::filesystem::path& output);
 
 } // namespace
 

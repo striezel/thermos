@@ -27,7 +27,28 @@ namespace thermos
 {
 
 std::optional<std::string> generate(const std::string& db_file_name, Template& tpl,
-                                    const std::chrono::hours time_span, const std::filesystem::path& output)
+                                    const std::filesystem::path& output_directory)
+{
+  auto opt = generate_plot(db_file_name, tpl, std::chrono::hours(48), output_directory / "graph_48h.html");
+  if (opt.has_value())
+  {
+    return opt;
+  }
+  opt = generate_plot(db_file_name, tpl, std::chrono::hours(7 * 24), output_directory / "graph_7d.html");
+  if (opt.has_value())
+  {
+    return opt;
+  }
+  opt = generate_plot(db_file_name, tpl, std::chrono::hours(30 * 24), output_directory / "graph_30d.html");
+  if (opt.has_value())
+  {
+    return opt;
+  }
+  return generate_plot(db_file_name, tpl, std::chrono::hours(365 * 24), output_directory / "graph_1y.html");
+}
+
+std::optional<std::string> generate_plot(const std::string& db_file_name, Template& tpl,
+                                         const std::chrono::hours time_span, const std::filesystem::path& output)
 {
   std::string header;
   {
