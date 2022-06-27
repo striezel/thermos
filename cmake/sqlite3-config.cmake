@@ -16,10 +16,9 @@ endif(SQLite3_INCLUDE_PATH)
 
 find_library(SQLite3_LIBRARIES sqlite3)
 
-if (SQLite3_LIBRARIES)
-else (SQLite3_LIBRARIES)
+if (NOT SQLite3_LIBRARIES)
    message( "Library of sqlite3 was not found!")
-endif (SQLite3_LIBRARIES)
+endif ()
 
 
 if (SQLite3_INCLUDE_DIRS AND SQLite3_LIBRARIES)
@@ -29,10 +28,9 @@ else (SQLite3_INCLUDE_DIRS AND SQLite3_LIBRARIES)
 endif (SQLite3_INCLUDE_DIRS AND SQLite3_LIBRARIES)
 
 if (SQLite3_FIND_REQUIRED)
-  if (SQLite3_FOUND)
-  else (SQLite3_FOUND)
+  if (NOT SQLite3_FOUND)
     message(FATAL_ERROR "Could not find libsqlite3!")
-  endif(SQLite3_FOUND)
+  endif()
 endif(SQLite3_FIND_REQUIRED)
 
 mark_as_advanced(SQLite3_LIBRARIES SQLite3_INCLUDE_DIRS)
