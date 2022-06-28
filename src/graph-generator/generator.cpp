@@ -29,43 +29,69 @@ namespace thermos
 std::optional<std::string> generate(const std::string& db_file_name, Template& tpl,
                                     const std::filesystem::path& output_directory)
 {
-  auto opt = generate_plot(db_file_name, tpl, std::chrono::hours(48), output_directory / "graph_48h.html");
-  if (opt.has_value())
+  const std::vector<std::chrono::hours> intervals = {
+    std::chrono::hours(48),       // two days
+    std::chrono::hours(7 * 24),   // seven days / one week
+    std::chrono::hours(30 * 24),  // 30 days / one month
+    std::chrono::hours(365 * 24)  // one year
+  };
+  for (const auto& time_span: intervals)
   {
-    return opt;
+    const std::string base_name = "graph_" + get_short_name(time_span) + ".html";
+    const auto opt = generate_plot(db_file_name, tpl, time_span, intervals,
+                                   output_directory / base_name);
+    if (opt.has_value())
+    {
+      return opt;
+    }
   }
-  opt = generate_plot(db_file_name, tpl, std::chrono::hours(7 * 24), output_directory / "graph_7d.html");
-  if (opt.has_value())
+
+  return std::nullopt;
+}
+
+nonstd::expected<std::string, std::string> generate_header(Template& tpl)
+{
+  if (!tpl.load_section("link_with_integrity"))
   {
-    return opt;
+    return nonstd::make_unexpected("Failed to load section 'link_with_integrity' from template.");
   }
-  opt = generate_plot(db_file_name, tpl, std::chrono::hours(30 * 24), output_directory / "graph_30d.html");
-  if (opt.has_value())
+  tpl.tag("url", "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
+  tpl.tag("hash", "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3");
+  auto scripts = tpl.generate().value();
+
+  if (!tpl.load_section("script_with_integrity"))
   {
-    return opt;
+    return nonstd::make_unexpected("Failed to load section 'script_with_integrity' from template.");
   }
-  return generate_plot(db_file_name, tpl, std::chrono::hours(365 * 24), output_directory / "graph_1y.html");
+  tpl.tag("url", "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js");
+  tpl.tag("hash", "sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13");
+  scripts += tpl.generate().value();
+
+  if (!tpl.load_section("script"))
+  {
+    return "Failed to load section 'script' from template.";
+  }
+  tpl.tag("url", "https://cdn.plot.ly/plotly-basic-2.12.1.min.js");
+  scripts += tpl.generate().value();
+
+  if (!tpl.load_section("header"))
+  {
+    return nonstd::make_unexpected("Failed to load section 'header' from template.");
+  }
+  tpl.tag("title", "Temperature data plot");
+  tpl.integrate("scripts", scripts);
+  return tpl.generate().value();
 }
 
 std::optional<std::string> generate_plot(const std::string& db_file_name, Template& tpl,
-                                         const std::chrono::hours time_span, const std::filesystem::path& output)
+                                         const std::chrono::hours time_span,
+                                         const std::vector<std::chrono::hours>& all_time_spans,
+                                         const std::filesystem::path& output)
 {
-  std::string header;
+  const auto header = generate_header(tpl);
+  if (!header.has_value())
   {
-    if (!tpl.load_section("script"))
-    {
-      return "Failed to load section 'script' from template.";
-    }
-    tpl.tag("path", "https://cdn.plot.ly/plotly-basic-2.12.1.min.js");
-    const auto scripts = tpl.generate().value();
-
-    if (!tpl.load_section("header"))
-    {
-      return "Failed to load section 'header' from template.";
-    }
-    tpl.tag("title", "Temperature data plot");
-    tpl.integrate("scripts", scripts);
-    header = tpl.generate().value();
+    return header.error();
   }
 
   auto maybe_traces = generate_traces<thermal::reading>(db_file_name, tpl, time_span, "yaxis: 'y2',");
@@ -90,12 +116,18 @@ std::optional<std::string> generate_plot(const std::string& db_file_name, Templa
   tpl.integrate("traces", traces);
   const std::string graph = tpl.generate().value();
 
+  const auto nav = generate_navigation(tpl, time_span, all_time_spans);
+  if (!nav.has_value())
+  {
+    return nav.error();
+  }
+
   if (!tpl.load_section("full"))
   {
     return "Failed to load section 'full' from template.";
   }
-  tpl.integrate("header", header);
-  tpl.integrate("content", graph);
+  tpl.integrate("header", header.value());
+  tpl.integrate("content", nav.value() + graph);
   const std::string full = tpl.generate().value();
 
   std::ofstream stream(output, std::ios::out | std::ios::binary | std::ios::trunc);
@@ -107,6 +139,61 @@ std::optional<std::string> generate_plot(const std::string& db_file_name, Templa
   stream.close();
 
   return std::nullopt;
+}
+
+nonstd::expected<std::string, std::string>
+generate_navigation(Template& tpl, const std::chrono::hours current_time_span,
+                    const std::vector<std::chrono::hours>& all_time_spans)
+{
+  if (!tpl.load_section("nav_item"))
+  {
+    return nonstd::make_unexpected("Failed to load section 'nav_item' from template.");
+  }
+  std::string items;
+  for (const auto& time_span: all_time_spans)
+  {
+    const auto short_name = get_short_name(time_span);
+    const std::string base_name = "graph_" + short_name + ".html";
+    tpl.tag("url", base_name);
+    tpl.tag("name", short_name);
+    const bool active = (time_span == current_time_span);
+    tpl.tag("active", active ? " active" : "");
+    items += tpl.generate().value();
+  }
+
+  if (!tpl.load_section("navigation"))
+  {
+    return nonstd::make_unexpected("Failed to load section 'navigation' from template.");
+  }
+  tpl.integrate("items", items);
+  return tpl.generate().value();
+}
+
+std::string get_short_name(const std::chrono::hours time_span)
+{
+  if (time_span < std::chrono::hours(24))
+  {
+    return std::to_string(time_span.count()) + "h";
+  }
+
+  if (time_span < std::chrono::hours(365 * 24))
+  {
+    auto str = std::to_string(time_span.count() / 24) + "d";
+    const auto mod = time_span.count() % 24;
+    if (mod != 0)
+    {
+      str += " " + std::to_string(mod) + "h";
+    }
+    return str;
+  }
+
+  auto str = std::to_string(time_span.count() / (365 * 24)) + "y";
+  const auto remainder = time_span.count() % (365 * 24);
+  if (remainder != 0)
+  {
+    str += " " + get_short_name(std::chrono::hours(remainder));
+  }
+  return str;
 }
 
 } // namespace

@@ -25,6 +25,8 @@
 #include <filesystem>
 #include <optional>
 #include <string>
+#include <vector>
+#include "../../third-party/nonstd/expected.hpp"
 #include "../../lib/templating/template.hpp"
 
 namespace thermos
@@ -51,12 +53,34 @@ std::optional<std::string> generate(const std::string& db_file_name, Template& t
                          thermos-logger program.)
  * \param tpl           a loaded template for graph generation
  * \param time_span     amount of time to cover in the generated graph
+ * \param all_time_spans container with all time spans in the navigation
  * \param output        path where to save the generated file
  * \return Returns an empty optional, if graph generation was successful.
  *         Returns an optional containing an error message otherwise.
  */
 std::optional<std::string> generate_plot(const std::string& db_file_name, Template& tpl,
-                                         const std::chrono::hours time_span, const std::filesystem::path& output);
+                                         const std::chrono::hours time_span,
+                                         const std::vector<std::chrono::hours>& all_time_spans,
+                                         const std::filesystem::path& output);
+
+/** \brief Generates the navigation for a single HTML file.
+ *
+ * \param tpl            a loaded template for graph generation
+ * \param time_span      amount of time to cover in the generated graph
+ * \param all_time_spans container with all time spans in the navigation
+ * \return Returns the HTML code, if navigation generation was successful.
+ *         Returns an error message otherwise.
+ */
+nonstd::expected<std::string, std::string>
+generate_navigation(Template& tpl, const std::chrono::hours current_time_span,
+                    const std::vector<std::chrono::hours>& all_time_spans);
+
+/** \brief Gets a short name for a time span, e. g. "2d" for two days / 48 hours.
+ *
+ * \param time_span      amount of time
+ * \return Returns the short name for the time span.
+ */
+std::string get_short_name(const std::chrono::hours time_span);
 
 } // namespace
 
