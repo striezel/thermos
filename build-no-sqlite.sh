@@ -36,7 +36,7 @@ then
   exit 1
 fi
 
-make -j4
+cmake --build . -j4
 if [ $? -ne 0 ]
 then
   echo "Build failed."
