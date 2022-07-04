@@ -155,8 +155,8 @@ nonstd::expected<std::vector<thermos::thermal::device_reading>, std::string> rea
   // Use the IWbemServices pointer to make requests to WMI.
   IEnumWbemClassObject* pEnumerator = nullptr;
   hr = pService->ExecQuery(
-         bstr_t("WQL"), // query language; must be "WQL" for WMI Query Language
-         bstr_t("SELECT * FROM MSAcpi_ThermalZoneTemperature"),
+         _bstr_t(L"WQL"), // query language; must be "WQL" for WMI Query Language
+         _bstr_t(L"SELECT * FROM MSAcpi_ThermalZoneTemperature"),
          // flags for query behaviour:
          //   WBEM_FLAG_FORWARD_ONLY = return forward-only enumerator, which is
          //                            faster than other enumerators;

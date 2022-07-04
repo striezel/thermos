@@ -80,7 +80,11 @@ else ()
         include_directories(${SQLite3_INCLUDE_DIRS})
         target_link_libraries (thermos-db2csv ${SQLite3_LIBRARIES})
         if (ENABLE_STATIC_LINKING)
-            target_link_libraries(thermos-db2csv dl z pthread)
+            if (NOT MINGW)
+                target_link_libraries(thermos-db2csv dl z pthread)
+            else ()
+                target_link_libraries(thermos-db2csv z pthread)
+            endif ()
         endif ()
     else ()
         message ( FATAL_ERROR "SQLite3 was not found!" )
@@ -142,8 +146,10 @@ add_test(NAME thermos_db2csv_help_question_mark
          COMMAND $<TARGET_FILE:thermos-db2csv> -?)
 
 # Windows-style help parameter "/?"
-add_test(NAME thermos_db2csv_help_question_mark_windows
-         COMMAND $<TARGET_FILE:thermos-db2csv> /?)
+if (NOT DEFINED ENV{GITHUB_ACTIONS} OR NOT MINGW)
+    add_test(NAME thermos_db2csv_help_question_mark_windows
+             COMMAND $<TARGET_FILE:thermos-db2csv> /?)
+endif ()
 
 # parameter to show version information
 add_test(NAME thermos_db2csv_version

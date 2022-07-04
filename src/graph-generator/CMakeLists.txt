@@ -70,7 +70,11 @@ if (NOT NO_SQLITE)
             include_directories(${SQLite3_INCLUDE_DIRS})
             target_link_libraries (thermos-graph-generator ${SQLite3_LIBRARIES})
             if (ENABLE_STATIC_LINKING)
-                target_link_libraries(thermos-graph-generator dl z pthread)
+                if (NOT MINGW)
+                    target_link_libraries(thermos-graph-generator dl z pthread)
+                else ()
+                    target_link_libraries(thermos-graph-generator z pthread)
+                endif ()
             endif ()
         else ()
             message ( FATAL_ERROR "SQLite3 was not found!" )
@@ -133,8 +137,10 @@ add_test(NAME thermos_graph_generator_help_question_mark
          COMMAND $<TARGET_FILE:thermos-graph-generator> -?)
 
 # Windows-style help parameter "/?"
-add_test(NAME thermos_graph_generator_help_question_mark_windows
-         COMMAND $<TARGET_FILE:thermos-graph-generator> /?)
+if (NOT DEFINED ENV{GITHUB_ACTIONS} OR NOT MINGW)
+    add_test(NAME thermos_graph_generator_help_question_mark_windows
+             COMMAND $<TARGET_FILE:thermos-graph-generator> /?)
+endif ()
 
 # parameter to show version information
 add_test(NAME thermos_graph_generator_version

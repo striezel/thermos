@@ -78,7 +78,11 @@ if (NOT NO_SQLITE)
             include_directories(${SQLite3_INCLUDE_DIRS})
             target_link_libraries (thermos-logger ${SQLite3_LIBRARIES})
             if (ENABLE_STATIC_LINKING)
-                target_link_libraries(thermos-logger dl z pthread)
+                if (NOT MINGW)
+                    target_link_libraries(thermos-logger dl z pthread)
+                else ()
+                    target_link_libraries(thermos-logger z pthread)
+                endif ()
             endif ()
         else ()
             message ( FATAL_ERROR "SQLite3 was not found!" )
@@ -148,8 +152,10 @@ add_test(NAME thermos_logger_help_question_mark
          COMMAND $<TARGET_FILE:thermos-logger> -?)
 
 # Windows-style help parameter "/?"
-add_test(NAME thermos_logger_help_question_mark_windows
-         COMMAND $<TARGET_FILE:thermos-logger> /?)
+if (NOT DEFINED ENV{GITHUB_ACTIONS} OR NOT MINGW)
+    add_test(NAME thermos_logger_help_question_mark_windows
+             COMMAND $<TARGET_FILE:thermos-logger> /?)
+endif ()
 
 # parameter to show version information
 add_test(NAME thermos_logger_version

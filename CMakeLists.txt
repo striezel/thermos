@@ -63,7 +63,7 @@ option(USE_BUNDLED_SQLITE "Use the bundled version of the SQLite 3 library." OFF
 # Recurse into subdirectory for the executable.
 add_subdirectory (src)
 
-# Recurse into subdirectory for tests, if we aren't building with MSVC.
-if (NOT MSVC)
+# Recurse into subdirectory for tests, if we aren't building with MSVC or MinGW.
+if (NOT MSVC AND NOT MINGW)
   add_subdirectory (tests)
 endif ()

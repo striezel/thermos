@@ -97,8 +97,10 @@ add_test(NAME thermos_info_help_question_mark
          COMMAND $<TARGET_FILE:thermos-info> -?)
 
 # Windows-style help parameter "/?"
-add_test(NAME thermos_info_help_question_mark_windows
-         COMMAND $<TARGET_FILE:thermos-info> /?)
+if (NOT DEFINED ENV{GITHUB_ACTIONS} OR NOT MINGW)
+    add_test(NAME thermos_info_help_question_mark_windows
+             COMMAND $<TARGET_FILE:thermos-info> /?)
+endif ()
 
 # parameter to show version information
 add_test(NAME thermos_info_version
