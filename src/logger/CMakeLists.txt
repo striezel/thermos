@@ -86,6 +86,13 @@ if (NOT NO_SQLITE)
     endif (USE_BUNDLED_SQLITE)
 endif ()
 
+
+if (MINGW)
+     # MSVC links to them via "#pragma comment(lib, "foo.lib")", but MinGW does
+     # not support that.
+     target_link_libraries(thermos-logger wbemuuid kernel32)
+endif ()
+
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0")
   target_link_libraries(thermos-logger stdc++fs)

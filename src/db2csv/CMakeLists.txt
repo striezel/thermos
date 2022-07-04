@@ -56,6 +56,12 @@ endif ()
 
 add_executable(thermos-db2csv ${thermos_db2csv_sources})
 
+if (MINGW)
+     # MSVC links to them via "#pragma comment(lib, "foo.lib")", but MinGW does
+     # not support that.
+     target_link_libraries(thermos-db2csv wbemuuid kernel32)
+endif ()
+
 # find sqlite3 library
 if (USE_BUNDLED_SQLITE)
     include_directories("../../third-party/sqlite/")

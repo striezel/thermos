@@ -49,6 +49,12 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSIO
   endif ()
 endif ()
 
+if (MINGW)
+     # MSVC links to them via "#pragma comment(lib, "foo.lib")", but MinGW does
+     # not support that.
+     target_link_libraries(thermos-info wbemuuid kernel32)
+endif ()
+
 # create git-related constants
 # -- get the current commit hash
 execute_process(

@@ -22,7 +22,9 @@
 #if defined(_WIN32) || defined(_WIN64)
 #include <thread>
 #include <windows.h>
+#if defined(_MSC_VER)
 #pragma comment(lib, "kernel32.lib")
+#endif
 
 namespace thermos::load
 {

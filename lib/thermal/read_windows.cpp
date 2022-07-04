@@ -23,7 +23,9 @@
 #define _WIN32_DCOM
 #include <comdef.h>
 #include <wbemidl.h>
+#if defined(_MSC_VER)
 #pragma comment(lib, "wbemuuid.lib")
+#endif
 #if defined(__STDC_LIB_EXT1__)
 #define __STDC_WANT_LIB_EXT1__ 1
 #endif
