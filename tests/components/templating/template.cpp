@@ -70,7 +70,7 @@ TEST_CASE("Template class")
     const std::string simple_template("<!--section-start::test--><li><a href=\"{{url}}\">{{text}}</a></li><!--section-end::test-->");
     const auto file_name = "load_from_file_single_section.tpl";
     {
-      std::ofstream stream(file_name);
+      std::ofstream stream(file_name, std::ios::out | std::ios::binary);
       stream.write(simple_template.c_str(), simple_template.length());
       REQUIRE( stream.good() );
       stream.close();
@@ -91,7 +91,7 @@ TEST_CASE("Template class")
     const std::string simple_template("<!--section-start::test--><li>\n  <a href=\"{{url}}\">{{text}}</a>\r\n</li><!--section-end::test-->");
     const auto file_name = "load_from_file_new_lines.tpl";
     {
-      std::ofstream stream(file_name);
+      std::ofstream stream(file_name, std::ios::out | std::ios::binary);
       stream.write(simple_template.c_str(), simple_template.length());
       REQUIRE( stream.good() );
       stream.close();
@@ -111,7 +111,7 @@ TEST_CASE("Template class")
     const std::string simple_template("<!--section-start::test--><li>\n  <a href=\"{{url}}\">{{text}}</a>\r\n</li><!--section-end::test-->\n<!--section-start::foo--><b>Info\nFoo\r\nBar\rBaz:</b> {{info}}<!--section-end::foo-->");
     const auto file_name = "load_from_file_multiple_sections_with_new_lines.tpl";
     {
-      std::ofstream stream(file_name);
+      std::ofstream stream(file_name, std::ios::out | std::ios::binary);
       stream.write(simple_template.c_str(), simple_template.length());
       REQUIRE( stream.good() );
       stream.close();
