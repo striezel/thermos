@@ -1,7 +1,6 @@
-# We might support earlier versions, too, but try to use a more recent one.
 cmake_minimum_required (VERSION 3.8)
 
-# test binary for JSON parsing
+# test binary for code in lib/ directory
 project(component_tests)
 
 set(component_tests_sources
@@ -102,6 +101,12 @@ if (NOT NO_SQLITE)
       message ( FATAL_ERROR "SQLite3 was not found!" )
     endif (SQLite3_FOUND)
   endif ()
+endif ()
+
+# MSYS2 / MinGW uses Catch 3.x.
+if (HAS_CATCH_V3)
+    find_package(Catch2 3 REQUIRED)
+    target_link_libraries(component_tests Catch2::Catch2WithMain)
 endif ()
 
 # GNU GCC before 9.1.0 needs to link to libstdc++fs explicitly.
