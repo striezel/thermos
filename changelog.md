@@ -33,7 +33,8 @@ Linux systems, a load of 100 % means that one core is completely busy. So the
 interpretation of load values depends on the number of cores in that case. For
 example, imagine a system with four CPU cores. If all four cores are completely
 busy, then the CPU load will be 400 % on Linux, but only 100 % on Windows. If
-only one core is busy on the same system, then the CPU load will be 100 % on Linux, but only 25 % on Windows.
+only one core is busy on the same system, then the CPU load will be 100 % on
+Linux, but only 25 % on Windows.
 
 In other words: CPU load scales with the number of CPU cores on Linux, but it
 does not on Windows.
