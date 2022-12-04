@@ -32,15 +32,15 @@ nonstd::expected<sqlite::database, std::string> db::prepare_db(const std::string
   {
     return nonstd::make_unexpected(maybe_db.error());
   }
-  auto& db = maybe_db.value();
+  auto& db_ = maybe_db.value();
   // Make sure the schema is correct.
-  const auto existence = ensure_tables_exist(db);
+  const auto existence = ensure_tables_exist(db_);
   if (existence.has_value())
   {
     return nonstd::make_unexpected(existence.value());
   }
 
-  return std::move(db);
+  return std::move(db_);
 }
 
 std::optional<std::string> db::save(const std::vector<thermos::thermal::device_reading>& data, const std::string& file_name)
@@ -63,9 +63,9 @@ std::optional<std::string> db::load(std::vector<thermos::load::device_reading>& 
   return load_impl<thermos::load::device_reading>(data, file_name);
 }
 
-std::optional<std::string> db::ensure_tables_exist(sqlite::database& db)
+std::optional<std::string> db::ensure_tables_exist(sqlite::database& dbase)
 {
-  auto exists = db.table_exists("device");
+  auto exists = dbase.table_exists("device");
   if (!exists.has_value())
   {
     return exists.error();
@@ -86,17 +86,17 @@ std::optional<std::string> db::ensure_tables_exist(sqlite::database& db)
           value INTEGER
         );
         )SQL";
-    if (!db.exec(statement))
+    if (!dbase.exec(statement))
       return "Failed to create tables.";
   }
 
   return std::nullopt;
 }
 
-nonstd::expected<int64_t, std::string> db::find_or_create_device(sqlite::database& db, const device& dev)
+nonstd::expected<int64_t, std::string> db::find_or_create_device(sqlite::database& dbase, const device& dev)
 {
   {
-    auto maybe_stmt = db.prepare("SELECT deviceId FROM device WHERE origin = @ori AND name = @name LIMIT 1;");
+    auto maybe_stmt = dbase.prepare("SELECT deviceId FROM device WHERE origin = @ori AND name = @name LIMIT 1;");
     if (!maybe_stmt.has_value())
     {
       return nonstd::make_unexpected(maybe_stmt.error());
@@ -121,7 +121,7 @@ nonstd::expected<int64_t, std::string> db::find_or_create_device(sqlite::databas
   }
 
   // SQLITE_DONE means "no more data", so the device does not exist yet.
-  auto maybe_stmt = db.prepare("INSERT INTO device (origin, name) VALUES (@ori, @name);");
+  auto maybe_stmt = dbase.prepare("INSERT INTO device (origin, name) VALUES (@ori, @name);");
   if (!maybe_stmt.has_value())
   {
     return nonstd::make_unexpected(maybe_stmt.error());
@@ -139,7 +139,7 @@ nonstd::expected<int64_t, std::string> db::find_or_create_device(sqlite::databas
            .append("' into database!");
     return nonstd::make_unexpected(message);
   }
-  return db.last_insert_id();
+  return dbase.last_insert_id();
 }
 
 std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, const thermos::reading_type type, const std::string& file_name)
@@ -150,11 +150,11 @@ std::optional<std::string> db::get_devices(std::vector<thermos::device>& data, c
   {
     return maybe_db.error();
   }
-  auto& db = maybe_db.value();
+  auto& dbase = maybe_db.value();
 
-  auto maybe_stmt = db.prepare(R"(SELECT deviceId, name, origin FROM device JOIN
-                                    (SELECT DISTINCT deviceId AS devid, type FROM reading WHERE reading.type=@t)
-                                    ON device.deviceId = devid ORDER BY name ASC;)");
+  auto maybe_stmt = dbase.prepare(R"(SELECT deviceId, name, origin FROM device JOIN
+                                       (SELECT DISTINCT deviceId AS devid, type FROM reading WHERE reading.type=@t)
+                                       ON device.deviceId = devid ORDER BY name ASC;)");
   if (!maybe_stmt.has_value())
   {
     return maybe_stmt.error();
@@ -193,8 +193,8 @@ nonstd::expected<int64_t, std::string> db::get_device_id(const thermos::device& 
   {
     return nonstd::make_unexpected(maybe_db.error());
   }
-  auto& db = maybe_db.value();
-  auto maybe_stmt = db.prepare("SELECT deviceId FROM device WHERE name=@nom AND origin=@ori LIMIT 1;");
+  auto& dbase = maybe_db.value();
+  auto maybe_stmt = dbase.prepare("SELECT deviceId FROM device WHERE name=@nom AND origin=@ori LIMIT 1;");
   if (!maybe_stmt.has_value())
   {
     return nonstd::make_unexpected(maybe_stmt.error());

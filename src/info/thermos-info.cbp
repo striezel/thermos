@@ -30,6 +30,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wnon-virtual-dtor" />
+			<Add option="-Wshadow" />
 			<Add option="-Weffc++" />
 			<Add option="-Wmain" />
 			<Add option="-pedantic-errors" />

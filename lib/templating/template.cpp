@@ -61,7 +61,6 @@ bool Template::load_from_str(const std::string& content)
   }
 
   std::regex pattern("<!--section-start::(.*?)-->((.|\\r|\\n)*?)<!--section-end::(.*?)-->");
-  std::smatch match;
   sections.clear();
   auto iter = std::sregex_iterator(content.begin(), content.end(), pattern);
   const auto iter_end = std::sregex_iterator();

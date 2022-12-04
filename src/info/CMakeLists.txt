@@ -20,7 +20,7 @@ set(thermos_info_sources
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    add_definitions (-Wall -pedantic-errors -pedantic -Wextra -fexceptions)
+    add_definitions (-Wall -Wextra -pedantic -pedantic-errors -Wshadow -fexceptions)
     if (CODE_COVERAGE)
         add_definitions (-O0)
     else ()
@@ -44,8 +44,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSIO
     # If we are on Clang 7.x, then the filesystem library from GCC is better.
     target_link_libraries(thermos-info stdc++fs)
   else ()
-   # Use Clang's C++ filesystem library, it is recent enough.
-   target_link_libraries(thermos-info c++fs)
+    # Use Clang's C++ filesystem library, it is recent enough.
+    target_link_libraries(thermos-info c++fs)
   endif ()
 endif ()
 

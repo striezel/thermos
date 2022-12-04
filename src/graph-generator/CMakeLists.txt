@@ -34,7 +34,7 @@ if (NOT NO_SQLITE AND USE_BUNDLED_SQLITE)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    add_definitions (-Wall -pedantic-errors -pedantic -Wextra -fexceptions)
+    add_definitions (-Wall -Wextra -pedantic -pedantic-errors -Wshadow -fexceptions)
     if (CODE_COVERAGE)
         add_definitions (-O0)
     else ()
@@ -93,8 +93,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSIO
     # If we are on Clang 7.x, then the filesystem library from GCC is better.
     target_link_libraries(thermos-graph-generator stdc++fs)
   else ()
-   # Use Clang's C++ filesystem library, it is recent enough.
-   target_link_libraries(thermos-graph-generator c++fs)
+    # Use Clang's C++ filesystem library, it is recent enough.
+    target_link_libraries(thermos-graph-generator c++fs)
   endif ()
 endif ()
 

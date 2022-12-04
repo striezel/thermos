@@ -573,14 +573,14 @@ TEST_CASE("db storage: load device list")
     {
       // Save some temperature data.
       std::vector<thermos::thermal::device_reading> data;
-      thermal::device_reading reading_one;
-      reading_one.dev.name = "foo's thermal sibling";
-      reading_one.dev.origin = "origin was here";
-      reading_one.reading.value = 25000;
-      reading_one.reading.time = to_time(2022, 4, 23, 19, 18, 17);
-      data.push_back(reading_one);
-      reading_one.reading.time = to_time(2022, 4, 23, 20, 19, 18);
-      data.push_back(reading_one);
+      thermal::device_reading reading_temperature;
+      reading_temperature.dev.name = "foo's thermal sibling";
+      reading_temperature.dev.origin = "origin was here";
+      reading_temperature.reading.value = 25000;
+      reading_temperature.reading.time = to_time(2022, 4, 23, 19, 18, 17);
+      data.push_back(reading_temperature);
+      reading_temperature.reading.time = to_time(2022, 4, 23, 20, 19, 18);
+      data.push_back(reading_temperature);
       db store;
       const auto opt = store.save(data, file_name);
       REQUIRE_FALSE( opt.has_value() );

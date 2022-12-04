@@ -29,6 +29,7 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wshadow" />
 			<Add option="-Wunreachable-code" />
 			<Add option="-Weffc++" />
 			<Add option="-pedantic-errors" />

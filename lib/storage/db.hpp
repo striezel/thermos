@@ -147,9 +147,9 @@ class db: public store, public retrieve
      *         Returns an error message otherwise.
      */
     template<typename T>
-    std::optional<std::string> insert_reading(sqlite::database& db, const device_reading<T>& reading)
+    std::optional<std::string> insert_reading(sqlite::database& sql_db, const device_reading<T>& reading)
     {
-      const auto dev_id = find_or_create_device(db, reading.dev);
+      const auto dev_id = find_or_create_device(sql_db, reading.dev);
       if (!dev_id.has_value())
       {
         return dev_id.error();
@@ -164,7 +164,7 @@ class db: public store, public retrieve
           + std::to_string(dev_id.value()) + ", '" + to_string(reading.reading.type())
           + "', '" + time_string.value() + "', " + std::to_string(reading.reading.value)
           + ");";
-      if (!db.exec(sql))
+      if (!sql_db.exec(sql))
       {
         return "Could not insert new device reading into database!";
       }
@@ -182,7 +182,7 @@ class db: public store, public retrieve
       {
         return maybe_db.error();
       }
-      auto& db = maybe_db.value();
+      auto& dbase = maybe_db.value();
 
       for(const auto& reading: data)
       {
@@ -190,7 +190,7 @@ class db: public store, public retrieve
         //       the device ids repeatedly for the same devices. However, currently
         //       the code does not use multiple readings for the same device in one
         //       call to the save() method yet, so we should still be fine.
-        auto insert = insert_reading(db, reading);
+        auto insert = insert_reading(dbase, reading);
         if (insert.has_value())
         {
           return insert;
@@ -209,9 +209,9 @@ class db: public store, public retrieve
       {
         return maybe_db.error();
       }
-      auto& db = maybe_db.value();
+      auto& dbase = maybe_db.value();
 
-      auto maybe_stmt = db.prepare("SELECT name, origin, reading.deviceId, date, value FROM reading JOIN device ON reading.deviceId=device.deviceId WHERE type=@t ORDER BY reading.deviceId ASC, date ASC;");
+      auto maybe_stmt = dbase.prepare("SELECT name, origin, reading.deviceId, date, value FROM reading JOIN device ON reading.deviceId=device.deviceId WHERE type=@t ORDER BY reading.deviceId ASC, date ASC;");
       if (!maybe_stmt.has_value())
       {
         return maybe_stmt.error();
@@ -270,12 +270,12 @@ class db: public store, public retrieve
       {
         return maybe_db.error();
       }
-      auto& db = maybe_db.value();
+      auto& dbase = maybe_db.value();
 
       std::string max_date;
       {
-        auto maybe_stmt = db.prepare("SELECT MAX(date) FROM reading WHERE deviceId ="
-                                    + std::to_string(maybe_id.value()) + " LIMIT 1;");
+        auto maybe_stmt = dbase.prepare("SELECT MAX(date) FROM reading WHERE deviceId ="
+                                       + std::to_string(maybe_id.value()) + " LIMIT 1;");
         if (!maybe_stmt.has_value())
         {
           return maybe_stmt.error();
@@ -297,7 +297,7 @@ class db: public store, public retrieve
       }
 
       const auto hours = std::to_string(abs(static_cast<long long int>(time_span.count())));
-      auto maybe_stmt = db.prepare("SELECT date, value FROM reading WHERE deviceId ="
+      auto maybe_stmt = dbase.prepare("SELECT date, value FROM reading WHERE deviceId ="
           + std::to_string(maybe_id.value())
           + " AND type = @t AND date >= datetime(@max_d, '-" + hours + " hours');");
       if (!maybe_stmt.has_value())
