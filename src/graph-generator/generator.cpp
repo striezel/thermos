@@ -112,7 +112,7 @@ std::optional<std::string> generate_plot(const std::string& db_file_name, Templa
     return "Failed to load section 'graph' from template.";
   }
   tpl.tag("plotId", "id_1");
-  tpl.tag("title", "Data of the last " + std::to_string(time_span.count()) + " hours");
+  tpl.tag("title", "Data of the last " + get_human_readable_span(time_span));
   tpl.integrate("traces", traces);
   const std::string graph = tpl.generate().value();
 
@@ -167,6 +167,39 @@ generate_navigation(Template& tpl, const std::chrono::hours current_time_span,
   }
   tpl.integrate("items", items);
   return tpl.generate().value();
+}
+
+std::string get_human_readable_span(const std::chrono::hours time_span)
+{
+  if (time_span < std::chrono::hours(24))
+  {
+    if (time_span.count() == 1)
+    {
+      return "1 hour";
+    }
+    return std::to_string(time_span.count()) + " hours";
+  }
+
+  if (time_span < std::chrono::hours(365 * 24))
+  {
+    const auto days = time_span.count() / 24;
+    auto str = std::to_string(days) + ((days == 1 ) ? " day" : " days");
+    const auto mod = time_span.count() % 24;
+    if (mod != 0)
+    {
+      str += " " + get_human_readable_span(std::chrono::hours(mod));
+    }
+    return str;
+  }
+
+  const auto years = time_span.count() / (365 * 24);
+  auto str = std::to_string(years) + ((years == 1) ? " year" : " years");
+  const auto remainder = time_span.count() % (365 * 24);
+  if (remainder != 0)
+  {
+    str += " " + get_human_readable_span(std::chrono::hours(remainder));
+  }
+  return str;
 }
 
 std::string get_short_name(const std::chrono::hours time_span)

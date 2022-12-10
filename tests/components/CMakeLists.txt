@@ -39,6 +39,12 @@ set(component_tests_sources
     thermal/reading.cpp
     main.cpp)
 
+if (NOT NO_SQLITE)
+    list(APPEND component_tests_sources
+    ../../src/graph-generator/generator.cpp
+    graph-generator/generator.cpp)
+endif ()
+
 if (NOT NO_SQLITE AND USE_BUNDLED_SQLITE)
     list(APPEND component_tests_sources
     ../../third-party/sqlite/sqlite3.c)
@@ -62,7 +68,11 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clan
 endif ()
 
 if (NO_SQLITE)
-    add_definitions( -DTHERMOS_NO_SQLITE=1 )
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        add_definitions( -DTHERMOS_NO_SQLITE=1 )
+    elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        add_definitions( /DTHERMOS_NO_SQLITE=1 )
+    endif ()
 endif ()
 
 set(CMAKE_CXX_STANDARD 17)

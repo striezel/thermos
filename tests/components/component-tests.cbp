@@ -74,9 +74,12 @@
 		<Unit filename="../../lib/templating/vectorize.hpp" />
 		<Unit filename="../../lib/thermal/reading.cpp" />
 		<Unit filename="../../lib/thermal/reading.hpp" />
+		<Unit filename="../../src/graph-generator/generator.cpp" />
+		<Unit filename="../../src/graph-generator/generator.hpp" />
 		<Unit filename="../../third-party/nonstd/expected.hpp" />
 		<Unit filename="device.cpp" />
 		<Unit filename="find_catch.hpp" />
+		<Unit filename="graph-generator/generator.cpp" />
 		<Unit filename="load/device_reading.cpp" />
 		<Unit filename="load/reading.cpp" />
 		<Unit filename="main.cpp" />

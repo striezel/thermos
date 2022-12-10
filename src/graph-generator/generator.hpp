@@ -75,6 +75,13 @@ nonstd::expected<std::string, std::string>
 generate_navigation(Template& tpl, const std::chrono::hours current_time_span,
                     const std::vector<std::chrono::hours>& all_time_spans);
 
+/** \brief Gets a human-readable string for a time span, e. g. "2 days" for two days / 48 hours.
+ *
+ * \param time_span      amount of time
+ * \return Returns the descriptive name for the time span.
+ */
+std::string get_human_readable_span(const std::chrono::hours time_span);
+
 /** \brief Gets a short name for a time span, e. g. "2d" for two days / 48 hours.
  *
  * \param time_span      amount of time
