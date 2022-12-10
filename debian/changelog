@@ -1,3 +1,12 @@
+thermos (0.6.0-1) UNRELEASED; urgency=medium
+
+  * thermos-graph-generator, a command line application that generated graphs
+    from logged data of thermos-logger, is added. Currently,
+    thermos-graph-generator only supports logged data in the SQLite 3 database
+    format and cannot generate graphs from CSV data.
+
+ -- Dirk Stolle <striezel-dev@web.de>  Sat, 10 Dec 2022 21:42:21 +0100
+
 thermos (0.5.1-1) UNRELEASED; urgency=medium
 
   * On Linux systems, the information about thermal readings does now contain
