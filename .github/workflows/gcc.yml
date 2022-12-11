@@ -24,7 +24,7 @@ jobs:
           mkdir build
           cd build
           cmake ../
-          make -j4
+          make -j2
       - name: Tests
         run: |
           cd "$GITHUB_WORKSPACE"/build
@@ -37,7 +37,7 @@ jobs:
           mkdir build-no-sqlite
           cd build-no-sqlite
           cmake ../ -DNO_SQLITE=ON
-          make -j4
+          make -j2
       - name: Tests - no SQLite
         run: |
           cd "$GITHUB_WORKSPACE"/build-no-sqlite
@@ -58,7 +58,7 @@ jobs:
           mkdir build-bundled
           cd build-bundled
           cmake ../ -DUSE_BUNDLED_SQLITE=ON -DENABLE_LTO=ON
-          make -j4
+          make -j2
         if: matrix.version == 10
       - name: Tests - bundled SQLite
         run: |
