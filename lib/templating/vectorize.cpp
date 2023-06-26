@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022  Dirk Stolle
+    Copyright (C) 2022, 2023  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,11 +50,11 @@ nonstd::expected<vectorized_data, std::string> vectorize(const std::vector<load:
   }
   if (!data.empty())
   {
-    result.dates = std::move(dates.str());
+    result.dates = dates.str();
     const auto d_len = result.dates.length();
     result.dates[d_len - 2] = ']';
     result.dates.erase(d_len - 1, 1);
-    result.values = std::move(values.str());
+    result.values = values.str();
     result.values[result.values.length() - 1] = ']';
   }
   else
@@ -84,11 +84,11 @@ nonstd::expected<vectorized_data, std::string> vectorize(const std::vector<therm
   }
   if (!data.empty())
   {
-    result.dates = std::move(dates.str());
+    result.dates = dates.str();
     const auto d_len = result.dates.length();
     result.dates[d_len - 2] = ']';
     result.dates.erase(d_len - 1, 1);
-    result.values = std::move(values.str());
+    result.values = values.str();
     result.values[result.values.length() - 1] = ']';
   }
   else

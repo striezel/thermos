@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022  Dirk Stolle
+    Copyright (C) 2022, 2023  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -296,7 +296,7 @@ class db: public store, public retrieve
         }
       }
 
-      const auto hours = std::to_string(abs(static_cast<long long int>(time_span.count())));
+      const auto hours = std::to_string(std::abs(static_cast<long long int>(time_span.count())));
       auto maybe_stmt = dbase.prepare("SELECT date, value FROM reading WHERE deviceId ="
           + std::to_string(maybe_id.value())
           + " AND type = @t AND date >= datetime(@max_d, '-" + hours + " hours');");
