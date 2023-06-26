@@ -3,11 +3,11 @@ name: GCC
 on: push
 
 jobs:
-  ubuntu_20_04_gcc:
-    runs-on: ubuntu-20.04
+  gcc:
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        version: [8, 9, 10, 11]
+        version: [9, 10, 11, 12]
       fail-fast: false
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE.
@@ -15,7 +15,7 @@ jobs:
       - name: Install Debian packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y catch cmake g++-${{ matrix.version }} libsqlite3-dev pkg-config
+          sudo apt-get install -y catch2 cmake g++-${{ matrix.version }} libsqlite3-dev pkg-config
       - name: Build with GNU GCC ${{ matrix.version }}
         run: |
           export CXX=g++-${{ matrix.version }}
@@ -49,7 +49,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           ./build-static.sh
         # Only do static build on latest version in the matrix.
-        if: matrix.version == 11
+        if: matrix.version == 12
       - name: Build with GNU GCC ${{ matrix.version }} - bundled SQLite
         run: |
           export CXX=g++-${{ matrix.version }}
@@ -59,9 +59,9 @@ jobs:
           cd build-bundled
           cmake ../ -DUSE_BUNDLED_SQLITE=ON -DENABLE_LTO=ON
           make -j2
-        if: matrix.version == 10
+        if: matrix.version == 11
       - name: Tests - bundled SQLite
         run: |
           cd "$GITHUB_WORKSPACE"/build-bundled
           ctest -V
-        if: matrix.version == 10
+        if: matrix.version == 11
