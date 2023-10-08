@@ -71,7 +71,7 @@ nonstd::expected<std::string, std::string> generate_header(Template& tpl)
   {
     return "Failed to load section 'script' from template.";
   }
-  tpl.tag("url", "https://cdn.plot.ly/plotly-basic-2.26.1.min.js");
+  tpl.tag("url", "https://cdn.plot.ly/plotly-basic-2.26.2.min.js");
   scripts += tpl.generate().value();
 
   if (!tpl.load_section("header"))
