@@ -63,7 +63,7 @@ jobs:
           cp src/logger/readme.md artifacts/logger/
           cp readme.md artifacts/
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: msys2-artifacts-static-linking
           path: |
