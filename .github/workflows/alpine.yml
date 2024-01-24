@@ -37,6 +37,7 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/graph-generator
           cp build-static/src/graph-generator/thermos-graph-generator artifacts/graph-generator
           cp src/graph-generator/readme.md artifacts/graph-generator
+          cp src/graph-generator/graph.tpl artifacts/graph-generator
           # info
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/info
           cp build-static/src/info/thermos-info artifacts/info
