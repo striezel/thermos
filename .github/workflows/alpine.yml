@@ -1,0 +1,55 @@
+name: Alpine
+
+on: push
+
+jobs:
+  alpine:
+    runs-on: ubuntu-22.04
+    container: alpine:latest
+    steps:
+      # Checks-out the repository under $GITHUB_WORKSPACE.
+      - uses: actions/checkout@v4
+      - name: Install packages
+        run: |
+          apk update
+          apk add catch2 cmake g++ git make pkgconf sqlite-dev zlib-dev
+          apk add sqlite-static zlib-static
+      - name: Build statically linked binaries
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          mkdir build-static
+          cd build-static
+          cmake ../ -DENABLE_LTO=ON -DENABLE_STATIC_LINKING=ON
+          cmake --build . -j2
+      - name: Run tests
+        run: |
+          cd "$GITHUB_WORKSPACE/build-static"
+          ctest -V
+      - name: Collect statically linked artifacts
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          # db2csv
+          mkdir -p "$GITHUB_WORKSPACE"/artifacts/db2csv
+          cp build-static/src/db2csv/thermos-db2csv artifacts/db2csv
+          cp src/db2csv/readme.md artifacts/db2csv
+          # graph-generator
+          mkdir -p "$GITHUB_WORKSPACE"/artifacts/graph-generator
+          cp build-static/src/graph-generator/thermos-graph-generator artifacts/graph-generator
+          cp src/graph-generator/readme.md artifacts/graph-generator
+          # info
+          mkdir -p "$GITHUB_WORKSPACE"/artifacts/info
+          cp build-static/src/info/thermos-info artifacts/info
+          cp src/info/readme.md artifacts/info
+          # logger
+          mkdir -p "$GITHUB_WORKSPACE"/artifacts/logger
+          cp build-static/src/logger/thermos-logger artifacts/logger
+          cp src/logger/readme.md artifacts/logger
+          # changelog + readme
+          cp LICENSE artifacts/
+          cp changelog.md artifacts/
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: thermos-alpine-artifacts
+          path: |
+            artifacts/*
