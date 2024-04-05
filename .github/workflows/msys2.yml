@@ -52,21 +52,27 @@ jobs:
         run: |
           export MSYSTEM=MINGW64
           cd "$GITHUB_WORKSPACE"
+          # db2csv
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/db2csv
           cp build-static/src/db2csv/thermos-db2csv.exe artifacts/db2csv/
           cp src/db2csv/readme.md artifacts/db2csv/
+          # graph-generator
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/graph-generator
           cp build-static/src/graph-generator/thermos-graph-generator.exe artifacts/graph-generator/
           cp src/graph-generator/readme.md artifacts/graph-generator/
           cp src/graph-generator/graph.tpl artifacts/graph-generator/
+          # info
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/info
           cp build-static/src/info/thermos-info.exe artifacts/info/
           cp src/info/readme.md artifacts/info/
+          # logger
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/logger
           cp build-static/src/logger/thermos-logger.exe artifacts/logger/
           cp src/logger/readme.md artifacts/logger/
-          cp readme.md artifacts/
+          # license + changelog + third-party notices
           cp LICENSE artifacts/
+          cp changelog.md artifacts/
+          cp documentation/third-party.md artifacts/
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -46,9 +46,10 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/logger
           cp build-static/src/logger/thermos-logger artifacts/logger
           cp src/logger/readme.md artifacts/logger
-          # changelog + readme
+          # license + changelog + third-party notices
           cp LICENSE artifacts/
           cp changelog.md artifacts/
+          cp documentation/third-party.md artifacts/
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
