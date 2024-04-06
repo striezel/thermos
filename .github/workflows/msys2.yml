@@ -11,6 +11,8 @@ jobs:
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
@@ -73,9 +75,14 @@ jobs:
           cp LICENSE artifacts/
           cp changelog.md artifacts/
           cp documentation/third-party.md artifacts/
+          # determine version
+          VERSION=$(git describe --always)
+          echo Version is $VERSION.
+          mv artifacts thermos-$VERSION
+          "C:\Program Files\7-Zip\7z.exe" a -r thermos_${VERSION}_win64.zip thermos-$VERSION
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: msys2-artifacts-static-linking
-          path: |
-            artifacts/*
+          name: thermos-msys2-win64
+          path: thermos_*_win64.zip
+          if-no-files-found: error
