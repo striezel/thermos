@@ -23,7 +23,7 @@ Catch (C++ Automated Test Cases in Headers) to perform some tests.
 It also helps to have Git, a distributed version control system, on your build
 system to get the latest source code directly from the Git repository.
 
-All of that can usually be installed be typing
+All of that can usually be installed by typing
 
 ```bash
 # on Debian, Ubuntu, etc.
