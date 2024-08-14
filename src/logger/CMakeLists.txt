@@ -25,6 +25,7 @@ set(thermos_logger_sources
     ../../lib/thermal/read_windows.cpp
     ../../lib/thermal/reading.cpp
     ../util/GitInfos.cpp
+    ../Version.cpp
     Logger.cpp
     main.cpp)
 

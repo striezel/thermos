@@ -22,6 +22,7 @@ set(thermos_db2csv_sources
     ../../lib/storage/utilities.cpp
     ../../lib/thermal/reading.cpp
     ../util/GitInfos.cpp
+    ../Version.cpp
     db2csv.cpp
     main.cpp)
 

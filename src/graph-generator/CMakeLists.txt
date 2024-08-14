@@ -17,6 +17,7 @@ set(thermos_graph_generator_sources
     ../../lib/templating/vectorize.cpp
     ../../lib/thermal/reading.cpp
     ../util/GitInfos.cpp
+    ../Version.cpp
     generator.cpp
     main.cpp)
 

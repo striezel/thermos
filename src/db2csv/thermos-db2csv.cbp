@@ -64,6 +64,7 @@
 		<Unit filename="../../lib/thermal/reading.cpp" />
 		<Unit filename="../../lib/thermal/reading.hpp" />
 		<Unit filename="../ReturnCodes.hpp" />
+		<Unit filename="../Version.cpp" />
 		<Unit filename="../Version.hpp" />
 		<Unit filename="../util/GitInfos.cpp" />
 		<Unit filename="../util/GitInfos.hpp" />

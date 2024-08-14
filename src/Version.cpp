@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of the thermos.
-    Copyright (C) 2022, 2024  Dirk Stolle
+    Copyright (C) 2024  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,21 +18,19 @@
  -------------------------------------------------------------------------------
 */
 
-#ifndef THERMOS_VERSION_HPP
-#define THERMOS_VERSION_HPP
-
-#include <string>
+#include "Version.hpp"
+#include <iostream>
 
 namespace thermos
 {
 
-/** \brief version information */
-const std::string version = "version 0.6.0, 2022-12-10";
+void showLicenseInformation()
+{
+  std::cout << "\nCopyright (C) 2022 - 2024  Dirk Stolle\n"
+            << "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n"
+            << "This is free software: you are free to change and redistribute it under the\n"
+            << "terms of the GNU General Public License version 3 or any later version.\n"
+            << "There is NO WARRANTY, to the extent permitted by law.\n";
+}
 
-/** \brief Shows license information on standard output.
- */
-void showLicenseInformation();
-
-} // namespace
-
-#endif // THERMOS_VERSION_HPP
+}

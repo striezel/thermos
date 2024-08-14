@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022  Dirk Stolle
+    Copyright (C) 2022, 2024  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ void showVersion()
             << "Note: This version was built without SQLite support, so the SQLite-related\n"
             << "features are not available." << std::endl;
   #endif
+  thermos::showLicenseInformation();
 }
 
 void showHelp()

@@ -17,6 +17,7 @@ set(thermos_info_sources
     ../../lib/thermal/read_linux.cpp
     ../../lib/thermal/read_windows.cpp
     ../util/GitInfos.cpp
+    ../Version.cpp
     main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
