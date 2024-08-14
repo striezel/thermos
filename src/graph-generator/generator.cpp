@@ -55,16 +55,16 @@ nonstd::expected<std::string, std::string> generate_header(Template& tpl)
   {
     return nonstd::make_unexpected("Failed to load section 'link_with_integrity' from template.");
   }
-  tpl.tag("url", "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css");
-  tpl.tag("hash", "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65");
+  tpl.tag("url", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css");
+  tpl.tag("hash", "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH");
   auto scripts = tpl.generate().value();
 
   if (!tpl.load_section("script_with_integrity"))
   {
     return nonstd::make_unexpected("Failed to load section 'script_with_integrity' from template.");
   }
-  tpl.tag("url", "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js");
-  tpl.tag("hash", "sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V");
+  tpl.tag("url", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js");
+  tpl.tag("hash", "sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy");
   scripts += tpl.generate().value();
 
   if (!tpl.load_section("script"))
