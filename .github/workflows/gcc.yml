@@ -4,10 +4,10 @@ on: push
 
 jobs:
   gcc:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        version: [9, 10, 11, 12]
+        version: [11, 12, 13, 14]
       fail-fast: false
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE.
@@ -49,7 +49,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           ./build-static.sh
         # Only do static build on latest version in the matrix.
-        if: matrix.version == 12
+        if: matrix.version == 14
       - name: Build with GNU GCC ${{ matrix.version }} - bundled SQLite
         run: |
           export CXX=g++-${{ matrix.version }}
@@ -59,9 +59,9 @@ jobs:
           cd build-bundled
           cmake ../ -DUSE_BUNDLED_SQLITE=ON -DENABLE_LTO=ON
           make -j2
-        if: matrix.version == 11
+        if: matrix.version == 13
       - name: Tests - bundled SQLite
         run: |
           cd "$GITHUB_WORKSPACE"/build-bundled
           ctest -V
-        if: matrix.version == 11
+        if: matrix.version == 13
