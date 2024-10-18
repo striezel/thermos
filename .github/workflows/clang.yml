@@ -4,10 +4,10 @@ on: push
 
 jobs:
   clang:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        version: [11, 12, 13, 14]
+        version: [15, 16, 17, 18]
       fail-fast: false
     steps:
       # Checks-out the repository under $GITHUB_WORKSPACE.
@@ -19,7 +19,6 @@ jobs:
       - name: Install Clang's standard C++ library
         run: |
           sudo apt-get install -y libc++-${{ matrix.version }}-dev
-        if: matrix.version != 11
       - name: Build with Clang ${{ matrix.version }}
         run: |
           export CXX=clang++-${{ matrix.version }}
@@ -53,7 +52,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           ./build-static.sh
         # Only do static build on latest version in the matrix.
-        if: matrix.version == 14
+        if: matrix.version == 18
       - name: Build with Clang ${{ matrix.version }} - bundled SQLite
         run: |
           export CXX=clang++-${{ matrix.version }}
@@ -63,9 +62,9 @@ jobs:
           cd build-bundled
           cmake ../ -DUSE_BUNDLED_SQLITE=ON -DENABLE_LTO=ON
           make -j2
-        if: matrix.version == 13
+        if: matrix.version == 17
       - name: Tests - bundled SQLite
         run: |
           cd "$GITHUB_WORKSPACE"/build-bundled
           ctest -V
-        if: matrix.version == 13
+        if: matrix.version == 17
