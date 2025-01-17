@@ -10,6 +10,6 @@ Currently, the following libraries are here:
   by Martin Moene <https://github.com/martinmoene>,
   licensed under the Boost Software License 1.0
   <https://opensource.org/licenses/BSL-1.0>
-* **sqlite/**: SQLite database engine, version 3.47.2,
+* **sqlite/**: SQLite database engine, version 3.48.0,
   by D. Richard Hipp <drh@hwaci.com>,
   dedicated to the public domain
