@@ -27,14 +27,20 @@
 
 {{>traces}}
   var layout = {
-    title: '{{title}}',
+    title: {
+      text: '{{title}}'
+    },
     yaxis: {
-       title: 'CPU load percentage'
+      title: {
+        text: 'CPU load percentage'
+      }
     },
     yaxis2: {
-       title: 'temperature in ° Celsius',
-       overlaying: 'y',
-       side: 'right'
+      title: {
+        text: 'temperature in ° Celsius'
+      },
+      overlaying: 'y',
+      side: 'right'
     }
   };
   Plotly.newPlot('{{plotId}}', traces, layout, {
