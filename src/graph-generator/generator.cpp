@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022, 2023, 2024  Dirk Stolle
+    Copyright (C) 2022, 2023, 2024, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ nonstd::expected<std::string, std::string> generate_header(Template& tpl)
   {
     return "Failed to load section 'script' from template.";
   }
-  tpl.tag("url", "https://cdn.plot.ly/plotly-basic-2.35.3.min.js");
+  tpl.tag("url", "https://cdn.plot.ly/plotly-basic-3.0.0.min.js");
   scripts += tpl.generate().value();
 
   if (!tpl.load_section("header"))
