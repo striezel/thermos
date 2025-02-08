@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022, 2024  Dirk Stolle
+    Copyright (C) 2022, 2024, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ void showHelp()
             << "                               " << type::db << "\n"
             << "                           If the type is '" << type::csv << "', then the readings are stored\n"
             << "                           as character-separated values (CSV). If the type is\n"
-            << "                           '" << type::db << "', then the readings are stored in a SQLite 3\n"
+            << "                           '" << type::db << "', then the readings are stored in an SQLite 3\n"
             << "                           database.\n"
             << "                           If no type is given, then '" << defaultFileType << "' is assumed.\n";
 }
@@ -119,7 +119,7 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param <<"\"." << std::endl;
+                    << param << "\"." << std::endl;
           return thermos::rcInvalidParameter;
         }
       } // if log file
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file type after \""
-                    << param <<"\"." << std::endl;
+                    << param << "\"." << std::endl;
           return thermos::rcInvalidParameter;
         }
       } // if file type
@@ -178,8 +178,13 @@ int main(int argc, char** argv)
   {
     std::cerr << "Error: No path for the log file has been specified.\n"
               << "Use the --file parameter to specify the log file destination,"
+              #if defined(THERMOS_NO_SQLITE)
               << " e. g. as in\n\n\tthermos-logger --file data.csv\n\n"
               << "to log the data to the file data.csv in the current directory."
+              #else
+              << " e. g. as in\n\n\tthermos-logger --file data.db\n\n"
+              << "to log the data to the file data.db in the current directory."
+              #endif
               << std::endl;
     return thermos::rcInvalidParameter;
   }

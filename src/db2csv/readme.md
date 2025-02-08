@@ -10,7 +10,7 @@ database format to the CSV format.
 ```
 thermos-db2csv [OPTIONS]
 
-Writes thermal sensor data and CPU load from a SQLite 3 file to a CSV file.
+Writes thermal sensor data and CPU load from an SQLite 3 file to a CSV file.
 
 options:
   -? | --help            - Shows this help message.
@@ -23,7 +23,7 @@ it will be created in the same directory, but with the file extension `.csv`.
 
 ## Copyright and Licensing
 
-Copyright 2022  Dirk Stolle
+Copyright 2022, 2025  Dirk Stolle
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,5 +1,9 @@
 # Version history of thermos
 
+## Version 0.?.? (2025-02-??)
+
+Some help texts and error messages are improved.
+
 ## Version 0.6.0 (2022-12-10)
 
 `thermos-graph-generator`, a command line application that generated graphs from

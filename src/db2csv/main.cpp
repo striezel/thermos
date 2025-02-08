@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022, 2024  Dirk Stolle
+    Copyright (C) 2022, 2024, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ void showHelp()
 {
   std::cout << "thermos-db2csv [OPTIONS]\n"
             << "\n"
-            << "Writes thermal sensor data and CPU load from a SQLite 3 file to a CSV file.\n"
+            << "Writes thermal sensor data and CPU load from an SQLite 3 file to a CSV file.\n"
             << "\n"
             << "options:\n"
             << "  -? | --help            - Shows this help message.\n"
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param <<"\"." << std::endl;
+                    << param << "\"." << std::endl;
           return thermos::rcInvalidParameter;
         }
       } // if database file

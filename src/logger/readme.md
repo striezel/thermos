@@ -21,7 +21,7 @@ options:
                                db
                            If the type is 'csv', then the readings are stored
                            as character-separated values (CSV). If the type is
-                           'db', then the readings are stored in a SQLite 3
+                           'db', then the readings are stored in an SQLite 3
                            database.
                            If no type is given, then 'db' is assumed.
 ```
