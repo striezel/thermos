@@ -46,7 +46,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (NO_SQLITE)
-    add_definitions( -DTHERMOS_NO_SQLITE=1 )
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        add_definitions( /DTHERMOS_NO_SQLITE=1 )
+    else ()
+        add_definitions( -DTHERMOS_NO_SQLITE=1 )
+    endif ()
 endif ()
 
 add_executable(thermos-graph-generator ${thermos_graph_generator_sources})
