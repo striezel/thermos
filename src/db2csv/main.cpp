@@ -34,7 +34,7 @@ void showVersion()
             << "Version control date:   " << info.date() << "\n"
             << "\n"
             << "Libraries:\n"
-            << "SQLite " << sqlite3_libversion() << std::endl;
+            << "SQLite " << sqlite3_libversion() << '\n';
   thermos::showLicenseInformation();
 }
 
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
         if (!dbFile.empty())
         {
           std::cerr << "Error: Database file was already set to " << dbFile
-                    << "!" << std::endl;
+                    << "!\n";
           return thermos::rcInvalidParameter;
         }
         // enough parameters?
@@ -92,14 +92,14 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param << "\"." << std::endl;
+                    << param << "\".\n";
           return thermos::rcInvalidParameter;
         }
       } // if database file
       else
       {
         std::cerr << "Error: Unknown parameter " << param << "!\n"
-                  << "Use --help to show available parameters." << std::endl;
+                  << "Use --help to show available parameters.\n";
         return thermos::rcInvalidParameter;
       }
     } // for i
@@ -111,8 +111,7 @@ int main(int argc, char** argv)
     std::cerr << "Error: No path for the database file has been specified.\n"
               << "Use the --file parameter to specify the file location,"
               << " e. g. as in\n\n\tthermos-db2csv --file data.db\n\n"
-              << "to read the data from the file data.db in the current directory."
-              << std::endl;
+              << "to read the data from the file data.db in the current directory.\n";
     return thermos::rcInvalidParameter;
   }
 

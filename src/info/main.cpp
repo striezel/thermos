@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022, 2024  Dirk Stolle
+    Copyright (C) 2022, 2024, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ void showVersion()
   std::cout << "thermos-info, " << thermos::version << "\n"
             << "\n"
             << "Version control commit: " << info.commit() << "\n"
-            << "Version control date:   " << info.date() << std::endl;
+            << "Version control date:   " << info.date() << '\n';
   thermos::showLicenseInformation();
 }
 
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
       else
       {
         std::cerr << "Error: Unknown parameter " << param << "!\n"
-                  << "Use --help to show available parameters." << std::endl;
+                  << "Use --help to show available parameters.\n";
         return thermos::rcInvalidParameter;
       }
     } // for i
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
   {
     std::cout << "No temperature readings available!\n";
     if (!thermal_readings.has_value())
-      std::cout << thermal_readings.error() << std::endl;
+      std::cout << thermal_readings.error() << '\n';
   }
   else
   {
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
   {
     std::cout << "No CPU load data available!\n";
     if (!load_readings.has_value())
-      std::cout << load_readings.error() << std::endl;
+      std::cout << load_readings.error() << '\n';
   }
   else
   {

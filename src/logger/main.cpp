@@ -44,10 +44,10 @@ void showVersion()
             << "\n"
   #if !defined(THERMOS_NO_SQLITE)
             << "Libraries:\n"
-            << "SQLite " << sqlite3_libversion() << std::endl;
+            << "SQLite " << sqlite3_libversion() << '\n';
   #else
             << "Note: This version was built without SQLite support, so the SQLite-related\n"
-            << "features are not available." << std::endl;
+            << "features are not available.\n";
   #endif
   thermos::showLicenseInformation();
 }
@@ -105,8 +105,8 @@ int main(int argc, char** argv)
       {
         if (!logFile.empty())
         {
-          std::cerr << "Error: Log file was already set to " << logFile << "!"
-                    << std::endl;
+          std::cerr << "Error: Log file was already set to " << logFile
+                    << "!\n";
           return thermos::rcInvalidParameter;
         }
         // enough parameters?
@@ -119,7 +119,7 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param << "\"." << std::endl;
+                    << param << "\".\n";
           return thermos::rcInvalidParameter;
         }
       } // if log file
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
         if (fileType.has_value())
         {
           std::cerr << "Error: File type was already set to "
-                    << fileType.value() << "!" << std::endl;
+                    << fileType.value() << "!\n";
           return thermos::rcInvalidParameter;
         }
         // enough parameters?
@@ -160,14 +160,14 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file type after \""
-                    << param << "\"." << std::endl;
+                    << param << "\".\n";
           return thermos::rcInvalidParameter;
         }
       } // if file type
       else
       {
         std::cerr << "Error: Unknown parameter " << param << "!\n"
-                  << "Use --help to show available parameters." << std::endl;
+                  << "Use --help to show available parameters.\n";
         return thermos::rcInvalidParameter;
       }
     } // for i
@@ -185,7 +185,7 @@ int main(int argc, char** argv)
               << " e. g. as in\n\n\tthermos-logger --file data.db\n\n"
               << "to log the data to the file data.db in the current directory."
               #endif
-              << std::endl;
+              << '\n';
     return thermos::rcInvalidParameter;
   }
 
@@ -199,7 +199,7 @@ int main(int argc, char** argv)
   if (opt.has_value())
   {
     std::cerr << "Error: Logging failed or was aborted.\n"
-              << opt.value() << std::endl;
+              << opt.value() << '\n';
     return thermos::rcLoggingFailure;
   }
 

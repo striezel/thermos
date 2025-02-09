@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022  Dirk Stolle
+    Copyright (C) 2022, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ int db2csv(const std::string& db_path)
   std::error_code error;
   if (!std::filesystem::exists(db_path, error) || error)
   {
-    std::cerr << "Error: File " << db_path << " does not exist." << std::endl;
+    std::cerr << "Error: File " << db_path << " does not exist.\n";
     return thermos::rcInputOutputFailure;
   }
 
@@ -86,7 +86,7 @@ int db2csv(const std::string& db_path)
   }
 
   std::cout << "Data from " << db_path << " was written to " << destination
-            << "." << std::endl;
+            << ".\n";
   return 0;
 }
 

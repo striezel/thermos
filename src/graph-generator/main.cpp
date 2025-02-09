@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos.
-    Copyright (C) 2022, 2024  Dirk Stolle
+    Copyright (C) 2022, 2024, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,10 +38,10 @@ void showVersion()
             << "\n"
   #if !defined(THERMOS_NO_SQLITE)
             << "Libraries:\n"
-            << "SQLite " << sqlite3_libversion() << std::endl;
+            << "SQLite " << sqlite3_libversion() << '\n';
   #else
             << "Note: This version was built without SQLite support, so the SQLite-related\n"
-            << "features are not available." << std::endl;
+            << "features are not available.\n";
   #endif
   thermos::showLicenseInformation();
 }
@@ -124,8 +124,8 @@ int main(int argc, char** argv)
       {
         if (!logFile.empty())
         {
-          std::cerr << "Error: Log file was already set to " << logFile << "!"
-                    << std::endl;
+          std::cerr << "Error: Log file was already set to " << logFile
+                    << "!\n";
           return thermos::rcInvalidParameter;
         }
         // enough parameters?
@@ -138,7 +138,7 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param << "\"." << std::endl;
+                    << param << "\".\n";
           return thermos::rcInvalidParameter;
         }
       } // if log file
@@ -146,8 +146,8 @@ int main(int argc, char** argv)
       {
         if (!templateFile.empty())
         {
-          std::cerr << "Error: Template file was already set to " << templateFile << "!"
-                    << std::endl;
+          std::cerr << "Error: Template file was already set to "
+                    << templateFile << "!\n";
           return thermos::rcInvalidParameter;
         }
         // enough parameters?
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param << "\"." << std::endl;
+                    << param << "\".\n";
           return thermos::rcInvalidParameter;
         }
       } // if template file
@@ -168,8 +168,8 @@ int main(int argc, char** argv)
       {
         if (!destination.empty())
         {
-          std::cerr << "Error: Output file was already set to " << destination << "!"
-                    << std::endl;
+          std::cerr << "Error: Output file was already set to " << destination
+                    << "!\n";
           return thermos::rcInvalidParameter;
         }
         // enough parameters?
@@ -182,14 +182,14 @@ int main(int argc, char** argv)
         else
         {
           std::cerr << "Error: You have to enter a file path after \""
-                    << param << "\"." << std::endl;
+                    << param << "\".\n";
           return thermos::rcInvalidParameter;
         }
       } // if output file
       else
       {
         std::cerr << "Error: Unknown parameter " << param << "!\n"
-                  << "Use --help to show available parameters." << std::endl;
+                  << "Use --help to show available parameters.\n";
         return thermos::rcInvalidParameter;
       }
     } // for i
