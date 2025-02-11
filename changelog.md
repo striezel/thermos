@@ -1,6 +1,6 @@
 # Version history of thermos
 
-## Version 0.?.? (2025-02-??)
+## Version 0.6.1 (2025-02-11)
 
 Some help texts and error messages are improved.
 

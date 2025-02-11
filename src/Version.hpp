@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of the thermos.
-    Copyright (C) 2022, 2024  Dirk Stolle
+    Copyright (C) 2022, 2024, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ namespace thermos
 {
 
 /** \brief version information */
-const std::string version = "version 0.6.0, 2022-12-10";
+const std::string version = "version 0.6.1, 2025-02-11";
 
 /** \brief Shows license information on standard output.
  */

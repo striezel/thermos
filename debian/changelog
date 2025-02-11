@@ -1,3 +1,9 @@
+thermos (0.6.1-1) UNRELEASED; urgency=medium
+
+  * Some help texts and error messages are improved.
+
+ -- Dirk Stolle <striezel-dev@web.de>  Tue, 11 Feb 2025 02:54:17 +0100
+
 thermos (0.6.0-1) UNRELEASED; urgency=medium
 
   * thermos-graph-generator, a command line application that generated graphs
