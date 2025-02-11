@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.8...3.31)
 
 if (NOT NO_SQLITE)
     # Recurse into subdirectory for the db2csv executable.
