@@ -1,7 +1,7 @@
 /*
  -------------------------------------------------------------------------------
     This file is part of thermos, with earlier code from botvinnik Matrix bot.
-    Copyright (C) 2020, 2022  Dirk Stolle
+    Copyright (C) 2020, 2022, 2025  Dirk Stolle
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #define THERMOS_SQLITE3_DATABASE_HPP
 
 #if !defined(THERMOS_NO_SQLITE)
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <sqlite3.h>
