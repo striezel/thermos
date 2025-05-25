@@ -65,6 +65,6 @@ jobs:
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: thermos-linux-generic
+          name: thermos-linux-amd64-generic
           path: thermos_*_linux-amd64-generic.tar.gz
           if-no-files-found: error
