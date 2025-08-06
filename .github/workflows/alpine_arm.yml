@@ -26,6 +26,44 @@ jobs:
         run: |
           apk add nodejs
           sed -i 's~ID=alpine~ID=nopine~g' /etc/os-release
+
+          # exploring
+          cd /
+          pwd
+          ls -lah
+
+          cd /host
+          pwd
+          ls -lah
+
+          cd /host/home/
+          pwd
+          ls -lah
+
+          cd /host/home/runner
+          pwd
+          ls -lah
+
+          cd /host/home/runner/actions-runner
+          pwd
+          ls -lah
+
+          cd /host/home/runner/actions-runner/cached
+          pwd
+          ls -lah
+
+          cd /host/home/runner/actions-runner/cached/externals/
+          pwd
+          ls -lah
+
+          cd /host/home/runner/actions-runner/cached/externals/node20
+          pwd
+          ls -lah
+
+          cd /host/home/runner/actions-runner/cached/externals/node20/bin
+          pwd
+          ls -lah
+
           cd /host/home/runner/actions-runner/*/externals/
           rm -rf node20/*
           mkdir node20/bin
