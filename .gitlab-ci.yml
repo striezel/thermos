@@ -1,13 +1,13 @@
 coverage:
-  image: debian:12-slim
+  image: debian:13-slim
   stage: test
   before_script:
     - apt-get update && apt-get -y upgrade
-    - apt-get install -y catch2 cmake g++-12 lcov libsqlite3-dev pkg-config
+    - apt-get install -y catch2 cmake g++-14 lcov libsqlite3-dev pkg-config
   script:
     # build
-    - export CXX=g++-12
-    - export CC=gcc-12
+    - export CXX=g++-14
+    - export CC=gcc-14
     - mkdir build-coverage
     - cd build-coverage
     - cmake -DCODE_COVERAGE=ON ../
@@ -15,7 +15,7 @@ coverage:
     # tests
     - ctest -V
     # collect code coverage data
-    - lcov -c --directory . --output-file main_coverage.info
+    - lcov -c --directory . --ignore-errors inconsistent,inconsistent --output-file main_coverage.info
     - lcov --remove main_coverage.info '/usr/include/*' '*tests/*' '*third-party/*' -o main_coverage_filtered.info
     - genhtml main_coverage_filtered.info --output-directory ../public
   coverage: /^[\t ]*lines\.*:\s*\d+.\d+\%/
@@ -59,7 +59,7 @@ fedora:
     - ctest -V
 
 pages:
-  image: debian:12-slim
+  image: debian:13-slim
   stage: deploy
   needs: ["coverage"]
   dependencies:
@@ -71,7 +71,7 @@ pages:
       - public
 
 package_debian:
-  image: debian:12-slim
+  image: debian:13-slim
   stage: build
   before_script:
     - ./ci/01-install-dependencies.sh
