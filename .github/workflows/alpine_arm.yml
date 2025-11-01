@@ -90,7 +90,7 @@ jobs:
           mv artifacts thermos-$VERSION
           tar czf thermos_${VERSION}_linux-arm64-generic.tar.gz thermos-$VERSION
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: thermos-linux-arm64-generic
           path: thermos_*_linux-arm64-generic.tar.gz
