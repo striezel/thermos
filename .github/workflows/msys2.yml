@@ -83,8 +83,9 @@ jobs:
           mv artifacts thermos-$VERSION
           "C:\Program Files\7-Zip\7z.exe" a -r thermos_${VERSION}_win64.zip thermos-$VERSION
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
+          archive: false
           name: thermos-msys2-win64
           path: thermos_*_win64.zip
           if-no-files-found: error
