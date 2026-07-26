@@ -26,7 +26,7 @@ coverage:
       - public
 
 fedora:
-  image: fedora:43
+  image: fedora:44
   stage: test
   before_script:
     - yum update -y
