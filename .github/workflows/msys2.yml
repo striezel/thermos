@@ -17,19 +17,19 @@ jobs:
           persist-credentials: false
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: mingw64
+          msystem: ucrt64
           update: true
           install: >-
             git
-            mingw-w64-x86_64-catch
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-sqlite3
-            mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-pkg-config
+            mingw-w64-ucrt-x86_64-catch
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-sqlite3
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
       - name: Build
         run: |
-          export MSYSTEM=MINGW64
+          export MSYSTEM=UCRT64
           export CXX=g++
           export CC=gcc
           cd "$GITHUB_WORKSPACE"
@@ -39,12 +39,12 @@ jobs:
           cmake --build . -j2
       - name: Tests
         run: |
-          export MSYSTEM=MINGW64
+          export MSYSTEM=UCRT64
           cd "$GITHUB_WORKSPACE"/build
           ctest -V
       - name: Build statically linked binaries
         run: |
-          export MSYSTEM=MINGW64
+          export MSYSTEM=UCRT64
           export CXX=g++
           export CC=gcc
           cd "$GITHUB_WORKSPACE"
@@ -54,7 +54,7 @@ jobs:
           cmake --build . -j2
       - name: Collect statically linked artifacts
         run: |
-          export MSYSTEM=MINGW64
+          export MSYSTEM=UCRT64
           cd "$GITHUB_WORKSPACE"
           # db2csv
           mkdir -p "$GITHUB_WORKSPACE"/artifacts/db2csv
