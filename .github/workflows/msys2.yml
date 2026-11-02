@@ -3,7 +3,7 @@ name: MSYS2
 on: push
 
 jobs:
-  msys2_mingw64:
+  msys2:
     runs-on: windows-2022
     defaults:
       run:
